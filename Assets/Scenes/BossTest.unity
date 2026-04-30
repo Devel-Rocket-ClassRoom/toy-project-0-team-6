@@ -855,6 +855,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1890410289026383522, guid: ec06d59a25025df4faf8326294504ede, type: 3}
+      propertyPath: data
+      value: 
+      objectReference: {fileID: 11400000, guid: 1699faee540515e45b63a30f23c41cc8, type: 2}
+    - target: {fileID: 1890410289026383522, guid: ec06d59a25025df4faf8326294504ede, type: 3}
+      propertyPath: attackZone
+      value: 
+      objectReference: {fileID: 360807662}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -874,6 +882,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a9435a324d0fda4cb010a42c1cbedf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Boss
+--- !u!114 &360807662 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3617712889193596332, guid: ec06d59a25025df4faf8326294504ede, type: 3}
+  m_PrefabInstance: {fileID: 360807660}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44577b86e8b09c34c830accb4f758f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AttackZone
 --- !u!1 &641234908
 GameObject:
   m_ObjectHideFlags: 0

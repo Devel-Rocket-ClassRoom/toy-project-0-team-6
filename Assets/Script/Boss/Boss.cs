@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Boss : MonoBehaviour, IDamageable
@@ -19,8 +20,11 @@ public class Boss : MonoBehaviour, IDamageable
 
     private Animator animator;
     public NormalAttackZone attackZone;
+    public BossData data;
 
     private Statement currentstatement;
+
+    public Action<int> OnDamage;
 
     private void Awake()
     {
@@ -67,6 +71,9 @@ public class Boss : MonoBehaviour, IDamageable
 
     public void GetDamage(DamageVO damageData)
     {
+        data.BossHp -= damageData.amount;
+        OnDamage?.Invoke(damageData.amount);
+
         switch (damageData.damageType)
         {   
             case DamageVO.DamageType.normal:
