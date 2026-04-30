@@ -24,8 +24,8 @@ public class DualSliderBar : MonoBehaviour
 
     public void SetValue(float current, float max)
     {
-        float newRatio = max > 0 ? current / max : 0f;
-        bool isDecreasing = newRatio < _trueRatio;
+        float newRatio = max > 0 ? current / max : 0f;//비율 계산
+        bool isDecreasing = newRatio < _trueRatio;// 감소 or 회복 
         _trueRatio = newRatio;
          
 
@@ -55,7 +55,7 @@ public class DualSliderBar : MonoBehaviour
     }
     private IEnumerator DelayedDrop(float targetValue)
     {
-        yield return null; // 한 프레임 대기
+        yield return null; 
         mainSlider.value = targetValue;
     }
 

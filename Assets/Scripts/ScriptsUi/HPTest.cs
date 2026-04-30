@@ -62,7 +62,7 @@ public class HPTest : MonoBehaviour
         // R: 스태미너 사용 (시간이 지나면 자동 회복)
         if (Input.GetKeyDown(KeyCode.R))
         {
-            staminaBar.Use(20f);
+            staminaBar.Use(30f);
         }
     }
 }
