@@ -1,15 +1,21 @@
 using UnityEngine;
 
-public class AttackZone : MonoBehaviour
+public class NormalAttackZone : MonoBehaviour
 {
     public Boss Boss;
     private BoxCollider attackZone;
     private IDamageable player;
     public bool attackable;
+    private DamageVO damage;
 
     private void OnEnable()
     {
         attackZone = GetComponent<BoxCollider>();
+    }
+
+    public void SetDamage(DamageVO damageInfo)
+    {
+        damage = damageInfo;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -22,7 +28,7 @@ public class AttackZone : MonoBehaviour
         if (player != null && attackable)
         {
             attackable = false;
-            player.GetDamage(Boss.state);
+            player.GetDamage(damage);
         }
     }
 

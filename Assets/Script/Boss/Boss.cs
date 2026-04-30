@@ -2,15 +2,25 @@ using UnityEngine;
 
 public class Boss : MonoBehaviour, IDamageable
 {
+    private enum Statement
+    {
+        Idle,
+        Attack,
+        Death,
+        Hit,
+        BigHit,
+        Move,
+    }
+
     private static readonly string MiddleHit = "MiddleHit";
     private static readonly string BigHit = "BigHit";
     private static readonly string Death = "Death";
     private static readonly string Attack = "Attack";
 
     private Animator animator;
-    public AttackZone attackZone;
+    public NormalAttackZone attackZone;
 
-    public DamageVO state;
+    private Statement currentstatement;
 
     private void Awake()
     {
@@ -20,23 +30,25 @@ public class Boss : MonoBehaviour, IDamageable
 
     public void OnMiddleHit()
     {
+        currentstatement = Statement.Hit;
         animator.SetTrigger(MiddleHit);
     }
 
     public void OnBigHit()
     {
+        currentstatement = Statement.BigHit;
         animator.SetTrigger(BigHit);
     }
 
     public void OnDeath()
     {
+        currentstatement = Statement.Death;
         animator.SetTrigger(Death);
     }
 
     public void OnAttack()
     {
-        state.amount = 100;
-        state.damageType = DamageVO.DamageType.normal;
+        currentstatement = Statement.Attack;
         animator.SetTrigger(Attack);
     }
 
@@ -45,6 +57,8 @@ public class Boss : MonoBehaviour, IDamageable
         if(attackZone.gameObject.activeSelf == false)
         {
             attackZone.gameObject.SetActive(true);
+            DamageVO attackInfo = new() { amount = 100, damageType = DamageVO.DamageType.normal };
+            attackZone.SetDamage(attackInfo);
             attackZone.attackable = true;
             return;
         }
@@ -54,8 +68,7 @@ public class Boss : MonoBehaviour, IDamageable
     public void GetDamage(DamageVO damageData)
     {
         switch (damageData.damageType)
-        {
-            
+        {   
             case DamageVO.DamageType.normal:
                 OnMiddleHit();
                 break;
@@ -64,6 +77,7 @@ public class Boss : MonoBehaviour, IDamageable
                 OnBigHit();
                 break;
             case DamageVO.DamageType.instantKill:
+                OnDeath();
                 break;
             case DamageVO.DamageType.noDamage:
             case DamageVO.DamageType.soft:
