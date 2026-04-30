@@ -3,8 +3,8 @@ using UnityEngine;
 public class CharacterState : MonoBehaviour
 {
     public int maxHealth = 100;
-
     private int currentHealth;
+
     private int consumablesCount;   //현재 소모품 갯수
     private int currentConsumable;  //현재 소모품 타입(임시 int)
 
@@ -12,9 +12,16 @@ public class CharacterState : MonoBehaviour
     private int healthStat;     //체력스텟
     private int dexterity;      //민첩
 
-    public bool isDead = false; //사망 여부
+    public float maxStamina;          //최대 스테미나
+    private float currentStamina;     //현재 스테미나
+    public float[] stmUseSpeed = new float[3]{2, 0.5f, 4};   //스테미나 소모 속도[공격(1회)/달리기(초당)/회피(1회)] /임시 값
 
-    public event System.Action<int> Damaged;        //데미지 이벤트 함수
+    public bool isDead = false;     //사망 여부
+    public bool canRestoreStm = true;     //스테미나 회복가능 여부
+    public bool isDrained = false;      //스테미나 다떨어진 상태
+
+    public event System.Action<int> Damaged;    //데미지 이벤트 함수
+    public event System.Action<float> OnStaminaChanged;
 
     public int CurrentHealth
     {
@@ -25,6 +32,18 @@ public class CharacterState : MonoBehaviour
 
             if (currentHealth == 0)
                 isDead = true;
+        }
+    }
+
+    public float CurrentStamina
+    {
+        get { return currentStamina; }
+        set
+        {
+            currentStamina = Mathf.Clamp(value, 0, maxStamina);
+
+            if (currentStamina == 0)
+                isDrained = true;
         }
     }
 
@@ -44,9 +63,19 @@ public class CharacterState : MonoBehaviour
     public int HealthStat => healthStat;
     public int Dexterity => dexterity;
 
+    
+
     void Start()
     {
         CurrentHealth = maxHealth;
+    }
+
+    private void Update()
+    {
+        if (canRestoreStm)
+        {
+            RestoreStamina(stmUseSpeed[1]);
+        }
     }
 
     public void OnDamage(int damage)
@@ -54,5 +83,12 @@ public class CharacterState : MonoBehaviour
         CurrentHealth -= damage;
 
         Damaged?.Invoke(damage);
+    }
+
+    private void RestoreStamina(float stamina)
+    {
+        CurrentStamina += stamina;
+
+        OnStaminaChanged?.Invoke(stamina);
     }
 }
