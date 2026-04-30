@@ -69,7 +69,6 @@ public class CharacterState : MonoBehaviour, IDamageable
             {
                 OnStaminaChanged?.Invoke(currentStamina);
             }
-            ;
         }
     }
 
