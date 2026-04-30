@@ -40,8 +40,6 @@ public class Boss : MonoBehaviour, IDamageable
     {
         attackCoolTime += Time.deltaTime;
 
-        Debug.Log(currentstatement);
-
         switch (currentstatement)
         {
             case Statement.Idle:
