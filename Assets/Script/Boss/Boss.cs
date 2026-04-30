@@ -8,8 +8,6 @@ public class Boss : MonoBehaviour, IDamageable
         Idle,
         Attack,
         Death,
-        Hit,
-        BigHit,
         Move,
     }
 
@@ -17,12 +15,18 @@ public class Boss : MonoBehaviour, IDamageable
     private static readonly string BigHit = "BigHit";
     private static readonly string Death = "Death";
     private static readonly string Attack = "Attack";
+    private static readonly string BigAttack = "BigAttack";
+    private static readonly int Move = Animator.StringToHash("Move");
 
     private Animator animator;
     public NormalAttackZone attackZone;
     public BossData data;
 
     private Statement currentstatement;
+    private int normalAttackCount = 0;
+    private float idleTime = 0f;
+    public float targetDistance = 0f;
+    private float attackCoolTime = 0f;
 
     public Action<int> OnDamage;
 
@@ -32,15 +36,51 @@ public class Boss : MonoBehaviour, IDamageable
         attackZone.gameObject.SetActive(false);
     }
 
+    private void Update()
+    {
+        attackCoolTime += Time.deltaTime;
+
+        Debug.Log(currentstatement);
+
+        switch (currentstatement)
+        {
+            case Statement.Idle:
+                idleTime += Time.deltaTime;
+                if(idleTime > 4f)
+                {
+                    currentstatement = Statement.Move;
+                    idleTime = 0f;
+                }
+                break;
+            case Statement.Attack:
+                if(attackCoolTime > 4f)
+                {
+                    OnAttack();
+                    attackCoolTime = 0f;
+                }
+                break;
+            case Statement.Death:
+                OnDeath();
+                break;
+            case Statement.Move:
+                OnMove();
+                if(targetDistance < 3f)
+                {
+                    currentstatement = Statement.Attack;
+                }
+                break;
+        }
+    }
+
+
+
     public void OnMiddleHit()
     {
-        currentstatement = Statement.Hit;
         animator.SetTrigger(MiddleHit);
     }
 
     public void OnBigHit()
     {
-        currentstatement = Statement.BigHit;
         animator.SetTrigger(BigHit);
     }
 
@@ -52,8 +92,27 @@ public class Boss : MonoBehaviour, IDamageable
 
     public void OnAttack()
     {
+        if(normalAttackCount >= 2)
+        {
+            animator.SetTrigger(BigAttack);
+            normalAttackCount = 0;
+        }
+        else
+        {
+            animator.SetTrigger(Attack);
+            normalAttackCount++;
+        }
+    }
+
+    public void OnBigAttack()
+    {
         currentstatement = Statement.Attack;
-        animator.SetTrigger(Attack);
+        animator.SetTrigger(BigAttack);
+    }
+
+    public void OnMove()
+    {
+        animator.SetBool(Move, true);
     }
 
     public void ToggleAttackZone()
@@ -67,6 +126,12 @@ public class Boss : MonoBehaviour, IDamageable
             return;
         }
         attackZone.gameObject.SetActive(false);
+    }
+
+    public void AttackAnimationEnd()
+    {
+        currentstatement = Statement.Idle;
+        animator.SetBool(Move, false);
     }
 
     public void GetDamage(DamageVO damageData)
