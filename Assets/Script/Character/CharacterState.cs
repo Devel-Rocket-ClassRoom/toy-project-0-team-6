@@ -26,6 +26,10 @@ public class CharacterState : MonoBehaviour, IDamageable
     public event System.Action<float> OnStaminaChanged; //스테미나 이벤트 함수
 
     private Animator anim;
+    private readonly int Normal = Animator.StringToHash("Normal");
+    private readonly int Hard = Animator.StringToHash("Hard");
+    private readonly int VeryHard = Animator.StringToHash("VeryHard");
+    private readonly int Die = Animator.StringToHash("Die");
 
     public int CurrentHealth
     {
@@ -99,7 +103,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     {
         //if (IsDead)
         //    return;
-        anim.SetTrigger("Dead");
+        anim.SetTrigger(Die);
     }
 
     public void GetDamage(DamageVO damageData)
@@ -110,13 +114,13 @@ public class CharacterState : MonoBehaviour, IDamageable
             case DamageVO.DamageType.soft:
                 break;
             case DamageVO.DamageType.normal:
-                anim.SetTrigger("Normal");
+                anim.SetTrigger(Normal);
                 break;
             case DamageVO.DamageType.hard:
-                anim.SetTrigger("Hard");
+                anim.SetTrigger(Hard);
                 break;
             case DamageVO.DamageType.veryHard:
-                anim.SetTrigger("VeryHard");
+                anim.SetTrigger(VeryHard);
                 break;
             case DamageVO.DamageType.instantKill:
                 Dead();
