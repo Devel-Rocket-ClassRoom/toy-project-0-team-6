@@ -5,14 +5,16 @@ public class CharacterState : MonoBehaviour
     public int maxHealth = 100;
 
     private int currentHealth;
-    private int consumablesCount;
-    private int currentConsumable;
+    private int consumablesCount;   //현재 소모품 갯수
+    private int currentConsumable;  //현재 소모품 타입(임시 int)
 
-    private int power;
-    private int healthStat;
-    private int dexterity;
+    private int power;          //힘
+    private int healthStat;     //체력스텟
+    private int dexterity;      //민첩
 
-    public bool isDead = false;
+    public bool isDead = false; //사망 여부
+
+    public event System.Action<int> OnHealthChanged;        //데미지 이벤트 함수
 
     public int CurrentHealth
     {
@@ -45,5 +47,13 @@ public class CharacterState : MonoBehaviour
     void Start()
     {
         CurrentHealth = maxHealth;
+        OnHealthChanged?.Invoke(CurrentHealth);
+    }
+
+    public void OnDamage(int damage)
+    {
+        CurrentHealth -= damage;
+
+        OnHealthChanged?.Invoke(CurrentHealth);
     }
 }
