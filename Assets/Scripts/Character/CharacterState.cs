@@ -14,7 +14,7 @@ public class CharacterState : MonoBehaviour
 
     public bool isDead = false; //사망 여부
 
-    public event System.Action<int> OnHealthChanged;        //데미지 이벤트 함수
+    public event System.Action<int> Damaged;        //데미지 이벤트 함수
 
     public int CurrentHealth
     {
@@ -47,13 +47,12 @@ public class CharacterState : MonoBehaviour
     void Start()
     {
         CurrentHealth = maxHealth;
-        OnHealthChanged?.Invoke(CurrentHealth);
     }
 
     public void OnDamage(int damage)
     {
         CurrentHealth -= damage;
 
-        OnHealthChanged?.Invoke(CurrentHealth);
+        Damaged?.Invoke(damage);
     }
 }
