@@ -18,12 +18,14 @@ public class CharacterState : MonoBehaviour, IDamageable
     private float restoreStmTime = 3f;  //스테미나 회복 대기시간
     private float restoreStmTimer = 0f; //대기 타이머
 
-    public bool isDead;     //사망 여부
-    public bool isDrained;      //스테미나 다떨어진 상태
+    public bool IsDead => currentHealth <= 0;     //사망 여부
+    public bool IsDrained => currentStamina <= 0;      //스테미나 다떨어진 상태
     public bool CanRestoreStm => restoreStmTimer <= 0f;
 
     public event System.Action<int> Damaged;    //데미지 이벤트 함수
-    public event System.Action<float> OnStaminaChanged;
+    public event System.Action<float> OnStaminaChanged; //스테미나 이벤트 함수
+
+    private Animator anim;
 
     public int CurrentHealth
     {
@@ -31,16 +33,6 @@ public class CharacterState : MonoBehaviour, IDamageable
         set
         {
             currentHealth = Mathf.Clamp(value, 0, maxHealth);
-
-            if (currentHealth > 0)
-            {
-                isDead = false;
-            }
-            else
-            {
-                isDead = true;
-            }
-
         }
     }
 
@@ -53,13 +45,6 @@ public class CharacterState : MonoBehaviour, IDamageable
             {
                 restoreStmTimer = restoreStmTime;
             }
-
-            currentStamina = Mathf.Clamp(value, 0, maxStamina);
-
-            if (currentStamina <= 0)
-                isDrained = true;
-            else
-                isDrained = false;
 
             float prev = currentStamina;
 
@@ -92,6 +77,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     {
         CurrentHealth = maxHealth;
         CurrentStamina = maxStamina;
+        anim = GetComponent<Animator>();
     }
 
     private void Update()
@@ -99,6 +85,9 @@ public class CharacterState : MonoBehaviour, IDamageable
         if (restoreStmTimer > 0)
         {
             restoreStmTimer -= Time.deltaTime;
+
+            if (restoreStmTimer < 0)
+                restoreStmTimer = 0;
         }
         if (CanRestoreStm && currentStamina < maxStamina)
         {
@@ -106,8 +95,33 @@ public class CharacterState : MonoBehaviour, IDamageable
         }
     }
 
+    public void Dead()
+    {
+        //if (IsDead)
+        //    return;
+        anim.SetTrigger("Dead");
+    }
+
     public void GetDamage(DamageVO damageData)
     {
+        switch (damageData.damageType)
+        {
+            case DamageVO.DamageType.noDamage:
+            case DamageVO.DamageType.soft:
+                break;
+            case DamageVO.DamageType.normal:
+                anim.SetTrigger("Normal");
+                break;
+            case DamageVO.DamageType.hard:
+                anim.SetTrigger("Hard");
+                break;
+            case DamageVO.DamageType.veryHard:
+                anim.SetTrigger("VeryHard");
+                break;
+            case DamageVO.DamageType.instantKill:
+                Dead();
+                break;
+        }
         CurrentHealth -= damageData.amount;
 
         Damaged?.Invoke(damageData.amount);

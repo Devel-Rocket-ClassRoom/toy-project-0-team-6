@@ -663,7 +663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a9435a324d0fda4cb010a42c1cbedf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Boss
-  attackZone: {fileID: 6006163044216416315}
+  attackZone: {fileID: 3617712889193596332}
 --- !u!1 &152494
 GameObject:
   m_ObjectHideFlags: 0
@@ -1495,3 +1495,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackZone
   Boss: {fileID: 1890410289026383522}
+  attackable: 0
