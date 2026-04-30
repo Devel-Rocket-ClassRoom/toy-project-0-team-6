@@ -394,7 +394,7 @@ PrefabInstance:
     - target: {fileID: 2161907641686016540, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 9100000, guid: aa595dbe63237734cb918763f97f9ef2, type: 2}
     - target: {fileID: 3935999515426265829, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
       propertyPath: m_Name
       value: Character
