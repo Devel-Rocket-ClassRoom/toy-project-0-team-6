@@ -3,7 +3,7 @@ using UnityEngine;
 public class CharacterState : MonoBehaviour, IDamageable
 {
     public int maxHealth = 100;
-    private int currentHealth;
+    //private int currentHealth;
 
     private int currentHealth;
     private int consumablesCount;   //현재 소모품 갯수
