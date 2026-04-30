@@ -11,11 +11,11 @@ public class Boss : MonoBehaviour, IDamageable
         Move,
     }
 
-    private static readonly string MiddleHit = "MiddleHit";
-    private static readonly string BigHit = "BigHit";
-    private static readonly string Death = "Death";
-    private static readonly string Attack = "Attack";
-    private static readonly string BigAttack = "BigAttack";
+    private static readonly int MiddleHit = Animator.StringToHash("MiddleHit");
+    private static readonly int BigHit = Animator.StringToHash("BigHit");
+    private static readonly int Death = Animator.StringToHash("Death");
+    private static readonly int Attack = Animator.StringToHash("Attack");
+    private static readonly int BigAttack = Animator.StringToHash("BigAttack");
     private static readonly int Move = Animator.StringToHash("Move");
 
     private Animator animator;
