@@ -8,10 +8,14 @@ public class Boss : MonoBehaviour, IDamageable
     private static readonly string Attack = "Attack";
 
     private Animator animator;
+    public AttackZone attackZone;
+
+    public DamageVO state;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        attackZone.gameObject.SetActive(false);
     }
 
     public void OnMiddleHit()
@@ -27,6 +31,24 @@ public class Boss : MonoBehaviour, IDamageable
     public void OnDeath()
     {
         animator.SetTrigger(Death);
+    }
+
+    public void OnAttack()
+    {
+        state.amount = 100;
+        state.damageType = DamageVO.DamageType.normal;
+        animator.SetTrigger(Attack);
+    }
+
+    public void ToggleAttackZone()
+    {
+        if(attackZone.gameObject.activeSelf == false)
+        {
+            attackZone.gameObject.SetActive(true);
+            attackZone.attackable = true;
+            return;
+        }
+        attackZone.gameObject.SetActive(false);
     }
 
     public void GetDamage(DamageVO damageData)
