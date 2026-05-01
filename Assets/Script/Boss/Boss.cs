@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Boss : MonoBehaviour, IDamageable
 {
@@ -17,37 +18,85 @@ public class Boss : MonoBehaviour, IDamageable
     private static readonly int Attack = Animator.StringToHash("Attack");
     private static readonly int BigAttack = Animator.StringToHash("BigAttack");
     private static readonly int Move = Animator.StringToHash("Move");
+    private static readonly string PlayerTag = "Player";
 
     private Animator animator;
     public NormalAttackZone attackZone;
     public BossData data;
+    private NavMeshAgent agent;
+    private GameObject target;
 
     private Statement currentstatement;
     private int normalAttackCount = 0;
     private float idleTime = 0f;
-    public float targetDistance = 0f;
+    public float attackDistance = 0f;
+    private float toTargetDistance => Vector3.Distance(transform.position, target.transform.position);
     private float attackCoolTime = 0f;
 
     public Action<int> OnDamage;
+
+    private Statement CurrentStatement
+    {
+        get { return currentstatement; }
+        set
+        {
+            switch (value)
+            {
+                case Statement.Idle:
+                    currentstatement = value;
+                    agent.isStopped = true;
+                    break;
+                case Statement.Attack:
+                    agent.isStopped = true;
+                    currentstatement = value;
+                    break;
+                case Statement.Death:
+                    agent.isStopped = true;
+                    currentstatement = value;
+                    break;
+                case Statement.Move:
+                    idleTime = 0f;
+                    agent.isStopped = false;
+                    currentstatement = value;
+                    break;
+            }
+        }
+    }
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         attackZone.gameObject.SetActive(false);
+        agent = GetComponent<NavMeshAgent>();
+    }
+
+    private void Start()
+    {
+        target = GameObject.FindGameObjectWithTag(PlayerTag);
+        
+        CurrentStatement = Statement.Idle;
     }
 
     private void Update()
     {
         attackCoolTime += Time.deltaTime;
 
-        switch (currentstatement)
+        if (target != null)
+        {
+            agent.SetDestination(target.transform.position);
+        }
+
+        switch (CurrentStatement)
         {
             case Statement.Idle:
                 idleTime += Time.deltaTime;
-                if(idleTime > 4f)
+                if (toTargetDistance < attackDistance)
                 {
-                    currentstatement = Statement.Move;
-                    idleTime = 0f;
+                    CurrentStatement = Statement.Attack;
+                }
+                if (idleTime > 4f)
+                {
+                    CurrentStatement = Statement.Move;
                 }
                 break;
             case Statement.Attack:
@@ -62,12 +111,17 @@ public class Boss : MonoBehaviour, IDamageable
                 break;
             case Statement.Move:
                 OnMove();
-                if(targetDistance < 3f)
+                if(toTargetDistance < attackDistance)
                 {
-                    currentstatement = Statement.Attack;
+                    CurrentStatement = Statement.Attack;
                 }
                 break;
         }
+    }
+
+    private void FixedUpdate()
+    {
+        transform.rotation = Quaternion.LookRotation(target.transform.position);
     }
 
 
@@ -104,7 +158,6 @@ public class Boss : MonoBehaviour, IDamageable
 
     public void OnBigAttack()
     {
-        currentstatement = Statement.Attack;
         animator.SetTrigger(BigAttack);
     }
 
@@ -128,7 +181,7 @@ public class Boss : MonoBehaviour, IDamageable
 
     public void AttackAnimationEnd()
     {
-        currentstatement = Statement.Idle;
+        CurrentStatement = Statement.Idle;
         animator.SetBool(Move, false);
     }
 
