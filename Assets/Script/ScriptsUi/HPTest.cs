@@ -1,68 +1,68 @@
+// 테스트 전용
 using UnityEngine;
 
 public class HPTest : MonoBehaviour
 {
-    [SerializeField] private DualSliderBar playerHpBar;
-    [SerializeField] private DualSliderBar enemyHpBar;
-    [SerializeField] private StaminaBar staminaBar;
-    [SerializeField] private ConsumableSlotUI consumableSlot;
-    [SerializeField] private ConsumableSlotUI weaponSlot;
+   
+    [SerializeField] private PlayerHUDController playerHUD;
+    [SerializeField] private BossHUDController bossHUD;
 
-    [SerializeField] private ItemData ItemSlot;
-    [SerializeField] private ItemData WeaponSlot;
+    
+    [SerializeField] private CharacterState characterState;
+    [SerializeField] private Boss boss;
 
-    private float _playerHp = 100f;
-    private float _playerStamina = 100f;
-    private float _enemyHp = 1000f;
-    private float heal = 20f;   
-    private int _count;
+   
+    [SerializeField] private int playerDamageAmount = 20;
+    [SerializeField] private int bossDamageAmount = 100;
+    [SerializeField] private int healAmount = 30;
 
     private void Start()
     {
-        _count = ItemSlot.itemCount;
-        playerHpBar.SetValue(_playerHp, 100f);
-        enemyHpBar.SetValue(_enemyHp, 1000f);
-        consumableSlot.SetItem(ItemSlot, _count);
-        weaponSlot.SetItem(WeaponSlot, WeaponSlot.itemCount);
+         
+        if (characterState == null)
+            Debug.LogWarning("Character연결X");
+
+       
+        if (boss == null || boss.data == null)
+            Debug.LogWarning("Boss연결X");
     }
 
     private void Update()
     {
         // Q: 플레이어 피격
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) && characterState != null)
         {
-            _playerHp = Mathf.Max(0f, _playerHp - 20f);
-            playerHpBar.SetValue(_playerHp, 100f);
-        }
-        // W: 플레이어 회복
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            _playerHp = Mathf.Min(100f, _playerHp + heal);
-
-            playerHpBar.SetValue(_playerHp, 100f);
-        }
-        // E: 보스 피격
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            _enemyHp = Mathf.Max(0f, _enemyHp - 100f);
-            enemyHpBar.SetValue(_enemyHp, 1000f);
-        }
-
-        // F: 소모품 사용
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if (_count > 0)
+            DamageVO dmg = new DamageVO
             {
-                _playerHp = Mathf.Min(100f, _playerHp + 30f);
-                _count--;
-                playerHpBar.SetValue(_playerHp, 100f);
-                consumableSlot.SetCount(_count);
-            }
+                amount = playerDamageAmount,
+                damageType = DamageVO.DamageType.normal
+            };
+            characterState.GetDamage(dmg);
         }
-        // R: 스태미너 사용 (시간이 지나면 자동 회복)
-        if (Input.GetKeyDown(KeyCode.R))
+
+        // E: 플레이어 회복
+        if (Input.GetKeyDown(KeyCode.E) && characterState != null)
         {
-            staminaBar.Use(30f);
+            characterState.CurrentHealth += healAmount;
+            // Damaged 이벤트는 피격에만 발생하므로 직접 HUD 갱신
+            playerHUD?.OnHealForTest(characterState.CurrentHealth, characterState.maxHealth);
+        }
+
+        // W: 보스 피격
+        if (Input.GetKeyDown(KeyCode.W) && boss != null)
+        {
+            DamageVO dmg = new DamageVO
+            {
+                amount = bossDamageAmount,
+                damageType = DamageVO.DamageType.normal
+            };
+            boss.GetDamage(dmg);
+        }
+
+        // R: 스태미나 소모 테스트
+        if (Input.GetKeyDown(KeyCode.R) && characterState != null)
+        {
+            characterState.CurrentStamina -= 30f;
         }
     }
 }

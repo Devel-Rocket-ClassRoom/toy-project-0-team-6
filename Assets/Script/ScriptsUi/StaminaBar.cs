@@ -5,31 +5,10 @@ public class StaminaBar : MonoBehaviour
 {
     [SerializeField] private Slider staminaSlider;
 
-    [SerializeField] private float maxStamina = 100f;
-    [SerializeField] private float regenPerSecond = 10f;
-
-    private float _currentStamina;
-
-    private void Start()
+    // 외부에서 값 받아서 표시만
+    public void SetValue(float current, float max)
     {
-        _currentStamina = maxStamina;
-        Refresh();
+        if (max <= 0) return;
+        staminaSlider.value = current / max;
     }
-
-    private void Update()
-    {
-        if (_currentStamina < maxStamina)
-        {
-            _currentStamina = Mathf.Min(maxStamina, _currentStamina + regenPerSecond * Time.deltaTime);
-            Refresh();
-        }
-    }
-
-    public void Use(float amount)
-    {
-        _currentStamina = Mathf.Max(0f, _currentStamina - amount);
-        Refresh();
-    }
-
-    private void Refresh() => staminaSlider.value = _currentStamina / maxStamina;
 }
