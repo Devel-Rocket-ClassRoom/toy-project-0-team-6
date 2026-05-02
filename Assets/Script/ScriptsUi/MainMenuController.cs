@@ -11,7 +11,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject pausePanel;
     
-
+    [SerializeField] private AudioClip clickSound;
 
     private void Update()
     {
@@ -32,6 +32,7 @@ public class MainMenuController : MonoBehaviour
     }
     public void OnCloseSettings()
     {
+        AudioManager.Instance.PlaySE(clickSound);
         settingsPanel.SetActive(false);
         startMenuPanel.SetActive(true);
     }

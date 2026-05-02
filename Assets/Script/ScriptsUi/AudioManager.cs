@@ -1,0 +1,50 @@
+using UnityEngine;
+using UnityEngine.Audio;
+
+public class AudioManager : MonoBehaviour
+{
+    public static AudioManager Instance { get; private set; }
+
+    [SerializeField] private AudioMixer audioMixer;
+    [SerializeField] private AudioSource bgmSource;
+    [SerializeField] private AudioSource seSource;
+
+    private const string BGM_KEY = "BGMVolume";
+    private const string SE_KEY = "SEVolume";
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+    private void Start()
+    {
+        //세이브된 볼륨이 없을 때 기본값 설정
+        //세이브 데이터 구조 확정시 수정 필요
+        SetBGMVolume(0.1f);
+        SetSEVolume(0.5f);
+    }
+
+    
+    public void SetBGMVolume(float value)
+    {
+        float db = Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20f;
+        audioMixer.SetFloat(BGM_KEY, db);
+    }
+
+    public void SetSEVolume(float value)
+    {
+        float db = Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20f;
+        audioMixer.SetFloat(SE_KEY, db);
+    }
+
+    public void PlaySE(AudioClip clip)
+    {
+        seSource.PlayOneShot(clip);
+    }
+}
