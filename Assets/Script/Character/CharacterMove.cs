@@ -29,6 +29,7 @@ public class CharacterMove : MonoBehaviour
     {
         Horizontal = Input.GetAxis(horizontal);
         Vertical = Input.GetAxis(vertical);
+        transform.Rotate(0f, Input.GetAxis("Mouse X") * rotateSpeed, 0f, Space.World);
 
         anim.SetBool("IsMoving", Horizontal != 0 || Vertical != 0);
         anim.SetFloat("MoveX", Horizontal);
