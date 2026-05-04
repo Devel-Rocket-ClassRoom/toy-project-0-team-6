@@ -59,7 +59,7 @@ public class MainMenuController : MonoBehaviour
     public void OnCloseSettings()
     {
         AudioManager.Instance.PlaySE(clickSound);
-        SaveManager.Instance.Save();
+        //SaveManager.Instance.Save();
         settingsPanel.SetActive(false);
         startMenuPanel.SetActive(true);
 

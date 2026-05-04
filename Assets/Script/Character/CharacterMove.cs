@@ -24,9 +24,6 @@ public class CharacterMove : MonoBehaviour
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible= false;
     }
 
     private void Update()
