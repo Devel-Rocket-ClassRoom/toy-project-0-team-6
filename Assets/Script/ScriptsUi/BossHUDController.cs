@@ -4,11 +4,11 @@ using UnityEngine;
 public class BossHUDController : MonoBehaviour
 {
     [SerializeField] private DualSliderBar hpBar;
-    [SerializeField] private TMP_Text      bossNameText;
-    [SerializeField] private Boss          boss;
+    [SerializeField] private TMP_Text bossNameText;
+    [SerializeField] private Boss boss;
 
     private int startHp;
-    private int endHp;
+    
 
     private void Start()
     {
@@ -36,8 +36,8 @@ public class BossHUDController : MonoBehaviour
             boss.OnDamage -= OnBossDamaged;
     }
 
-    private void OnBossDamaged(int _)
+    private void OnBossDamaged(int dmg)
     {
-        hpBar.SetValue(boss.data.BossHp,startHp);
+        hpBar.SetValue(boss.CurrentHp, startHp);
     }
 }
