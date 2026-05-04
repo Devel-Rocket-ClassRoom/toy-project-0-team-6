@@ -2,15 +2,14 @@ using UnityEngine;
 
 public class CharacterMove : MonoBehaviour
 {
-    private CharacterState state;
-    private Camera camera;
+    public CharacterState state;
     private Animator anim;
     private Rigidbody rb;
     private CapsuleCollider collider;
 
     public float moveSpeed = 5;
     public float rotateSpeed = 3f;
-    private bool isAttacking;
+    public  bool isAttacking;
 
     public static readonly string horizontal = "Horizontal";
     public static readonly string vertical = "Vertical";
@@ -22,15 +21,11 @@ public class CharacterMove : MonoBehaviour
     void Start()
     {
         state = GetComponent<CharacterState>();
-        camera = GetComponentInChildren<Camera>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
 
         isAttacking = false;
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible= false;
     }
 
     private void Update()
