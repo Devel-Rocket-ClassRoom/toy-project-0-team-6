@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -19,6 +20,7 @@ public class Boss : MonoBehaviour, IDamageable
     private static readonly int BigAttack = Animator.StringToHash("BigAttack");
     private static readonly int Move = Animator.StringToHash("Move");
     private static readonly int Phase2 = Animator.StringToHash("Phase2");
+    private static readonly int Forward = Animator.StringToHash("Forward");
     private static readonly string PlayerTag = "Player";
 
     private Animator animator;
@@ -26,23 +28,33 @@ public class Boss : MonoBehaviour, IDamageable
     public BossData data;
     private NavMeshAgent agent;
     private GameObject target;
+    private Coroutine coroutine;
 
     private Statement currentstatement;
     private int normalAttackCount = 0;
     private float idleTime = 0f;
-    private float idleInterval = 4f;
+    public float idleInterval = 4f;
     public float attackDistance = 0f;
     private float toTargetDistance => Vector3.Distance(transform.position, target.transform.position);
     private float attackCoolTime = 0f;
-    private float attackInterval = 4f;
+    public float attackInterval = 4f;
+    private float forwardAttackCoolTime = 0f;   //전진공격
+    public float forwardAttackInterval = 10f;
+    private float windMillCoolTime = 0f;   //전진공격
+    public float windMillInterval = 10f;
     private bool phase2;
     private int maxHp;
     private int currentHp;
     private int damage;
     private bool isDeath;
     private bool invincible;
+    private bool isAttack;      
+    private bool canForward;    //전진공격 가능 여부
+    private bool canWindMill;
+    private float wait;
 
     public event Action<int> OnDamage;
+    public event Action OnClear;
 
     private Statement CurrentStatement
     {
@@ -81,6 +93,12 @@ public class Boss : MonoBehaviour, IDamageable
 
     private void Start()
     {
+        if(coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
+        }
+
         target = GameObject.FindGameObjectWithTag(PlayerTag);
         
         CurrentStatement = Statement.Idle;
@@ -90,17 +108,21 @@ public class Boss : MonoBehaviour, IDamageable
         damage = data.Attack;
         isDeath = false;
         invincible = false;
+        isAttack = false;
+        canWindMill = false;
+        wait = 0f;
     }
 
     private void Update()
     {
-
         if (target == null || isDeath)
         {
             return;
         }
 
-        if(!phase2 && currentHp <= maxHp / 2)
+        agent.SetDestination(target.transform.position);
+
+        if (!phase2 && currentHp <= maxHp / 2)
         {
             invincible = true;
             phase2 = true;
@@ -113,14 +135,27 @@ public class Boss : MonoBehaviour, IDamageable
         }
 
         attackCoolTime += Time.deltaTime;
-
-        agent.SetDestination(target.transform.position);
+        forwardAttackCoolTime += Time.deltaTime;
+        if (phase2)
+        {
+            windMillCoolTime += Time.deltaTime;
+        }
 
         switch (CurrentStatement)
         {
             case Statement.Idle:
                 idleTime += Time.deltaTime;
-                if (toTargetDistance < attackDistance)
+                if (toTargetDistance > attackDistance && toTargetDistance < 7f && forwardAttackCoolTime > forwardAttackInterval)
+                {
+                    canForward = true;
+                    CurrentStatement = Statement.Attack;
+                }
+                else if (phase2 && windMillCoolTime > windMillInterval)
+                {
+                    canWindMill = true;
+                    CurrentStatement = Statement.Attack;
+                }
+                else if (toTargetDistance < attackDistance)
                 {
                     CurrentStatement = Statement.Attack;
                 }
@@ -130,10 +165,9 @@ public class Boss : MonoBehaviour, IDamageable
                 }
                 break;
             case Statement.Attack:
-                if(attackCoolTime > attackInterval)
+                if(!isAttack && attackCoolTime > attackInterval)
                 {
                     OnAttack();
-                    attackCoolTime = 0f;
                 }
                 break;
             case Statement.Death:
@@ -141,7 +175,12 @@ public class Boss : MonoBehaviour, IDamageable
                 break;
             case Statement.Move:
                 OnMove();
-                if(toTargetDistance < attackDistance)
+                if (toTargetDistance > attackDistance && toTargetDistance < 7f && forwardAttackCoolTime > forwardAttackInterval)
+                {
+                    canForward = true;
+                    CurrentStatement = Statement.Attack;
+                }
+                else if (toTargetDistance < attackDistance)
                 {
                     CurrentStatement = Statement.Attack;
                 }
@@ -179,12 +218,30 @@ public class Boss : MonoBehaviour, IDamageable
     public void OnDeath()
     {
         isDeath = true;
-        currentstatement = Statement.Death;
+        agent.isStopped = true;
         animator.SetTrigger(Death);
+        OnClear?.Invoke();
     }
 
     public void OnAttack()
     {
+        isAttack = true;
+
+
+        if (canForward)
+        {
+            animator.SetTrigger(Forward);
+            forwardAttackCoolTime = 0f;
+            canForward = false;
+            return;
+        }
+
+        if (toTargetDistance > attackDistance)
+        {
+            CurrentStatement = Statement.Move;
+            return;
+        }
+
         if(normalAttackCount >= 2)
         {
             animator.SetTrigger(BigAttack);
@@ -209,7 +266,7 @@ public class Boss : MonoBehaviour, IDamageable
 
     public void ToggleAttackZone()
     {
-        if(attackZone.gameObject.activeSelf == false)
+        if(!attackZone.gameObject.activeSelf)
         {
             attackZone.gameObject.SetActive(true);
             DamageVO attackInfo = new() { amount = damage, damageType = DamageVO.DamageType.normal };
@@ -224,6 +281,9 @@ public class Boss : MonoBehaviour, IDamageable
     {
         CurrentStatement = Statement.Idle;
         animator.SetBool(Move, false);
+        attackCoolTime = 0f;
+        wait = 0f;
+        isAttack = false;
     }
 
     public void GetDamage(DamageVO damageData)
@@ -253,6 +313,12 @@ public class Boss : MonoBehaviour, IDamageable
             default:
                 break;
         }
+
+        if(currentHp < 0)
+        {
+            currentHp = 0;
+            currentstatement = Statement.Death;
+        }
     }
 
     public void Phase2MotionEnd()
@@ -263,5 +329,32 @@ public class Boss : MonoBehaviour, IDamageable
     public void ToggleInvincible()
     {
         invincible = !invincible;
+    }
+
+    public void WindMillEnd()
+    {
+        windMillCoolTime = 0f;
+    }
+
+    public void Waiting()
+    {
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
+        }
+
+        coroutine = StartCoroutine(CoWaiting());
+    }
+
+    public IEnumerator CoWaiting()
+    {
+        animator.speed = 0.1f;
+        while(wait < 1f)
+        {
+            wait += Time.deltaTime;
+            yield return null;
+        }
+        animator.speed = 1f;
     }
 }
