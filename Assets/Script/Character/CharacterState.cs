@@ -20,7 +20,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     }
 
     private CharacterMove characterMove;
-    public BossAttackZone AttackZone;
+    public CharacterAttackZone AttackZone;
     private GameObject boss;
     public int maxHealth = 100;
     private int currentHealth;

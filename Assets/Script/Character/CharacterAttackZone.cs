@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BossAttackZone : MonoBehaviour
+public class CharacterAttackZone : MonoBehaviour
 {
     public CharacterState characterState;
     private BoxCollider characterAttackZone;
