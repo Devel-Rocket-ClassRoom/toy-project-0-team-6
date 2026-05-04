@@ -57,6 +57,7 @@ public class MainMenuController : MonoBehaviour
         gameOverPanel.SetActive(false);
         gamePanel.SetActive(true);
         settingsController.StartCount();
+        Time.timeScale = 1f;
     }
 
     public void OnMainMenu()
