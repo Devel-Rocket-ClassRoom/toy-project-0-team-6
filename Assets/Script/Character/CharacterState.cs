@@ -147,8 +147,6 @@ public class CharacterState : MonoBehaviour, IDamageable
             currentState == StateType.Die)
             return;
 
-        currentState = StateType.Attack;
-
         DamageVO damage = new DamageVO();
         damage.amount = Power;
         damage.damageType = DamageVO.DamageType.soft;
@@ -158,8 +156,27 @@ public class CharacterState : MonoBehaviour, IDamageable
         CurrentStamina -= stmUseSpeed[(int)StaminaUseType.NormalAttack];
     }
 
+    public void Dodging()
+    {
+        if (currentState == StateType.Attack ||
+            currentState == StateType.Damaged ||
+            currentState == StateType.Die)
+            return;
+
+        CurrentStamina -= stmUseSpeed[(int)StaminaUseType.Dodge];
+    }
+
+    public bool IsInvincible()
+    {
+        return currentState == StateType.Dodge ||
+               currentState == StateType.Die;
+    }
+
     public void GetDamage(DamageVO damageData)
     {
+        if (IsInvincible())
+            return;
+
         switch (damageData.damageType)
         {
             case DamageVO.DamageType.noDamage:

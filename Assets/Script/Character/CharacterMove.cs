@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using static CharacterState;
 
 public class CharacterMove : MonoBehaviour
@@ -9,11 +9,15 @@ public class CharacterMove : MonoBehaviour
     private CapsuleCollider collider;
 
     public float moveSpeed = 5;
+    public float dodgeSpeed = 8f;
     public float rotateSpeed = 3f;
+
+    private Vector3 dodgeDirection; //닷지 시 방향 저장
 
     public static readonly string horizontal = "Horizontal";
     public static readonly string vertical = "Vertical";
     public static readonly int Attack = Animator.StringToHash("Attack");
+    public static readonly int Dodge = Animator.StringToHash("Dodge");
 
     public float Horizontal { get; private set; }
     public float Vertical { get; private set; }
@@ -73,21 +77,34 @@ public class CharacterMove : MonoBehaviour
                 Cursor.visible = false;
             }
         }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnDodge();
+        }
     }
 
     private void FixedUpdate()
     {
         if (state.currentState == CharacterState.StateType.Attack ||
-            state.currentState == CharacterState.StateType.Dodge ||
             state.currentState == CharacterState.StateType.Damaged)
         {
             rb.linearVelocity = Vector3.zero;
             return;
         }
+        else if(state.currentState == CharacterState.StateType.Dodge)
+        {
+            rb.linearVelocity = dodgeDirection * dodgeSpeed;
+            transform.rotation = Quaternion.LookRotation(dodgeDirection);
+        }
+        else
+        {
+            Vector3 direction = transform.right * Horizontal + transform.forward * Vertical;
+            direction = Vector3.ClampMagnitude(direction, 1f);
+            rb.linearVelocity = direction * moveSpeed;
 
-        Vector3 direction = transform.right * Horizontal + transform.forward * Vertical;
-        direction = Vector3.ClampMagnitude(direction, 1f);
-        rb.linearVelocity = direction * moveSpeed;
+        }
+
+        
     }
 
     private void OnAttack()
@@ -101,6 +118,26 @@ public class CharacterMove : MonoBehaviour
         anim.SetTrigger(Attack);
         state.Attacking();
     }
+
+    private void OnDodge()
+    {
+        if (state.currentState != StateType.Idle &&
+            state.currentState != StateType.Move)
+            return;
+
+        state.currentState = CharacterState.StateType.Dodge;
+
+        dodgeDirection = transform.right * Horizontal + transform.forward * Vertical;
+
+        if (dodgeDirection == Vector3.zero)
+            dodgeDirection = transform.forward;
+
+        dodgeDirection.Normalize();
+
+        anim.SetTrigger(Dodge);
+        state.Dodging();
+    }
+
     public void EndAttack()
     {
         state.currentState = CharacterState.StateType.Idle;
