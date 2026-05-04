@@ -204,14 +204,11 @@ public class Boss : MonoBehaviour, IDamageable
         transform.LookAt(target.transform.position);
     }
 
-
-    //디버그용
     public void OnMiddleHit()
     {
         animator.SetTrigger(MiddleHit);
     }
 
-    //디버그용
     public void OnBigHit()
     {
         animator.SetTrigger(BigHit);
