@@ -1,16 +1,14 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class InputManager : MonoBehaviour
+public static class InputManager
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public static void RemapButtonClicked(InputAction actionToRebind)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        var rebindOperation = actionToRebind.PerformInteractiveRebinding()
+        // To avoid accidental input from mouse motion
+        .WithControlsExcluding("Mouse")
+        .OnMatchWaitForAnother(0.1f)
+        .Start();
     }
 }
