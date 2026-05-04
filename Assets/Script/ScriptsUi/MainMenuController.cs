@@ -37,12 +37,18 @@ public class MainMenuController : MonoBehaviour
         gamePanel.SetActive(true);
         settingsController.StartCount();
         Time.timeScale = 1f;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public void OnOpenSettings()
     {
         startMenuPanel.SetActive(false);
         settingsPanel.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void OnCloseSettings()
@@ -50,6 +56,9 @@ public class MainMenuController : MonoBehaviour
         AudioManager.Instance.PlaySE(clickSound);
         settingsPanel.SetActive(false);
         startMenuPanel.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void OnGameRestart()
@@ -58,6 +67,9 @@ public class MainMenuController : MonoBehaviour
         gamePanel.SetActive(true);
         settingsController.StartCount();
         Time.timeScale = 1f;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public void OnMainMenu()
@@ -67,6 +79,9 @@ public class MainMenuController : MonoBehaviour
         startMenuPanel.SetActive(true);
         Time.timeScale = 1f;
         settingsController.StopCount();
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void OnPause()
@@ -75,6 +90,9 @@ public class MainMenuController : MonoBehaviour
         pausePanel.SetActive(!isPaused);
         gamePanel.SetActive(isPaused);
         Time.timeScale = isPaused ? 1f : 0f;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void OnResume()
@@ -82,6 +100,9 @@ public class MainMenuController : MonoBehaviour
         pausePanel.SetActive(false);
         gamePanel.SetActive(true);
         Time.timeScale = 1f;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     public void OnGameOver()
     {
@@ -90,6 +111,10 @@ public class MainMenuController : MonoBehaviour
         Time.timeScale = 1f;
         settingsController.StopCount();
         //캐릭터 hp 0되면 호출 예정
+
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void OnQuit()
