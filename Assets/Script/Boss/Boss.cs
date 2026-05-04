@@ -21,6 +21,7 @@ public class Boss : MonoBehaviour, IDamageable
     private static readonly int Move = Animator.StringToHash("Move");
     private static readonly int Phase2 = Animator.StringToHash("Phase2");
     private static readonly int Forward = Animator.StringToHash("Forward");
+    private static readonly int WindMill = Animator.StringToHash("WindMill");
     private static readonly string PlayerTag = "Player";
 
     private Animator animator;
@@ -64,6 +65,7 @@ public class Boss : MonoBehaviour, IDamageable
             switch (value)
             {
                 case Statement.Idle:
+                    idleTime = 0f;
                     currentstatement = value;
                     agent.isStopped = true;
                     break;
@@ -76,7 +78,6 @@ public class Boss : MonoBehaviour, IDamageable
                     currentstatement = value;
                     break;
                 case Statement.Move:
-                    idleTime = 0f;
                     agent.isStopped = false;
                     currentstatement = value;
                     break;
@@ -115,7 +116,7 @@ public class Boss : MonoBehaviour, IDamageable
 
     private void Update()
     {
-        if (target == null || isDeath)
+        if (target == null || isDeath || isAttack)
         {
             return;
         }
@@ -132,6 +133,7 @@ public class Boss : MonoBehaviour, IDamageable
             agent.speed = Mathf.Ceil(agent.speed * 1.1f);
             agent.isStopped = true;
             animator.SetTrigger(Phase2);
+            return;
         }
 
         attackCoolTime += Time.deltaTime;
@@ -159,7 +161,7 @@ public class Boss : MonoBehaviour, IDamageable
                 {
                     CurrentStatement = Statement.Attack;
                 }
-                if (idleTime > idleInterval)
+                else if (idleTime > idleInterval)
                 {
                     CurrentStatement = Statement.Move;
                 }
@@ -178,6 +180,11 @@ public class Boss : MonoBehaviour, IDamageable
                 if (toTargetDistance > attackDistance && toTargetDistance < 7f && forwardAttackCoolTime > forwardAttackInterval)
                 {
                     canForward = true;
+                    CurrentStatement = Statement.Attack;
+                }
+                else if (phase2 && windMillCoolTime > windMillInterval)
+                {
+                    canWindMill = true;
                     CurrentStatement = Statement.Attack;
                 }
                 else if (toTargetDistance < attackDistance)
@@ -227,18 +234,22 @@ public class Boss : MonoBehaviour, IDamageable
     {
         isAttack = true;
 
-
         if (canForward)
         {
             animator.SetTrigger(Forward);
-            forwardAttackCoolTime = 0f;
-            canForward = false;
+            return;
+        }
+        else if (canWindMill)
+        {
+            agent.isStopped = false;
+            animator.SetTrigger(WindMill);
             return;
         }
 
         if (toTargetDistance > attackDistance)
         {
             CurrentStatement = Statement.Move;
+            isAttack = false;
             return;
         }
 
@@ -282,8 +293,8 @@ public class Boss : MonoBehaviour, IDamageable
         CurrentStatement = Statement.Idle;
         animator.SetBool(Move, false);
         attackCoolTime = 0f;
-        wait = 0f;
         isAttack = false;
+        Debug.Log(1);
     }
 
     public void GetDamage(DamageVO damageData)
@@ -331,9 +342,19 @@ public class Boss : MonoBehaviour, IDamageable
         invincible = !invincible;
     }
 
+    public void ForwardEnd()
+    {
+        forwardAttackCoolTime = 0f;
+        canForward = false;
+        Debug.Log(1);
+        AttackAnimationEnd();
+    }
+
     public void WindMillEnd()
     {
         windMillCoolTime = 0f;
+        canWindMill = false;
+        AttackAnimationEnd();
     }
 
     public void Waiting()
@@ -356,5 +377,7 @@ public class Boss : MonoBehaviour, IDamageable
             yield return null;
         }
         animator.speed = 1f;
+        wait = 0f;
+        coroutine = null;
     }
 }
