@@ -3,14 +3,23 @@ using UnityEngine;
 
 public class CharacterState : MonoBehaviour, IDamageable
 { 
-
+    public enum StateType
+    {
+        Idle,
+        Move,
+        Attack,
+        Dodge,
+        Damaged,
+        Die
+    }
     public enum StaminaUseType
     {
-        NormalAttack = 0,
-        RestoreStamina,
-        Avoid,
+        NormalAttack = 0,       //공격 
+        RestoreStamina,         //초당 회복
+        Dodge,                  //회피
     }
 
+    private CharacterMove characterMove;
     public int maxHealth = 100;
     private int currentHealth;
 
@@ -23,9 +32,11 @@ public class CharacterState : MonoBehaviour, IDamageable
 
     public float maxStamina;          //최대 스테미나
     private float currentStamina;     //현재 스테미나
-    public float[] stmUseSpeed = new float[] { 2, 0.5f, 4 };   //스테미나 소모 속도[공격(1회)/달리기(초당)/회피(1회)] /임시 값
+    public float[] stmUseSpeed = new float[] { 20, 0.5f, 4 };   //스테미나 소모 속도[공격(1회)/달리기(초당)/회피(1회)] /임시 값
     private float restoreStmTime = 3f;  //스테미나 회복 대기시간
     private float restoreStmTimer = 0f; //대기 타이머
+
+    public StateType currentState = StateType.Idle;
 
     public bool IsDead => currentHealth <= 0;     //사망 여부
     public bool IsDrained => currentStamina <= 0;      //스테미나 다떨어진 상태
@@ -90,6 +101,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     {
         CurrentHealth = maxHealth;
         CurrentStamina = maxStamina;
+        characterMove = GetComponent<CharacterMove>();
         anim = GetComponent<Animator>();
     }
 
@@ -110,13 +122,20 @@ public class CharacterState : MonoBehaviour, IDamageable
 
     public void Dead()
     {
-        //if (IsDead)
-        //    return;
+        currentState = StateType.Die;
+
         anim.SetTrigger(Die);
     }
 
     public void Attacking()
     {
+        if (currentState == StateType.Dodge ||
+        currentState == StateType.Damaged ||
+        currentState == StateType.Die)
+            return;
+
+        currentState = StateType.Attack;
+
         currentStamina -= stmUseSpeed[(int)StaminaUseType.NormalAttack];
     }
 
@@ -129,17 +148,22 @@ public class CharacterState : MonoBehaviour, IDamageable
                 break;
             case DamageVO.DamageType.normal:
                 anim.SetTrigger(Normal);
+                currentState = StateType.Damaged;
                 break;
             case DamageVO.DamageType.hard:
                 anim.SetTrigger(Hard);
+                currentState = StateType.Damaged;
                 break;
             case DamageVO.DamageType.veryHard:
                 anim.SetTrigger(VeryHard);
+                currentState = StateType.Damaged;
                 break;
             case DamageVO.DamageType.instantKill:
                 Dead();
                 break;
         }
+
+
         CurrentHealth -= damageData.amount;
 
         Damaged?.Invoke(damageData.amount);

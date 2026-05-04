@@ -1,4 +1,5 @@
 using UnityEngine;
+using static CharacterState;
 
 public class CharacterMove : MonoBehaviour
 {
@@ -9,7 +10,6 @@ public class CharacterMove : MonoBehaviour
 
     public float moveSpeed = 5;
     public float rotateSpeed = 3f;
-    public  bool isAttacking;
 
     public static readonly string horizontal = "Horizontal";
     public static readonly string vertical = "Vertical";
@@ -25,18 +25,35 @@ public class CharacterMove : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
 
-        isAttacking = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible= false;
     }
 
     private void Update()
     {
         Horizontal = Input.GetAxis(horizontal);
         Vertical = Input.GetAxis(vertical);
-        transform.Rotate(0f, Input.GetAxis("Mouse X") * rotateSpeed, 0f, Space.World);
+        transform.Rotate(0f, Input.GetAxis("Mouse X") * rotateSpeed * Time.timeScale, 0f, Space.World);
 
-        anim.SetBool("IsMoving", Horizontal != 0 || Vertical != 0);
-        anim.SetFloat("MoveX", Horizontal);
-        anim.SetFloat("MoveZ", Vertical);
+        if (state.currentState != StateType.Attack &&
+            state.currentState != StateType.Dodge &&
+            state.currentState != StateType.Damaged)
+        {
+            bool isMoving = Horizontal != 0 || Vertical != 0;
+
+            state.currentState = isMoving ? StateType.Move : StateType.Idle;
+        }
+
+        if (state.currentState == StateType.Move)
+        {
+            anim.SetBool("IsMoving", true);
+            anim.SetFloat("MoveX", Horizontal);
+            anim.SetFloat("MoveZ", Vertical);
+        }
+        else
+        {
+            anim.SetBool("IsMoving", false);
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -56,30 +73,37 @@ public class CharacterMove : MonoBehaviour
                 Cursor.visible = false;
             }
         }
-
+        Debug.Log(state.currentState);
     }
 
     private void FixedUpdate()
     {
-        if (!isAttacking)
+        if (state.currentState == CharacterState.StateType.Attack ||
+            state.currentState == CharacterState.StateType.Dodge ||
+            state.currentState == CharacterState.StateType.Damaged)
         {
-            Vector3 direction = transform.right * Horizontal + transform.forward * Vertical;
-            direction = Vector3.ClampMagnitude(direction, 1f);
-            rb.linearVelocity = direction * moveSpeed;
+            rb.linearVelocity = Vector3.zero;
+            return;
         }
+
+        Vector3 direction = transform.right * Horizontal + transform.forward * Vertical;
+        direction = Vector3.ClampMagnitude(direction, 1f);
+        rb.linearVelocity = direction * moveSpeed;
     }
 
     private void OnAttack()
     {
-        if (isAttacking)
+        if (state.currentState != StateType.Idle &&
+            state.currentState != StateType.Move)
             return;
 
-        isAttacking = true;
+        state.currentState = CharacterState.StateType.Attack;
+
         anim.SetTrigger(Attack);
         state.Attacking();
     }
     public void EndAttack()
     {
-        isAttacking = false;
+        state.currentState = CharacterState.StateType.Idle;
     }
 }
