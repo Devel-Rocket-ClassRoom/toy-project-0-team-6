@@ -8,6 +8,9 @@ public class SettingsController : MonoBehaviour
     [SerializeField] private Toggle frame60;
     [SerializeField] private Toggle frame120;
     [SerializeField] private Toggle frameunlim;
+    [SerializeField] private Slider mouseSensivitySlider;
+    [SerializeField] private CharacterMove characterMove;
+
 
     [SerializeField] private TextMeshProUGUI playTimeTextSettings;
     [SerializeField] private TextMeshProUGUI playTimeTextPause;
@@ -15,6 +18,10 @@ public class SettingsController : MonoBehaviour
     private float totalPlayTime;
     private bool isPlaying;
 
+    private void Start()
+    {
+        mouseSensivitySlider.value = characterMove.rotateSpeed;
+    }
     private void Update()
     {
         if(!isPlaying) return;
@@ -22,6 +29,7 @@ public class SettingsController : MonoBehaviour
         UpdateTimeText();
 
     }
+    
     public void StartCount()
     {
         isPlaying = true;
@@ -45,6 +53,10 @@ public class SettingsController : MonoBehaviour
         int minutes = Mathf.FloorToInt((time % 3600) / 60);
         int seconds = Mathf.FloorToInt(time % 60);
         return $"{hours:00}:{minutes:00}:{seconds:00}";
+    }
+    public void SetMouseSensivity(float value)
+    {
+        characterMove.rotateSpeed = value;
     }
 
     public void SetFrameRate30()

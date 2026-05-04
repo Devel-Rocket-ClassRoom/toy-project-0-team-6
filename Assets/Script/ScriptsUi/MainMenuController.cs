@@ -20,6 +20,8 @@ public class MainMenuController : MonoBehaviour
         gamePanel.SetActive(false);
         gameOverPanel.SetActive(false);
         pausePanel.SetActive(false);
+        Time.timeScale = 0f; // 게임 시작 시 일시정지 상태로 시작
+        //메인메뉴상에서 보스가 움직여서 캐릭터를 공격하는 현상이 발생하여 일시정지 상태로 시작하도록 변경
     }
 
     private void Update()
@@ -34,6 +36,7 @@ public class MainMenuController : MonoBehaviour
         gameOverPanel.SetActive(false);
         gamePanel.SetActive(true);
         settingsController.StartCount();
+        Time.timeScale = 1f;
     }
 
     public void OnOpenSettings()
