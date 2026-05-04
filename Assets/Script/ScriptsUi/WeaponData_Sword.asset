@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1d500a1319cb29489455d52218cd0af, type: 3}
   m_Name: WeaponData_Sword
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
-  itemName: 
-  icon: {fileID: 0}
-  attackPower: 0
+  itemName: Sword
+  icon: {fileID: 21300000, guid: 09e1583f3b8e6ed48a4c1d568573a721, type: 3}
+  attackPower: 150

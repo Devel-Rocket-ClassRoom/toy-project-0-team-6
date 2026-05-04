@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: HpHeal
   icon: {fileID: 21300000, guid: 17773768e4b042f47846f5e300e1a311, type: 3}
-  itemCount: 3
+  itemCount: 5
