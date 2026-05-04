@@ -9,6 +9,7 @@ public class CharacterMove : MonoBehaviour
     private CapsuleCollider collider;
 
     public float moveSpeed = 5;
+    public float rotateSpeed = 3f;
 
     public static readonly string horizontal = "Horizontal";
     public static readonly string vertical = "Vertical";
