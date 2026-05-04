@@ -865,7 +865,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 462548, guid: ec06d59a25025df4faf8326294504ede, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 462548, guid: ec06d59a25025df4faf8326294504ede, type: 3}
       propertyPath: m_LocalPosition.y
@@ -873,7 +873,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 462548, guid: ec06d59a25025df4faf8326294504ede, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.6
+      value: -3.78
       objectReference: {fileID: 0}
     - target: {fileID: 462548, guid: ec06d59a25025df4faf8326294504ede, type: 3}
       propertyPath: m_LocalRotation.w
@@ -939,6 +939,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0.4982953
       objectReference: {fileID: 0}
+    - target: {fileID: 9510420, guid: ec06d59a25025df4faf8326294504ede, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 32c98cb0913ab58418a87c017818286e, type: 2}
     - target: {fileID: 9510420, guid: ec06d59a25025df4faf8326294504ede, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 1
@@ -1261,9 +1265,9 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 122
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!1 &699716919
 GameObject:
