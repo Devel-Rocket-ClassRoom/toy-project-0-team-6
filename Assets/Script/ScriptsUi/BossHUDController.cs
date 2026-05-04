@@ -38,7 +38,6 @@ public class BossHUDController : MonoBehaviour
 
     private void OnBossDamaged(int _)
     {
-        Debug.Log(_);
         hpBar.SetValue(boss.data.BossHp,startHp);
     }
 }
