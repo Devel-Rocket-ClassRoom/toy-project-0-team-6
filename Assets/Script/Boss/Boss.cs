@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -27,6 +28,7 @@ public class Boss : MonoBehaviour, IDamageable
     public BossData data;
     private NavMeshAgent agent;
     private GameObject target;
+    private Coroutine coroutine;
 
     private Statement currentstatement;
     private int normalAttackCount = 0;
@@ -91,6 +93,12 @@ public class Boss : MonoBehaviour, IDamageable
 
     private void Start()
     {
+        if(coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
+        }
+
         target = GameObject.FindGameObjectWithTag(PlayerTag);
         
         CurrentStatement = Statement.Idle;
@@ -177,16 +185,6 @@ public class Boss : MonoBehaviour, IDamageable
                     CurrentStatement = Statement.Attack;
                 }
                 break;
-        }
-
-        if(currentstatement == Statement.Attack && normalAttackCount >= 2)
-        {
-            animator.speed = 0f;
-            wait += Time.deltaTime;
-            if(wait > 1f)
-            {
-                animator.speed = 1f;
-            }
         }
     }
 
@@ -336,5 +334,27 @@ public class Boss : MonoBehaviour, IDamageable
     public void WindMillEnd()
     {
         windMillCoolTime = 0f;
+    }
+
+    public void Waiting()
+    {
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
+        }
+
+        coroutine = StartCoroutine(CoWaiting());
+    }
+
+    public IEnumerator CoWaiting()
+    {
+        animator.speed = 0.1f;
+        while(wait < 1f)
+        {
+            wait += Time.deltaTime;
+            yield return null;
+        }
+        animator.speed = 1f;
     }
 }
