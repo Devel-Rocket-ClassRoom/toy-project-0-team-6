@@ -18,6 +18,7 @@ public class Boss : MonoBehaviour, IDamageable
     private static readonly int Attack = Animator.StringToHash("Attack");
     private static readonly int BigAttack = Animator.StringToHash("BigAttack");
     private static readonly int Move = Animator.StringToHash("Move");
+    private static readonly int Phase2 = Animator.StringToHash("Phase2");
     private static readonly string PlayerTag = "Player";
 
     private Animator animator;
@@ -29,11 +30,19 @@ public class Boss : MonoBehaviour, IDamageable
     private Statement currentstatement;
     private int normalAttackCount = 0;
     private float idleTime = 0f;
+    private float idleInterval = 4f;
     public float attackDistance = 0f;
     private float toTargetDistance => Vector3.Distance(transform.position, target.transform.position);
     private float attackCoolTime = 0f;
+    private float attackInterval = 4f;
+    private bool phase2;
+    private int maxHp;
+    private int currentHp;
+    private int damage;
+    private bool isDeath;
+    private bool invincible;
 
-    public Action<int> OnDamage;
+    public event Action<int> OnDamage;
 
     private Statement CurrentStatement
     {
@@ -75,16 +84,37 @@ public class Boss : MonoBehaviour, IDamageable
         target = GameObject.FindGameObjectWithTag(PlayerTag);
         
         CurrentStatement = Statement.Idle;
+        phase2 = false;
+        maxHp = data.BossHp;
+        currentHp = maxHp;
+        damage = data.Attack;
+        isDeath = false;
+        invincible = false;
     }
 
     private void Update()
     {
+
+        if (target == null || isDeath)
+        {
+            return;
+        }
+
+        if(!phase2 && currentHp <= maxHp / 2)
+        {
+            invincible = true;
+            phase2 = true;
+            damage = Mathf.CeilToInt(data.Attack * 1.3f);
+            attackInterval = Mathf.Floor(attackInterval * 0.9f);
+            idleInterval = Mathf.Floor(idleInterval * 0.9f);
+            agent.speed = Mathf.Ceil(agent.speed * 1.1f);
+            agent.isStopped = true;
+            animator.SetTrigger(Phase2);
+        }
+
         attackCoolTime += Time.deltaTime;
 
-        if (target != null)
-        {
-            agent.SetDestination(target.transform.position);
-        }
+        agent.SetDestination(target.transform.position);
 
         switch (CurrentStatement)
         {
@@ -94,13 +124,13 @@ public class Boss : MonoBehaviour, IDamageable
                 {
                     CurrentStatement = Statement.Attack;
                 }
-                if (idleTime > 4f)
+                if (idleTime > idleInterval)
                 {
                     CurrentStatement = Statement.Move;
                 }
                 break;
             case Statement.Attack:
-                if(attackCoolTime > 4f)
+                if(attackCoolTime > attackInterval)
                 {
                     OnAttack();
                     attackCoolTime = 0f;
@@ -121,7 +151,12 @@ public class Boss : MonoBehaviour, IDamageable
 
     private void FixedUpdate()
     {
-        transform.rotation = Quaternion.LookRotation(target.transform.position);
+        if(target == null)
+        {
+            return;
+        }
+
+        transform.LookAt(target.transform.position);
     }
 
 
@@ -136,8 +171,14 @@ public class Boss : MonoBehaviour, IDamageable
         animator.SetTrigger(BigHit);
     }
 
+    public void OnPhase2()
+    {
+        currentHp -= currentHp / 2;
+    }
+
     public void OnDeath()
     {
+        isDeath = true;
         currentstatement = Statement.Death;
         animator.SetTrigger(Death);
     }
@@ -171,7 +212,7 @@ public class Boss : MonoBehaviour, IDamageable
         if(attackZone.gameObject.activeSelf == false)
         {
             attackZone.gameObject.SetActive(true);
-            DamageVO attackInfo = new() { amount = 100, damageType = DamageVO.DamageType.normal };
+            DamageVO attackInfo = new() { amount = damage, damageType = DamageVO.DamageType.normal };
             attackZone.SetDamage(attackInfo);
             attackZone.attackable = true;
             return;
@@ -187,7 +228,12 @@ public class Boss : MonoBehaviour, IDamageable
 
     public void GetDamage(DamageVO damageData)
     {
-        data.BossHp -= damageData.amount;
+        if (invincible)
+        {
+            return;
+        }
+
+        currentHp -= damageData.amount;
         OnDamage?.Invoke(damageData.amount);
 
         switch (damageData.damageType)
@@ -207,5 +253,15 @@ public class Boss : MonoBehaviour, IDamageable
             default:
                 break;
         }
+    }
+
+    public void Phase2MotionEnd()
+    {
+        agent.isStopped = currentstatement == Statement.Move ? false : true;
+    }
+
+    public void ToggleInvincible()
+    {
+        invincible = !invincible;
     }
 }
