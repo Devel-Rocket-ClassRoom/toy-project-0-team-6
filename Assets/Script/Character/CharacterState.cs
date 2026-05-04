@@ -20,11 +20,17 @@ public class CharacterState : MonoBehaviour, IDamageable
     }
 
     private CharacterMove characterMove;
+    public CharacterAttackZone AttackZone;
+    private GameObject boss;
     public int maxHealth = 100;
     private int currentHealth;
 
     private int consumablesCount;   //현재 소모품 갯수
     private int currentConsumable;  //현재 소모품 타입(임시 int)
+
+    public int StartPower = 5;
+    public int StartHealthStat = 5;
+    public int StartDexterity = 5;
 
     private int power;          //힘
     private int healthStat;     //체력스텟
@@ -50,6 +56,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     private readonly int Hard = Animator.StringToHash("Hard");
     private readonly int VeryHard = Animator.StringToHash("VeryHard");
     private readonly int Die = Animator.StringToHash("Die");
+    private readonly string BossTag = "Boss";
 
     public int CurrentHealth
     {
@@ -101,7 +108,13 @@ public class CharacterState : MonoBehaviour, IDamageable
     {
         CurrentHealth = maxHealth;
         CurrentStamina = maxStamina;
+
+        power = StartPower;
+        healthStat = StartHealthStat;
+        dexterity = StartDexterity;
+
         characterMove = GetComponent<CharacterMove>();
+        boss = GameObject.FindGameObjectWithTag(BossTag);
         anim = GetComponent<Animator>();
     }
 
@@ -130,13 +143,19 @@ public class CharacterState : MonoBehaviour, IDamageable
     public void Attacking()
     {
         if (currentState == StateType.Dodge ||
-        currentState == StateType.Damaged ||
-        currentState == StateType.Die)
+            currentState == StateType.Damaged ||
+            currentState == StateType.Die)
             return;
 
         currentState = StateType.Attack;
 
-        currentStamina -= stmUseSpeed[(int)StaminaUseType.NormalAttack];
+        DamageVO damage = new DamageVO();
+        damage.amount = Power;
+        damage.damageType = DamageVO.DamageType.soft;
+
+        AttackZone.SetDamage(damage);
+
+        CurrentStamina -= stmUseSpeed[(int)StaminaUseType.NormalAttack];
     }
 
     public void GetDamage(DamageVO damageData)
@@ -167,5 +186,15 @@ public class CharacterState : MonoBehaviour, IDamageable
         CurrentHealth -= damageData.amount;
 
         Damaged?.Invoke(damageData.amount);
+    }
+
+    public void EnableAttack()
+    {
+        AttackZone.Attackable = true;
+    }
+
+    public void DisableAttack()
+    {
+        AttackZone.Attackable = false;
     }
 }
