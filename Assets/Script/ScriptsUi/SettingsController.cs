@@ -21,6 +21,8 @@ public class SettingsController : MonoBehaviour
     private void Start()
     {
         mouseSensivitySlider.value = characterMove.rotateSpeed;
+        
+       
     }
     private void Update()
     {
