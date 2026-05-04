@@ -125,7 +125,6 @@ public class Boss : MonoBehaviour, IDamageable
 
         if (!phase2 && CurrentHp <= maxHp / 2)
         {
-            invincible = true;
             phase2 = true;
             damage = Mathf.CeilToInt(data.Attack * 1.3f);
             attackInterval = Mathf.Floor(attackInterval * 0.9f);
