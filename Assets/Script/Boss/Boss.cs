@@ -45,7 +45,7 @@ public class Boss : MonoBehaviour, IDamageable
     public float windMillInterval = 10f;
     private bool phase2;
     private int maxHp;
-    private int currentHp;
+    public int CurrentHp { get; private set; }
     private int damage;
     private bool isDeath;
     private bool invincible;
@@ -105,7 +105,7 @@ public class Boss : MonoBehaviour, IDamageable
         CurrentStatement = Statement.Idle;
         phase2 = false;
         maxHp = data.BossHp;
-        currentHp = maxHp;
+        CurrentHp = maxHp;
         damage = data.Attack;
         isDeath = false;
         invincible = false;
@@ -123,7 +123,7 @@ public class Boss : MonoBehaviour, IDamageable
 
         agent.SetDestination(target.transform.position);
 
-        if (!phase2 && currentHp <= maxHp / 2)
+        if (!phase2 && CurrentHp <= maxHp / 2)
         {
             invincible = true;
             phase2 = true;
@@ -197,7 +197,7 @@ public class Boss : MonoBehaviour, IDamageable
 
     private void FixedUpdate()
     {
-        if(target == null)
+        if(target == null || isDeath)
         {
             return;
         }
@@ -206,20 +206,22 @@ public class Boss : MonoBehaviour, IDamageable
     }
 
 
-
+    //디버그용
     public void OnMiddleHit()
     {
         animator.SetTrigger(MiddleHit);
     }
 
+    //디버그용
     public void OnBigHit()
     {
         animator.SetTrigger(BigHit);
     }
 
+    //디버그용
     public void OnPhase2()
     {
-        currentHp -= currentHp / 2;
+        CurrentHp -= CurrentHp / 2;
     }
 
     public void OnDeath()
@@ -242,6 +244,7 @@ public class Boss : MonoBehaviour, IDamageable
         else if (canWindMill)
         {
             agent.isStopped = false;
+            agent.speed *= 1.5f;
             animator.SetTrigger(WindMill);
             return;
         }
@@ -294,7 +297,6 @@ public class Boss : MonoBehaviour, IDamageable
         animator.SetBool(Move, false);
         attackCoolTime = 0f;
         isAttack = false;
-        Debug.Log(1);
     }
 
     public void GetDamage(DamageVO damageData)
@@ -304,7 +306,7 @@ public class Boss : MonoBehaviour, IDamageable
             return;
         }
 
-        currentHp -= damageData.amount;
+        CurrentHp -= damageData.amount;
         OnDamage?.Invoke(damageData.amount);
 
         switch (damageData.damageType)
@@ -325,9 +327,9 @@ public class Boss : MonoBehaviour, IDamageable
                 break;
         }
 
-        if(currentHp < 0)
+        if(CurrentHp < 0)
         {
-            currentHp = 0;
+            CurrentHp = 0;
             currentstatement = Statement.Death;
         }
     }
@@ -346,7 +348,6 @@ public class Boss : MonoBehaviour, IDamageable
     {
         forwardAttackCoolTime = 0f;
         canForward = false;
-        Debug.Log(1);
         AttackAnimationEnd();
     }
 
