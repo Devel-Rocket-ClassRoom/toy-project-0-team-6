@@ -715,7 +715,7 @@ MonoBehaviour:
       - m_Target: {fileID: 4835254446412471402}
         m_TargetAssemblyTypeName: SettingsController, Assembly-CSharp
         m_MethodName: SetMouseSensivity
-        m_Mode: 4
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8566,7 +8566,7 @@ PrefabInstance:
     - target: {fileID: 1524139537159726748, guid: e73ce2efa271fd947ba1a44e6420184e, type: 3}
       propertyPath: boss
       value: 
-      objectReference: {fileID: 1890410289026383522, guid: ec06d59a25025df4faf8326294504ede, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 1537930065079185371, guid: e73ce2efa271fd947ba1a44e6420184e, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
