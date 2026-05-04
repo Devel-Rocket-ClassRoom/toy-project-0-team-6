@@ -1,6 +1,7 @@
 //현재는 패널 전환만 확인하는 스크립트. 인게임 내 데이터 연동은 추후 예정.
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems; 
 
 public class MainMenuController : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private SettingsController settingsController;
 
 
-    private void Start()
+    private void Awake()
     {
         startMenuPanel.SetActive(true);
         settingsPanel.SetActive(false);
@@ -23,7 +24,7 @@ public class MainMenuController : MonoBehaviour
         pausePanel.SetActive(false);
         Time.timeScale = 0f; // 게임 시작 시 일시정지 상태로 시작
         Cursor.lockState = CursorLockMode.None; // 커서 보이도록 설정
-
+        Cursor.visible = true;
         //메인메뉴상에서 보스가 움직여서 캐릭터를 공격하는 현상이 발생하여 일시정지 상태로 시작하도록 변경
     }
 
@@ -40,7 +41,7 @@ public class MainMenuController : MonoBehaviour
         gameOverPanel.SetActive(false);
         gamePanel.SetActive(true);
         settingsController.StartCount();
-        Cursor.lockState = CursorLockMode.Locked;
+        
         Time.timeScale = 1f;
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -94,12 +95,12 @@ public class MainMenuController : MonoBehaviour
 
     public void OnPause()
     {
+        
         bool isPaused = pausePanel.activeSelf;
         pausePanel.SetActive(!isPaused);
         gamePanel.SetActive(isPaused);
         Time.timeScale = isPaused ? 1f : 0f;
  
-
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
  

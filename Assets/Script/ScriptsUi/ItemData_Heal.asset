@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 14230f980efc50342a18ee3aea71c489, type: 3}
-  m_Name: ItemData_Consumable
+  m_Name: ItemData_Heal
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: item
-  icon: {fileID: 21300000, guid: d084ce6766bd4ac48ae8beff161889d0, type: 3}
+  itemName: HpHeal
+  icon: {fileID: 21300000, guid: 17773768e4b042f47846f5e300e1a311, type: 3}
   itemCount: 3
