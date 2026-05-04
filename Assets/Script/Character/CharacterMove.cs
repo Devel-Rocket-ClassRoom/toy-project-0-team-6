@@ -35,12 +35,12 @@ public class CharacterMove : MonoBehaviour
         anim.SetBool("IsMoving", Horizontal != 0 || Vertical != 0);
         anim.SetFloat("MoveX", Horizontal);
         anim.SetFloat("MoveZ", Vertical);
-        
+
     }
 
     private void FixedUpdate()
     {
-        Vector3 direction = new Vector3(Horizontal, 0, Vertical);
+        Vector3 direction = transform.right * Horizontal + transform.forward * Vertical;
         direction = Vector3.ClampMagnitude(direction, 1f);
         rb.linearVelocity = direction * moveSpeed;
     }
