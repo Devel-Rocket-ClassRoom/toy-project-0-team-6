@@ -3,7 +3,7 @@ using static CharacterState;
 
 public class CharacterMove : MonoBehaviour
 {
-    public CharacterState state;
+    private CharacterState state;
     private Animator anim;
     private Rigidbody rb;
     private CapsuleCollider collider;
@@ -73,7 +73,6 @@ public class CharacterMove : MonoBehaviour
                 Cursor.visible = false;
             }
         }
-        Debug.Log(state.currentState);
     }
 
     private void FixedUpdate()
