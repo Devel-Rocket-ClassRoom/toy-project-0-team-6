@@ -13,6 +13,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private AudioClip clickSound;
     [SerializeField] private SettingsController settingsController;
 
+
     private void Start()
     {
         startMenuPanel.SetActive(true);
@@ -21,6 +22,8 @@ public class MainMenuController : MonoBehaviour
         gameOverPanel.SetActive(false);
         pausePanel.SetActive(false);
         Time.timeScale = 0f; // 게임 시작 시 일시정지 상태로 시작
+        Cursor.lockState = CursorLockMode.None; // 커서 보이도록 설정
+
         //메인메뉴상에서 보스가 움직여서 캐릭터를 공격하는 현상이 발생하여 일시정지 상태로 시작하도록 변경
     }
 
@@ -32,10 +35,12 @@ public class MainMenuController : MonoBehaviour
 
     public void OnStartGame()
     {
+       
         startMenuPanel.SetActive(false);
         gameOverPanel.SetActive(false);
         gamePanel.SetActive(true);
         settingsController.StartCount();
+        Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1f;
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -54,6 +59,7 @@ public class MainMenuController : MonoBehaviour
     public void OnCloseSettings()
     {
         AudioManager.Instance.PlaySE(clickSound);
+        SaveManager.Instance.Save();
         settingsPanel.SetActive(false);
         startMenuPanel.SetActive(true);
 
@@ -79,9 +85,11 @@ public class MainMenuController : MonoBehaviour
         startMenuPanel.SetActive(true);
         Time.timeScale = 1f;
         settingsController.StopCount();
+ 
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+ 
     }
 
     public void OnPause()
@@ -90,9 +98,11 @@ public class MainMenuController : MonoBehaviour
         pausePanel.SetActive(!isPaused);
         gamePanel.SetActive(isPaused);
         Time.timeScale = isPaused ? 1f : 0f;
+ 
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+ 
     }
 
     public void OnResume()
@@ -100,9 +110,12 @@ public class MainMenuController : MonoBehaviour
         pausePanel.SetActive(false);
         gamePanel.SetActive(true);
         Time.timeScale = 1f;
+ 
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+ 
+ 
     }
     public void OnGameOver()
     {
