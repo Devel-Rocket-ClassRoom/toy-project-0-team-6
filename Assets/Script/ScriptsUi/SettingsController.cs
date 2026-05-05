@@ -4,15 +4,23 @@ using TMPro;
 
 public class SettingsController : MonoBehaviour
 {
+    [Header("Frame Rate Settings")]
     [SerializeField] private Toggle frame30;
     [SerializeField] private Toggle frame60;
     [SerializeField] private Toggle frame120;
     [SerializeField] private Toggle frameunlim;
+
+    [Header("Mouse Settings")]
     [SerializeField] private Slider mouseSensivitySlider;
+
+    [Header("Audio Settings")]
     [SerializeField] private Slider bgmVolumeSlider;
     [SerializeField] private Slider seVolumeSlider;
+
+    [Header("References")]
     [SerializeField] private CharacterMove characterMove;
 
+    [Header("Play Time Display")]
     [SerializeField] private TextMeshProUGUI playTimeTextSettings;
     [SerializeField] private TextMeshProUGUI playTimeTextPause;
 
@@ -52,9 +60,9 @@ public class SettingsController : MonoBehaviour
     }
     private string FormatTime(float time)
     {
-        int hours = Mathf.FloorToInt(time / 3600);
-        int minutes = Mathf.FloorToInt((time % 3600) / 60);
-        int seconds = Mathf.FloorToInt(time % 60);
+        int hours = (int)(time / 3600);
+        int minutes = (int)((time % 3600) / 60);
+        int seconds = (int)(time % 60);
         return $"{hours:00}:{minutes:00}:{seconds:00}";
     }
     public void SetMouseSensivity(float value)

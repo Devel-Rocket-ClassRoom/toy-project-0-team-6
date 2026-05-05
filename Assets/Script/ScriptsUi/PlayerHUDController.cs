@@ -1,5 +1,5 @@
-using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHUDController : MonoBehaviour
 {
@@ -7,19 +7,32 @@ public class PlayerHUDController : MonoBehaviour
     [SerializeField] private StaminaBar staminaBar;
     [SerializeField] private CharacterState characterState;
 
-    private IEnumerator Start()
+    private bool initialized = false;
+
+    private void Start()
     {
+         
+        if (characterState == null || !characterState.gameObject.activeInHierarchy)
+            characterState = FindAnyObjectByType<CharacterState>();
+
         if (characterState == null)
         {
-            Debug.LogWarning("캐릭터 연결X");
-            yield break;
+            Debug.LogWarning("CharacterState 없음");
+            return;
         }
 
+      
         characterState.Damaged += OnDamaged;
         characterState.OnStaminaChanged += OnStaminaChanged;
+    }
 
-        yield return null; // CharacterState.Start() 완료 대기
+    private void Update()
+    {
+        
+        if (initialized || characterState == null) return;
+        if (characterState.CurrentHealth <= 0) return;
 
+        initialized = true;
         hpBar.SetValue(characterState.CurrentHealth, characterState.maxHealth);
         staminaBar.SetValue(characterState.CurrentStamina, characterState.maxStamina);
     }
@@ -31,7 +44,7 @@ public class PlayerHUDController : MonoBehaviour
         characterState.OnStaminaChanged -= OnStaminaChanged;
     }
 
-    private void OnDamaged(int dmg)//이벤트 시그니처 맞춰서 int로 받음 실제 사용X.
+    private void OnDamaged(int dmg)
     {
         if (characterState == null) return;
         hpBar.SetValue(characterState.CurrentHealth, characterState.maxHealth);

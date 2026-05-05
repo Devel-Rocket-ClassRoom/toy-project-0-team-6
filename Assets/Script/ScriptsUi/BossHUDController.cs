@@ -8,7 +8,6 @@ public class BossHUDController : MonoBehaviour
     [SerializeField] private Boss boss;
 
     private int startHp;
-    
 
     private void Start()
     {
@@ -18,14 +17,12 @@ public class BossHUDController : MonoBehaviour
             return;
         }
 
-        
         startHp = boss.data.BossHp;
-        
 
         if (bossNameText != null)
             bossNameText.text = boss.data.BossName;
 
-        hpBar.SetValue(startHp, startHp);//maxhp가 현재 없으므로 start로 설정.
+        hpBar.SetValue(startHp, startHp);
 
         boss.OnDamage += OnBossDamaged;
     }
