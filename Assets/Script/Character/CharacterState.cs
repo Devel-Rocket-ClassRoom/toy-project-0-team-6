@@ -158,6 +158,24 @@ public class CharacterState : MonoBehaviour, IDamageable
         CurrentStamina -= stmUseSpeed[(int)StaminaUseType.NormalAttack];
     }
 
+    public void HardAttacking()
+    {
+        if (currentState == StateType.Dodge ||
+            currentState == StateType.Damaged ||
+            currentState == StateType.Die)
+            return;
+
+        currentState = StateType.Attack;
+
+        DamageVO damage = new DamageVO();
+        damage.amount = (int)((float)Power * 1.5);
+        damage.damageType = DamageVO.DamageType.soft;
+
+        AttackZone.SetDamage(damage);
+
+        CurrentStamina -= stmUseSpeed[(int)StaminaUseType.NormalAttack];
+    }
+
     public void GetDamage(DamageVO damageData)
     {
         switch (damageData.damageType)
