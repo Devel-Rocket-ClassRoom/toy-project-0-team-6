@@ -35,6 +35,7 @@ public class SettingsController : MonoBehaviour
     private void Update()
     {
         if(!isPlaying) return;
+        if (SaveManager.Instance == null) return;
         totalPlayTime += Time.deltaTime;
         SaveManager.Instance.CurrentData.totalPlayTime = totalPlayTime;
         UpdateTimeText();
