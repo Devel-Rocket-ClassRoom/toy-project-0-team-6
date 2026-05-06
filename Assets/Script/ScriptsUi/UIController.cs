@@ -15,6 +15,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject clearPanel;
     [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject keyconfigPanel;
 
     [Header("References")]
     [SerializeField] private CharacterState characterState;
@@ -209,10 +210,19 @@ public class UIController : MonoBehaviour
     {
         if (!gameObject.activeSelf)
             return;
-        pausePanel.SetActive(true);
-        gamePanel.SetActive(false);
-        Time.timeScale = 0f;
-        CursorVisible();
+
+        if (pausePanel.activeSelf)
+        {
+            OnResume();
+        }
+        else
+        {
+            pausePanel.SetActive(true);
+            gamePanel.SetActive(false);
+            Time.timeScale = 0f;
+            CursorVisible();
+        }
+        
     }
 
     public void OnResume()
