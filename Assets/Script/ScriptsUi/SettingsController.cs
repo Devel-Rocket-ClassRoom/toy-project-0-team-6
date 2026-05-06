@@ -30,6 +30,9 @@ public class SettingsController : MonoBehaviour
 
     private void Start()
     {
+        mouseSensivitySlider.value = characterMove.rotateSpeed*10;
+        
+       
         ApplySettingData();
     }
     private void Update()
@@ -69,7 +72,7 @@ public class SettingsController : MonoBehaviour
     public void SetMouseSensivity(float value)
     {
         if(isInitialized) return;
-        characterMove.rotateSpeed = value;
+        characterMove.rotateSpeed = value*0.1f;
         SaveManager.Instance.CurrentData.mouseSensitivity = value;
     }
     public void SetFrameRate30()

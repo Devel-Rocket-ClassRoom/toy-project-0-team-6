@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using static CharacterState;
 
 public class CharacterMove : MonoBehaviour
@@ -12,12 +13,10 @@ public class CharacterMove : MonoBehaviour
 
     public float moveSpeed = 5;
     public float dodgeSpeed = 8f;
-    public float rotateSpeed = 3f;
+    public float rotateSpeed = 0.3f;
 
     private Vector3 dodgeDirection; //닷지 시 방향 저장
 
-    public static readonly string horizontal = "Horizontal";
-    public static readonly string vertical = "Vertical";
     public static readonly int Attack = Animator.StringToHash("Attack");
     public static readonly int Dodge = Animator.StringToHash("Dodge");
     public static readonly int HardAttack = Animator.StringToHash("HardAttack");
@@ -27,14 +26,31 @@ public class CharacterMove : MonoBehaviour
     [SerializeField]
     private int maxCommand = 2;
 
-    public float Horizontal { get; private set; }
-    public float Vertical { get; private set; }
+    Vector2 moveValue = Vector2.zero;
+    
+
+
+    //InputActions
+    InputAction move;
+    InputAction look;
+    InputAction attack;
+    InputAction dodge;
+    InputAction hardAttack;
 
     void Start()
     {
         state = GetComponent<CharacterState>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+
+        move = InputSystem.actions.FindAction("Move");
+        look = InputSystem.actions.FindAction("Look");
+        attack = InputSystem.actions.FindAction("Attack",true);
+        dodge = InputSystem.actions.FindAction("Dodge",true);
+        hardAttack= InputSystem.actions.FindAction("StrongAttack", true);
+
+        attack.performed += OnAttackKey;
+        dodge.performed += OnDodge;
     }
 
     private void Update()
@@ -44,15 +60,15 @@ public class CharacterMove : MonoBehaviour
             return;
         }
 
-        Horizontal = Input.GetAxis(horizontal);
-        Vertical = Input.GetAxis(vertical);
-        transform.Rotate(0f, Input.GetAxis("Mouse X") * rotateSpeed * Time.timeScale, 0f, Space.World);
+        moveValue = move.ReadValue<Vector2>();
+
+        transform.Rotate(0f, look.ReadValue<Vector2>().x * rotateSpeed * Time.timeScale, 0f, Space.World);
 
         if (state.currentState != StateType.Attack &&
             state.currentState != StateType.Dodge &&
             state.currentState != StateType.Damaged)
         {
-            bool isMoving = Horizontal != 0 || Vertical != 0;
+            bool isMoving = moveValue.magnitude>0.001f;
 
             state.currentState = isMoving ? StateType.Move : StateType.Idle;
         }
@@ -60,55 +76,38 @@ public class CharacterMove : MonoBehaviour
         if (state.currentState == StateType.Move)
         {
             anim.SetBool("IsMoving", true);
-            anim.SetFloat("MoveX", Horizontal);
-            anim.SetFloat("MoveZ", Vertical);
+            anim.SetFloat("MoveX", moveValue.x);
+            anim.SetFloat("MoveZ", moveValue.y);
         }
         else
         {
             anim.SetBool("IsMoving", false);
         }
+    }
 
-        if (Input.GetMouseButtonDown(0))
+    private void OnAttackKey(InputAction.CallbackContext context)
+    {
+        if (hardAttack.IsPressed())
         {
-            if (Input.GetKey(KeyCode.LeftShift))
+            OnHardAttack();
+        }
+        else
+        {
+            if (canCommand && state.attackCount > 0)
             {
-                OnHardAttack();
+                commandQueue.Add("A");
+                if (commandQueue.Count > maxCommand)
+                {
+                    commandQueue.RemoveAt(0);
+                }
             }
             else
             {
-                if (canCommand && state.attackCount > 0)
-                {
-                    commandQueue.Add("A");
-                    if(commandQueue.Count > maxCommand)
-                    {
-                        commandQueue.RemoveAt(0);
-                    }
-                }
-                else
-                {
-                    OnAttack();
-                }
+                OnAttack();
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (Cursor.lockState == CursorLockMode.Locked)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            OnDodge();
         }
     }
+
 
     private void FixedUpdate()
     {
@@ -125,7 +124,7 @@ public class CharacterMove : MonoBehaviour
         }
         else
         {
-            Vector3 direction = transform.right * Horizontal + transform.forward * Vertical;
+            Vector3 direction = transform.right * moveValue.x + transform.forward * moveValue.y;
             direction = Vector3.ClampMagnitude(direction, 1f);
             rb.linearVelocity = direction * moveSpeed;
         }
@@ -149,13 +148,13 @@ public class CharacterMove : MonoBehaviour
         anim.SetTrigger(HardAttack);
     }
 
-    private void OnDodge()
+    private void OnDodge(InputAction.CallbackContext context)
     {
         if (state.currentState != StateType.Idle &&
             state.currentState != StateType.Move)
             return;
 
-        dodgeDirection = transform.right * Horizontal + transform.forward * Vertical;
+        dodgeDirection = transform.right * moveValue.x + transform.forward * moveValue.y;
 
         if (dodgeDirection == Vector3.zero)
             dodgeDirection = transform.forward;

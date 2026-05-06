@@ -1750,6 +1750,11 @@ PrefabInstance:
       addedObject: {fileID: 91388505691160154}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+--- !u!1 &351653956 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4597604860202017013, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+  m_PrefabInstance: {fileID: 351653955}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &381054719 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100002, guid: f8ed7af4f37ae0e4796365f6d634f028, type: 3}
@@ -4589,6 +4594,14 @@ PrefabInstance:
     - target: {fileID: 5826423858752425657, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
       propertyPath: StartPower
       value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 6985358914666879070, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
+      propertyPath: startMenu
+      value: 
+      objectReference: {fileID: 351653956}
+    - target: {fileID: 6985358914666879070, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
+      propertyPath: rotateSpeed
+      value: 0.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
