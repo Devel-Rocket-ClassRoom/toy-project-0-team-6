@@ -74,7 +74,8 @@ public class SettingsController : MonoBehaviour
     public void SetMouseSensivity(float value)
     {
         if(isInitialized) return;
-        characterMove.rotateSpeed = value*0.1f;
+        mouseSensivitySlider.value = value;
+        characterMove.rotateSpeed = value * 0.1f;
         SaveManager.Instance.CurrentData.mouseSensitivity = value;
     }
     public void SetFrameRate30()
@@ -168,8 +169,8 @@ public class SettingsController : MonoBehaviour
 
 
 
-        characterMove.rotateSpeed = data.mouseSensitivity ;
-        mouseSensivitySlider.value = characterMove.rotateSpeed;
+        characterMove.rotateSpeed = data.mouseSensitivity * 0.1f;
+        mouseSensivitySlider.value = data.mouseSensitivity;
 
         totalPlayTime = data.totalPlayTime;
         UpdateTimeText();

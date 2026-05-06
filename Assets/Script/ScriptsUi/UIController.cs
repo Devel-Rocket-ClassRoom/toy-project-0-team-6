@@ -102,6 +102,7 @@ public class UIController : MonoBehaviour
         if(restartGame)
         {
             restartGame = false;
+            settingsController.ApplySettingData();
             OnStartGame();
         }
 
@@ -208,7 +209,7 @@ public class UIController : MonoBehaviour
 
     public void OnPause(InputAction.CallbackContext context)
     {
-        if (!gameObject.activeSelf)
+        if (!gamePanel.activeSelf)
             return;
 
         if (pausePanel.activeSelf)
