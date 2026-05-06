@@ -147,6 +147,7 @@ public class CharacterState : MonoBehaviour, IDamageable
             currentState == StateType.Die)
             return;
 
+        currentState = StateType.Attack;
         DamageVO damage = new DamageVO();
         damage.amount = Power;
         damage.damageType = DamageVO.DamageType.soft;
@@ -171,7 +172,7 @@ public class CharacterState : MonoBehaviour, IDamageable
 
         AttackZone.SetDamage(damage);
 
-        CurrentStamina -= stmUseSpeed[(int)StaminaUseType.NormalAttack];
+        CurrentStamina -= (int)(stmUseSpeed[(int)StaminaUseType.NormalAttack]* 1.5);
     }
 
     public void Dodging()
@@ -180,6 +181,8 @@ public class CharacterState : MonoBehaviour, IDamageable
             currentState == StateType.Damaged ||
             currentState == StateType.Die)
             return;
+
+        currentState = StateType.Dodge;
 
         CurrentStamina -= stmUseSpeed[(int)StaminaUseType.Dodge];
     }
