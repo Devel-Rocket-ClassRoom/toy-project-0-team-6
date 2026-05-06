@@ -8,7 +8,7 @@ public class CharacterMove : MonoBehaviour
     private CharacterState state;
     private Animator anim;
     private Rigidbody rb;
-    private CapsuleCollider collider;
+    public GameObject startMenu;
 
     public float moveSpeed = 5;
     public float dodgeSpeed = 8f;
@@ -35,11 +35,15 @@ public class CharacterMove : MonoBehaviour
         state = GetComponent<CharacterState>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        collider = GetComponent<CapsuleCollider>();
     }
 
     private void Update()
     {
+        if (startMenu.activeSelf)
+        {
+            return;
+        }
+
         Horizontal = Input.GetAxis(horizontal);
         Vertical = Input.GetAxis(vertical);
         transform.Rotate(0f, Input.GetAxis("Mouse X") * rotateSpeed * Time.timeScale, 0f, Space.World);
