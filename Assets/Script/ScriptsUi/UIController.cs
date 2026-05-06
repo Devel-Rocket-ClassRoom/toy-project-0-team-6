@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -18,6 +19,8 @@ public class UIController : MonoBehaviour
     [SerializeField] private Boss boss;
 
     [Header("Audio")]
+    [SerializeField] private AudioClip mainMenuSound;
+    [SerializeField] private AudioClip inGameSound;
     [SerializeField] private AudioClip clickSound;
 
     [Header("Controllers")]
@@ -38,7 +41,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI overBossHpText;
 
    
-    private int damageDealt;
+    private int damageDeal;
     private int damageTaken;
     private int attackCount;
     private int hitCount;
@@ -51,6 +54,7 @@ public class UIController : MonoBehaviour
 
     private void Awake()
     {
+        AudioManager.Instance.PlayBGM(mainMenuSound);
         startMenuPanel.SetActive(true);
         settingsPanel.SetActive(false);
         gamePanel.SetActive(false);
@@ -89,7 +93,7 @@ public class UIController : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    private void OnDestroy()//
     {
         if (characterState != null)
         {
@@ -121,71 +125,21 @@ public class UIController : MonoBehaviour
         if (characterState == null) return;
         if (!gamePanel.activeSelf) return;
         if (!characterState.IsDead) return;
+        
 
         gameOver = true;
         OnGameOver();
-        
-        
     }
 
    
 
-    private void OnPlayerDamaged(int dmg)
-    {
-        if (gameOver) return;
-        damageTaken += dmg;
-        hitCount++;
-    }
-    private void OnBossDamaged(int dmg)
-    {
-        if (gameOver) return;
-        damageDealt += dmg;
-        attackCount++;
-      
-    }
-    private void ResetStats()
-    {
-        damageDealt = 0;
-        damageTaken = 0;
-        attackCount = 0;
-        hitCount = 0;
-        runTimer = 0f;
-        timerRunning = false;
-    }
-
-    private string FormatTime(float seconds)
-    {
-        int min = (int)(seconds / 60);
-        int sec = (int)(seconds % 60);
-        return $"{min:D2}:{sec:D2}";
-    }
-
-    private void UpdateClearTexts()
-    {
-        clearDamageDealtText.text = $"{damageDealt:N0}";
-        clearDamageTakenText.text = $"{damageTaken:N0}";
-        clearAttackCountText.text = $"{attackCount}";
-        clearHitCountText.text = $"{hitCount}";
-        clearTimeText.text = FormatTime(runTimer);
-    }
-
-    private void UpdateGameOverTexts()
-    {
-        overDamageDealtText.text = $"{damageDealt:N0}";
-        overDamageTakenText.text = $"{damageTaken:N0}";
-         overAttackCountText.text = $"{attackCount}";
-        overHitCountText.text = $"{hitCount}";
-        
-        float ratio = boss.CurrentHp / (float)boss.data.BossHp * 100f;
-        overBossHpText.text = $"{ratio:F0}%";
-         
-    }
 
     
 
     public void OnStartGame()
     {
         AudioManager.Instance.PlaySE(clickSound);
+        AudioManager.Instance.PlayBGM(inGameSound);
         gameOver = false;
         ResetStats();
         timerRunning = true;
@@ -242,6 +196,7 @@ public class UIController : MonoBehaviour
 
     public void OnResume()
     {
+        AudioManager.Instance.PlaySE(clickSound);
         pausePanel.SetActive(false);
         gamePanel.SetActive(true);
         Time.timeScale = 1f;
@@ -293,5 +248,56 @@ public class UIController : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    private void OnPlayerDamaged(int dmg)
+    {
+        if (gameOver) return;
+        damageTaken += dmg;
+        hitCount++;
+    }
+    private void OnBossDamaged(int dmg)
+    {
+        if (gameOver) return;
+        damageDeal += dmg;
+        attackCount++;
+      
+    }
+    private void ResetStats()
+    {
+        damageDeal = 0;
+        damageTaken = 0;
+        attackCount = 0;
+        hitCount = 0;
+        runTimer = 0f;
+        timerRunning = false;
+    }
+
+    private string FormatTime(float seconds)
+    {
+        int min = (int)(seconds / 60);
+        int sec = (int)(seconds % 60);
+        return $"{min:D2}:{sec:D2}";
+    }
+
+    private void UpdateClearTexts()
+    {
+        clearDamageDealtText.text = $"{damageDeal:N0}";
+        clearDamageTakenText.text = $"{damageTaken:N0}";
+        clearAttackCountText.text = $"{attackCount}";
+        clearHitCountText.text = $"{hitCount}";
+        clearTimeText.text = FormatTime(runTimer);
+    }
+
+    private void UpdateGameOverTexts()
+    {
+        overDamageDealtText.text = $"{damageDeal:N0}";
+        overDamageTakenText.text = $"{damageTaken:N0}";
+         overAttackCountText.text = $"{attackCount}";
+        overHitCountText.text = $"{hitCount}";
+        
+        float ratio = boss.CurrentHp / boss.data.BossHp * 100f;
+        overBossHpText.text = $"{ratio:F0}%";
+         
     }
 }

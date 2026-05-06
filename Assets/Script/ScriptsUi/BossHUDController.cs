@@ -20,7 +20,9 @@ public class BossHUDController : MonoBehaviour
         startHp = boss.data.BossHp;
 
         if (bossNameText != null)
+        {
             bossNameText.text = boss.data.BossName;
+        }
 
         hpBar.SetValue(startHp, startHp);
 

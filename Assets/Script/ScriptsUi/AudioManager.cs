@@ -24,8 +24,7 @@ public class AudioManager : MonoBehaviour
     }
     private void Start()
     {
-        //세이브된 볼륨이 없을 때 기본값 설정
-        //세이브 데이터 구조 확정시 수정 필요
+      
         if (SaveManager.Instance == null) return;
         SaveData data = SaveManager.Instance.CurrentData;
         SetBGMVolume(data.bgmVolume);
@@ -51,5 +50,11 @@ public class AudioManager : MonoBehaviour
     {
         seSource.PlayOneShot(clip);
         
+    }
+    public void PlayBGM(AudioClip clip)
+    {
+        if (bgmSource.clip == clip && bgmSource.isPlaying) return;
+        bgmSource.clip = clip;
+        bgmSource.Play();
     }
 }
