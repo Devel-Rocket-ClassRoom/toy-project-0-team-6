@@ -107,12 +107,8 @@ public class UIController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && gamePanel.activeSelf)
-            OnPause();
-
-        if (timerRunning)
-            runTimer += Time.deltaTime;
-
+        if (Input.GetKeyDown(KeyCode.Escape) && gamePanel.activeSelf) OnPause();
+        if (timerRunning) runTimer += Time.deltaTime;
         CheckDeath();
     }
 
@@ -142,17 +138,10 @@ public class UIController : MonoBehaviour
         if (gameOver) return;
         damageDealt += dmg;
         attackCount++;
-        // invincible 구간엔 이벤트가 안 오므로 damageDealt는 과소 집계될 수 있음
-        // 정확한 최종 피해량은 UpdateGameOverTexts/UpdateClearTexts에서 HP 차이로 보정
+      
     }
 
-    // boss 최대HP - 현재HP = 실제 입힌 총 피해 (invincible 무관)
-    private int GetActualDamageDealt()
-    {
-        if (boss == null) return damageDealt;
-        int fromHp = boss.data != null ? boss.data.BossHp - boss.CurrentHp : damageDealt;
-        return Mathf.Max(fromHp, damageDealt); // 둘 중 더 큰 값 사용
-    }
+  
  
 
     private void ResetStats()
@@ -298,8 +287,6 @@ public class UIController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-
-
     public void OnQuit()
     {
 #if UNITY_EDITOR
