@@ -246,7 +246,8 @@ public class UIController : MonoBehaviour
         SaveManager.Instance.Save();
         CursorVisible();
         StartCoroutine(ShowGameOverLogStats());
-        Gamepad.current.SetMotorSpeeds(0f, 0f);
+        if (Gamepad.current != null)
+            Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
 
     public void OnClear()

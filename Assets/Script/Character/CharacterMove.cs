@@ -60,7 +60,10 @@ public class CharacterMove : MonoBehaviour
         attack.performed += OnAttackKey;
         dodge.performed += OnDodge;
         useItem.performed += OnUseConsumable;
-        Gamepad.current.SetMotorSpeeds(0f, 0f);
+        if(Gamepad.current != null)
+        {
+            Gamepad.current.SetMotorSpeeds(0f, 0f);
+        }
     }
 
     private void OnDisable()
@@ -68,7 +71,8 @@ public class CharacterMove : MonoBehaviour
         attack.performed -= OnAttackKey;
         dodge.performed -= OnDodge;
         useItem.performed -= OnUseConsumable;
-        Gamepad.current.SetMotorSpeeds(0f, 0f);
+        if (Gamepad.current != null)
+            Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
 
     private void Update()

@@ -83,7 +83,8 @@ public class CharacterState : MonoBehaviour, IDamageable
                 if (vibration != null)
                 {
                     StopCoroutine(vibration);
-                    Gamepad.current.SetMotorSpeeds(0f, 0f);
+                    if (Gamepad.current != null)
+                        Gamepad.current.SetMotorSpeeds(0f, 0f);
                 }
 
                 vibration = StartCoroutine(HitVibration());
@@ -96,7 +97,11 @@ public class CharacterState : MonoBehaviour, IDamageable
     Coroutine vibration=null;
     public IEnumerator HitVibration()
     {
-        Gamepad.current.SetMotorSpeeds(0.75f, 0.75f);
+        if (Gamepad.current == null)
+        {
+            yield break;
+        }
+            Gamepad.current.SetMotorSpeeds(0.75f, 0.75f);
         yield return new WaitForSeconds(0.2f);
         Gamepad.current.SetMotorSpeeds(0f, 0f);
         vibration = null;
