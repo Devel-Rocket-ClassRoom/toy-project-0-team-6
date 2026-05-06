@@ -5619,6 +5619,10 @@ PrefabInstance:
       propertyPath: startMenu
       value: 
       objectReference: {fileID: 351653956}
+    - target: {fileID: 6985358914666879070, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
+      propertyPath: rotateSpeed
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
