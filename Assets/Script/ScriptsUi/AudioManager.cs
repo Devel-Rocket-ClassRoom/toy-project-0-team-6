@@ -24,10 +24,11 @@ public class AudioManager : MonoBehaviour
     }
     private void Start()
     {
-        //세이브된 볼륨이 없을 때 기본값 설정
-        //세이브 데이터 구조 확정시 수정 필요
-        SetBGMVolume(0.1f);
-        SetSEVolume(0.5f);
+        
+        if (SaveManager.Instance == null) return;
+        SaveData data = SaveManager.Instance.CurrentData;
+        SetBGMVolume(data.bgmVolume);
+        SetSEVolume(data.seVolume);
     }
 
     
@@ -35,16 +36,26 @@ public class AudioManager : MonoBehaviour
     {
         float db = Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20f;
         audioMixer.SetFloat(BGM_KEY, db);
+        SaveManager.Instance.CurrentData.bgmVolume = value;
     }
 
     public void SetSEVolume(float value)
     {
         float db = Mathf.Log10(Mathf.Max(value, 0.0001f)) * 20f;
         audioMixer.SetFloat(SE_KEY, db);
+        SaveManager.Instance.CurrentData.seVolume = value;
     }
 
     public void PlaySE(AudioClip clip)
     {
         seSource.PlayOneShot(clip);
+        
+    }
+    public void PlayBGM(AudioClip clip)
+    {
+        if (bgmSource.clip == clip && bgmSource.isPlaying) return;
+        bgmSource.clip = clip;
+        bgmSource.Play();
+        bgmSource.loop = true;
     }
 }
