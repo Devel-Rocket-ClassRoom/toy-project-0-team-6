@@ -22,7 +22,7 @@ public class DualSliderBar : MonoBehaviour
     public void SetValue(float current, float max)
     {
         float newRatio = current / max;
-        bool isDecreasing = newRatio < trueRatio;
+        bool isDecreasing = newRatio < trueRatio;//
         trueRatio = newRatio;
 
         if (isDecreasing)

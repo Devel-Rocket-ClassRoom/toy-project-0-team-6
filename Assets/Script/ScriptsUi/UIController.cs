@@ -55,7 +55,7 @@ public class UIController : MonoBehaviour
 
     private void Awake()
     {
-        AudioManager.Instance.PlayBGM(mainMenuSound);
+        
         startMenuPanel.SetActive(true);
         settingsPanel.SetActive(false);
         gamePanel.SetActive(false);
@@ -69,7 +69,11 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
-         //캐릭터 인스턴스 탐색
+        if (AudioManager.Instance != null && mainMenuSound != null)
+        {
+            AudioManager.Instance.PlayBGM(mainMenuSound);
+        }
+        //캐릭터 인스턴스 탐색
         if (characterState == null || !characterState.gameObject.activeInHierarchy)
         {
             characterState = FindAnyObjectByType<CharacterState>();
