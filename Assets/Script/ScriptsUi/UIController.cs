@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using Unity.Jobs;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -52,7 +53,7 @@ public class UIController : MonoBehaviour
 
     private bool gameOver = false;
 
-   
+    InputAction cancel;
 
     private void Awake()
     {
@@ -102,6 +103,9 @@ public class UIController : MonoBehaviour
             restartGame = false;
             OnStartGame();
         }
+
+        cancel = InputSystem.actions.FindAction("Cancel");
+        cancel.performed += OnPause;
     }
 
     private void OnDestroy()//
@@ -122,7 +126,6 @@ public class UIController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && gamePanel.activeSelf) OnPause();
         if (timerRunning) runTimer += Time.deltaTime;
         CheckDeath();
     }
@@ -197,9 +200,10 @@ public class UIController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    public void OnPause()
+    public void OnPause(InputAction.CallbackContext context)
     {
-        
+        if (!gameObject.activeSelf)
+            return;
         pausePanel.SetActive(true);
         gamePanel.SetActive(false);
         Time.timeScale = 0f;
