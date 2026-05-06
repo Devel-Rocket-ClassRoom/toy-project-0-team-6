@@ -71,7 +71,14 @@ public class CharacterState : MonoBehaviour, IDamageable
         get { return currentHealth; }
         set
         {
+            float prev = currentHealth;
+
             currentHealth = Mathf.Clamp(value, 0, maxHealth);
+
+            if (prev != currentHealth)
+            {
+                Damaged?.Invoke(currentHealth);
+            }
         }
     }
 
@@ -250,8 +257,6 @@ public class CharacterState : MonoBehaviour, IDamageable
 
 
         CurrentHealth -= damageData.amount;
-
-        Damaged?.Invoke(damageData.amount);
     }
 
     public void EnableAttack()

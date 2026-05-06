@@ -330,6 +330,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 558523478e7513b4993a20eba82cfcce, type: 3}
   m_PrefabInstance: {fileID: 88468752}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &96572387 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4597604860202017013, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+  m_PrefabInstance: {fileID: 351653955}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &135253762 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100002, guid: f8ed7af4f37ae0e4796365f6d634f028, type: 3}
@@ -4676,6 +4681,10 @@ PrefabInstance:
       propertyPath: StartPower
       value: 40
       objectReference: {fileID: 0}
+    - target: {fileID: 6985358914666879070, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
+      propertyPath: startMenu
+      value: 
+      objectReference: {fileID: 96572387}
     - target: {fileID: 6985358914666879070, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
       propertyPath: MainCamera
       value: 
