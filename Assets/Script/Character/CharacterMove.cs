@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using static CharacterState;
+using static UnityEditor.FilePathAttribute;
 
 public class CharacterMove : MonoBehaviour
 {
@@ -104,6 +103,7 @@ public class CharacterMove : MonoBehaviour
         {
             OnDodge();
         }
+
     }
 
     private void FixedUpdate()
@@ -132,9 +132,8 @@ public class CharacterMove : MonoBehaviour
     {
         state.currentState = CharacterState.StateType.Attack;
 
-        anim.SetTrigger(Attack);
         state.Attacking();
-
+        anim.SetTrigger(Attack);
     }
 
     private void OnHardAttack()
@@ -143,8 +142,8 @@ public class CharacterMove : MonoBehaviour
             state.currentState != StateType.Move)
             return;
 
+        state.HardAttacking();
         anim.SetTrigger(HardAttack);
-        state.Attacking();
     }
 
     private void OnDodge()
@@ -153,8 +152,6 @@ public class CharacterMove : MonoBehaviour
             state.currentState != StateType.Move)
             return;
 
-        state.currentState = CharacterState.StateType.Dodge;
-
         dodgeDirection = transform.right * Horizontal + transform.forward * Vertical;
 
         if (dodgeDirection == Vector3.zero)
@@ -162,8 +159,8 @@ public class CharacterMove : MonoBehaviour
 
         dodgeDirection.Normalize();
 
-        anim.SetTrigger(Dodge);
         state.Dodging();
+        anim.SetTrigger(Dodge);
     }
 
     public void EndAttack()
