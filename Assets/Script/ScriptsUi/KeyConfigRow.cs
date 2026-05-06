@@ -30,11 +30,11 @@ public class KeyConfigRow : MonoBehaviour
         if (subKey.Length > 0)
         {
             Debug.Log(subKey);
-            bind = asset.FindAction(key).bindings.First((k) => k.name.Equals(subKey.ToLower()) && k.groups.Contains("Keyboard"));
+            bind = asset.FindAction(key).bindings.First((k) => k.name.Equals(subKey.ToLower()) && k.groups.Contains(type));
         }
         else
         {
-            bind = asset.FindAction(key).bindings.First((k) => k.groups.Contains("Keyboard"));
+            bind = asset.FindAction(key).bindings.First((k) => k.groups.Contains(type));
         }
 
         keyButtonText.text = InputControlPath.ToHumanReadableString(bind.effectivePath, InputControlPath.HumanReadableStringOptions.OmitDevice);
@@ -52,7 +52,7 @@ public class KeyConfigRow : MonoBehaviour
         }
         else
         {
-            bindIndex = bindingsList.FindIndex(x => !x.isPartOfComposite && x.groups != null && x.groups.Contains("Keyboard"));
+            bindIndex = bindingsList.FindIndex(x => !x.isPartOfComposite && x.groups != null && x.groups.Contains(type));
         }
 
         Debug.Log(bindIndex);
