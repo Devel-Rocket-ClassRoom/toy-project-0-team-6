@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Runtime.Serialization;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CharacterState : MonoBehaviour, IDamageable
 { 
@@ -74,7 +76,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     private readonly int Die = Animator.StringToHash("Die");
     private readonly string BossTag = "Boss";
     public int attackCount = 0;
-
+    private Coroutine vibration=null;
     public int CurrentHealth
     {
         get { return currentHealth; }
@@ -85,6 +87,15 @@ public class CharacterState : MonoBehaviour, IDamageable
 
             if (prev != currentHealth)
             {
+
+                if (vibration != null)
+                {
+                    StopCoroutine(vibration);
+                    Gamepad.current.SetMotorSpeeds(0f, 0f);
+                }
+
+                vibration = StartCoroutine(HitVibration());
+
                 Damaged?.Invoke(currentHealth);
             }
         }
@@ -95,6 +106,16 @@ public class CharacterState : MonoBehaviour, IDamageable
 
     public float HealCooldownRemaining =>
     Mathf.Max(0, (lastHealTime + HealCoolTime) - Time.time);
+    
+    
+    public IEnumerator HitVibration()
+    {
+        Gamepad.current.SetMotorSpeeds(0.75f, 0.75f);
+        yield return new WaitForSeconds(0.2f);
+        Gamepad.current.SetMotorSpeeds(0f, 0f);
+        vibration = null;
+    }
+
 
     public float CurrentStamina
     {

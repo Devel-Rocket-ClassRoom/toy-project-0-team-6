@@ -1,10 +1,10 @@
 using System.Collections;
 using TMPro;
-using Unity.Jobs;
+ 
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+
 
 public class UIController : MonoBehaviour
 {
@@ -15,6 +15,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject clearPanel;
     [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject keyconfigPanel;
 
     [Header("References")]
     [SerializeField] private CharacterState characterState;
@@ -101,11 +102,17 @@ public class UIController : MonoBehaviour
         if(restartGame)
         {
             restartGame = false;
+            settingsController.ApplySettingData();
             OnStartGame();
         }
 
         cancel = InputSystem.actions.FindAction("Cancel");
         cancel.performed += OnPause;
+    }
+
+    private void OnDisable()
+    {
+        cancel.performed -= OnPause;
     }
 
     private void OnDestroy()//
@@ -202,12 +209,21 @@ public class UIController : MonoBehaviour
 
     public void OnPause(InputAction.CallbackContext context)
     {
-        if (!gameObject.activeSelf)
+        if (!gamePanel.activeSelf)
             return;
-        pausePanel.SetActive(true);
-        gamePanel.SetActive(false);
-        Time.timeScale = 0f;
-        CursorVisible();
+
+        if (pausePanel.activeSelf)
+        {
+            OnResume();
+        }
+        else
+        {
+            pausePanel.SetActive(true);
+            gamePanel.SetActive(false);
+            Time.timeScale = 0f;
+            CursorVisible();
+        }
+        
     }
 
     public void OnResume()
@@ -230,6 +246,7 @@ public class UIController : MonoBehaviour
         SaveManager.Instance.Save();
         CursorVisible();
         StartCoroutine(ShowGameOverLogStats());
+        Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
 
     public void OnClear()
