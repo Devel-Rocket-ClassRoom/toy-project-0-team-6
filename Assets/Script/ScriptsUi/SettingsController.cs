@@ -118,6 +118,19 @@ public class SettingsController : MonoBehaviour
         AudioManager.Instance.SetSEVolume(value);
         SaveManager.Instance.CurrentData.seVolume = value;
     }
+    public void ResetSettings()
+    {
+        if (SaveManager.Instance == null) return;
+
+        SaveManager.Instance.ResetData();
+        ApplySettingData();
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetBGMVolume(SaveManager.Instance.CurrentData.bgmVolume);
+            AudioManager.Instance.SetSEVolume(SaveManager.Instance.CurrentData.seVolume);
+        }
+    }
     public void ApplySettingData()
     {
         if (SaveManager.Instance == null) return;

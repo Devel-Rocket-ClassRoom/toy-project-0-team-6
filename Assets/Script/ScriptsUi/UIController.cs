@@ -48,6 +48,7 @@ public class UIController : MonoBehaviour
     private int hitCount;
     private float runTimer;
     private bool timerRunning;
+    private static bool restartGame;
 
     private bool gameOver = false;
 
@@ -95,6 +96,11 @@ public class UIController : MonoBehaviour
         {
             boss.OnClear += OnClear;
             boss.OnDamage += OnBossDamaged;
+        }
+        if(restartGame)
+        {
+            restartGame = false;
+            OnStartGame();
         }
     }
 
@@ -179,6 +185,7 @@ public class UIController : MonoBehaviour
     public void OnGameRestart()
     {
         AudioManager.Instance.PlaySE(clickSound);
+        restartGame = true;
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);   
     }

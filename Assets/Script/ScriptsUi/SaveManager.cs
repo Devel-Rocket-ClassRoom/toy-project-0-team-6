@@ -54,6 +54,11 @@ public class SaveManager : MonoBehaviour
         string json = File.ReadAllText(Path);
         CurrentData = JsonConvert.DeserializeObject<SaveData>(json);
     }
+    public void ResetData()
+    {
+        CurrentData = new SaveData();
+        Save();
+    }   
 
     //키 설정 값 저장 추가 예정.
     //New Input System 사용 예정
