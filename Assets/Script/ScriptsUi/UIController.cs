@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using Unity.Jobs;
 using UnityEngine;
@@ -213,6 +214,7 @@ public class UIController : MonoBehaviour
         UpdateGameOverTexts();
         SaveManager.Instance.Save();
         CursorVisible();
+        StartCoroutine(ShowGameOverLogStats());
     }
 
     public void OnClear()
@@ -230,6 +232,7 @@ public class UIController : MonoBehaviour
         UpdateClearTexts();
         SaveManager.Instance.Save();
         CursorVisible();
+        StartCoroutine(ShowClearLogStats());
     }
     public void CursorVisible()
     {
@@ -296,8 +299,52 @@ public class UIController : MonoBehaviour
          overAttackCountText.text = $"{attackCount}";
         overHitCountText.text = $"{hitCount}";
         
-        float ratio = boss.CurrentHp / boss.data.BossHp * 100f;
+        float ratio = boss.CurrentHp / (float)boss.data.BossHp * 100f;
         overBossHpText.text = $"{ratio:F0}%";
          
+    }
+
+    //게임오버/클리어 패널의 로그 텍스트 순차적으로 띄우기
+
+    private IEnumerator ShowClearLogStats()
+    {
+        float delay = 0.3f;
+        
+        clearDamageDealtText.gameObject.SetActive(false);
+        clearDamageTakenText.gameObject.SetActive(false);
+        clearAttackCountText.gameObject.SetActive(false);
+        clearHitCountText.gameObject.SetActive(false);
+        clearTimeText.gameObject.SetActive(false);
+
+        yield return new WaitForSecondsRealtime(delay);
+        clearDamageDealtText.gameObject.SetActive(true);
+        yield return new WaitForSecondsRealtime(delay);
+        clearDamageTakenText.gameObject.SetActive(true);
+        yield return new WaitForSecondsRealtime(delay);
+        clearAttackCountText.gameObject.SetActive(true);
+        yield return new WaitForSecondsRealtime(delay);
+        clearHitCountText.gameObject.SetActive(true);
+        yield return new WaitForSecondsRealtime(delay);
+        clearTimeText.gameObject.SetActive(true);
+    }
+    private IEnumerator ShowGameOverLogStats()
+    {
+        float delay = 0.3f;
+        overDamageDealtText.gameObject.SetActive(false);
+        overDamageTakenText.gameObject.SetActive(false);
+        overAttackCountText.gameObject.SetActive(false);
+        overHitCountText.gameObject.SetActive(false);
+        overBossHpText.gameObject.SetActive(false);
+
+        yield return new WaitForSecondsRealtime(delay);
+        overDamageDealtText.gameObject.SetActive(true);
+        yield return new WaitForSecondsRealtime(delay);
+        overDamageTakenText.gameObject.SetActive(true);
+        yield return new WaitForSecondsRealtime(delay);
+        overAttackCountText.gameObject.SetActive(true);
+        yield return new WaitForSecondsRealtime(delay);
+        overHitCountText.gameObject.SetActive(true);
+        yield return new WaitForSecondsRealtime(delay);
+        overBossHpText.gameObject.SetActive(true);
     }
 }
