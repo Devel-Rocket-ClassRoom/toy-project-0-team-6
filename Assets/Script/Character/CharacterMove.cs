@@ -13,10 +13,11 @@ public class CharacterMove : MonoBehaviour
     public ParticleSystem HealParticle;
     public GameObject startMenu;
 
-    public float moveSpeed = 5;
+    public float normalSpeed = 5;
+
     public float dodgeSpeed = 8f;
     public float rotateSpeed = 0.3f;
-
+    public float drainedSpeedMultiplier = 0.3f; // 느려지는 정도
     private Vector3 dodgeDirection; //닷지 시 방향 저장
 
     public static readonly int Attack = Animator.StringToHash("Attack");
@@ -75,6 +76,7 @@ public class CharacterMove : MonoBehaviour
 
         if (state.currentState != StateType.Attack &&
             state.currentState != StateType.Dodge &&
+            state.currentState != StateType.UsingConsumable &&
             state.currentState != StateType.Damaged)
         {
             bool isMoving = moveValue.magnitude>0.001f;
@@ -120,6 +122,12 @@ public class CharacterMove : MonoBehaviour
 
     private void FixedUpdate()
     {
+        float speed = normalSpeed;
+        if (state.IsDrained)
+        {
+            speed *= 0.5f;
+        }
+
         if (state.currentState == CharacterState.StateType.Attack ||
             state.currentState == CharacterState.StateType.UsingConsumable ||
             state.currentState == CharacterState.StateType.Damaged)
@@ -130,13 +138,13 @@ public class CharacterMove : MonoBehaviour
         else if(state.currentState == CharacterState.StateType.Dodge)
         {
             rb.linearVelocity = dodgeDirection * dodgeSpeed;
-            transform.rotation = Quaternion.LookRotation(dodgeDirection);
+            //transform.rotation = Quaternion.LookRotation(dodgeDirection);
         }
         else
         {
             Vector3 direction = transform.right * moveValue.x + transform.forward * moveValue.y;
             direction = Vector3.ClampMagnitude(direction, 1f);
-            rb.linearVelocity = direction * moveSpeed;
+            rb.linearVelocity = direction * speed;
         }
     }
 
@@ -164,6 +172,9 @@ public class CharacterMove : MonoBehaviour
             state.currentState != StateType.Move)
             return;
 
+        if (!state.CanUseHeal())
+            return;
+
         state.UsingConsumable();
         anim.SetTrigger(Heal);
         HealParticle.Play();
@@ -181,6 +192,9 @@ public class CharacterMove : MonoBehaviour
             dodgeDirection = transform.forward;
 
         dodgeDirection.Normalize();
+
+        if (!state.CanDodge())
+            return;
 
         state.Dodging();
         anim.SetTrigger(Dodge);
