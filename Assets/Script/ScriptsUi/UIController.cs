@@ -233,10 +233,10 @@ public class UIController : MonoBehaviour
 
     public void OnPause()
     {
-        bool isPaused = pausePanel.activeSelf;
-        pausePanel.SetActive(!isPaused);
-        gamePanel.SetActive(isPaused);
-        Time.timeScale = isPaused ? 1f : 0f;
+        
+        pausePanel.SetActive(true);
+        gamePanel.SetActive(false);
+        Time.timeScale = 0f;
         CursorVisible();
     }
 
