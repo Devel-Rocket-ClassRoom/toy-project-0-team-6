@@ -346,5 +346,6 @@ public class UIController : MonoBehaviour
         overHitCountText.gameObject.SetActive(true);
         yield return new WaitForSecondsRealtime(delay);
         overBossHpText.gameObject.SetActive(true);
+        //중복 요소 줄이기 고려.
     }
 }

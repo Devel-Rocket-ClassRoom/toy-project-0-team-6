@@ -30,7 +30,7 @@ public class SaveManager : MonoBehaviour
     }
     private void Update()
     {
-        autoSaveTimer += Time.unscaledDeltaTime;
+        autoSaveTimer += Time.deltaTime;
         if(autoSaveTimer >= autoSaveInterval)
         {
             Save();
@@ -54,6 +54,9 @@ public class SaveManager : MonoBehaviour
         string json = File.ReadAllText(Path);
         CurrentData = JsonConvert.DeserializeObject<SaveData>(json);
     }
+
+    //키 설정 값 저장 추가 예정.
+    //New Input System 사용 예정
 
     private void OnApplicationQuit()
     {
