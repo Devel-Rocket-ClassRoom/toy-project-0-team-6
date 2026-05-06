@@ -48,17 +48,26 @@ public class CharacterState : MonoBehaviour, IDamageable
     public float maxStamina;          //최대 스테미나
     private float currentStamina;     //현재 스테미나
     public float[] stmUseSpeed = new float[] { 20, 0.5f, 4 };   //스테미나 소모 속도[공격(1회)/달리기(초당)/회피(1회)] /임시 값
-    private float restoreStmTime = 3f;  //스테미나 회복 대기시간
+    public float restoreStmTime = 5f;  //스테미나 회복 대기시간
     private float restoreStmTimer = 0f; //대기 타이머
+    public float DodgeCooltime = 2f;    //닷지 쿨타임
+    private float lastDodgeTime = -999f;
+    public float HealCoolTime = 8f;
+    private float lastHealTime = -999f;
 
     public StateType currentState = StateType.Idle;
 
     public bool IsDead => currentHealth <= 0;     //사망 여부
-    public bool IsDrained => currentStamina <= 0;      //스테미나 다떨어진 상태
+    public bool IsDrained => currentStamina <= 0.5f;      //스테미나 다떨어진 상태
     public bool CanRestoreStm => restoreStmTimer <= 0f;
+
+    private float lastSentDodgeCooldown = -1f;
+    private float lastSentHealCooldown = -1f;
 
     public event System.Action<int> Damaged;    //데미지 이벤트 함수
     public event System.Action<float> OnStaminaChanged; //스테미나 이벤트 함수
+    public event System.Action<float> OnDodgeCooldownChanged; //닷지 쿨타임 이벤트 함수
+    public event System.Action<float> OnHealCooldownChanged; //닷지 쿨타임 이벤트 함수
 
     private Animator anim;
     private readonly int Normal = Animator.StringToHash("Normal");
@@ -67,14 +76,13 @@ public class CharacterState : MonoBehaviour, IDamageable
     private readonly int Die = Animator.StringToHash("Die");
     private readonly string BossTag = "Boss";
     public int attackCount = 0;
-
+    private Coroutine vibration=null;
     public int CurrentHealth
     {
         get { return currentHealth; }
         set
         {
             float prev = currentHealth;
-
             currentHealth = Mathf.Clamp(value, 0, maxHealth);
 
             if (prev != currentHealth)
@@ -93,7 +101,13 @@ public class CharacterState : MonoBehaviour, IDamageable
         }
     }
 
-    Coroutine vibration=null;
+    public float DodgeCooldownRemaining =>
+        Mathf.Max(0, (lastDodgeTime + DodgeCooltime) - Time.time);
+
+    public float HealCooldownRemaining =>
+    Mathf.Max(0, (lastHealTime + HealCoolTime) - Time.time);
+    
+    
     public IEnumerator HitVibration()
     {
         Gamepad.current.SetMotorSpeeds(0.75f, 0.75f);
@@ -108,7 +122,7 @@ public class CharacterState : MonoBehaviour, IDamageable
         get { return currentStamina; }
         set
         {
-            if (currentStamina > value)
+            if (value < currentStamina - 0.01f)
             {
                 restoreStmTimer = restoreStmTime;
             }
@@ -167,6 +181,22 @@ public class CharacterState : MonoBehaviour, IDamageable
         {
             CurrentStamina += stmUseSpeed[1] * Time.deltaTime;
         }
+
+        float DodgeRemain = DodgeCooldownRemaining;
+
+        if (!Mathf.Approximately(DodgeRemain, lastSentDodgeCooldown))
+        {
+            OnDodgeCooldownChanged?.Invoke(DodgeRemain);
+            lastSentDodgeCooldown = DodgeRemain;
+        }
+
+        float HealRemain = HealCooldownRemaining;
+
+        if (!Mathf.Approximately(HealRemain, lastSentHealCooldown))
+        {
+            OnHealCooldownChanged?.Invoke(HealRemain);
+            lastSentHealCooldown = HealRemain;
+        }
     }
 
     public void Dead()
@@ -218,10 +248,26 @@ public class CharacterState : MonoBehaviour, IDamageable
             currentState == StateType.Die)
             return;
 
+        if (!CanDodge()) 
+            return;
+
         currentState = StateType.Dodge;
 
-        currentStamina -= stmUseSpeed[(int)StaminaUseType.Dodge];
+        CurrentStamina -= stmUseSpeed[(int)StaminaUseType.Dodge];
+
+        lastDodgeTime = Time.time;
+
         characterMove.commandQueue.Clear();
+    }
+
+    public bool CanDodge()
+    {
+        return Time.time >= lastDodgeTime + DodgeCooltime &&
+               currentStamina >= stmUseSpeed[(int)StaminaUseType.Dodge];
+    }
+    public float GetDodgeCooldownRatio()        //UI용
+    {
+        return DodgeCooldownRemaining / DodgeCooltime;
     }
 
     public void UsingConsumable()
@@ -231,9 +277,19 @@ public class CharacterState : MonoBehaviour, IDamageable
             currentState == StateType.Die)
             return;
 
+        if (!CanUseHeal())
+            return;
+
         currentState = StateType.UsingConsumable;
 
         CurrentHealth += 20;
+
+        lastHealTime = Time.time;
+    }
+
+    public bool CanUseHeal()
+    {
+        return Time.time >= lastHealTime + HealCoolTime;
     }
 
     public void StopHealParticle()
@@ -281,8 +337,6 @@ public class CharacterState : MonoBehaviour, IDamageable
 
     public void EnableAttack()
     {
-        Debug.Log("어택시작");
-
         characterMove.commandQueue.Clear();
         AttackZone.Attackable = true;
         attackCount++;
@@ -290,8 +344,7 @@ public class CharacterState : MonoBehaviour, IDamageable
 
     public void DisableAttack()
     {
-        Debug.Log("어택끝");
-
+        AttackZone.Attackable = false;
         if(characterMove.commandQueue.Count == 0)
         {
             characterMove.EndAttack();
