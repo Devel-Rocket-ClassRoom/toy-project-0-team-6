@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using UnityEngine.InputSystem;
 
 //세이브 데이터 클래스
 //설정 관련 저장을 최소치로 잡고 키 설정/fov는 추후 추가할 예정
@@ -14,6 +15,9 @@ public class SaveData
     public float fov = 80f;
     public int stageClearCount = 0;
     public float mouseSensitivity = 3f;
+    //new input system기준 키설정 저장
+    public string keyBindings = "";
+   
 
 
 
