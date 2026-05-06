@@ -9,6 +9,8 @@ public class CharacterMove : MonoBehaviour
     private CharacterState state;
     private Animator anim;
     private Rigidbody rb;
+
+    public ParticleSystem HealParticle;
     public GameObject startMenu;
 
     public float moveSpeed = 5;
@@ -20,6 +22,7 @@ public class CharacterMove : MonoBehaviour
     public static readonly int Attack = Animator.StringToHash("Attack");
     public static readonly int Dodge = Animator.StringToHash("Dodge");
     public static readonly int HardAttack = Animator.StringToHash("HardAttack");
+    public static readonly int Heal = Animator.StringToHash("Heal");
 
     public List<string> commandQueue = new();
     private bool canCommand = false;
@@ -42,6 +45,7 @@ public class CharacterMove : MonoBehaviour
         state = GetComponent<CharacterState>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        HealParticle.Stop();
 
         move = InputSystem.actions.FindAction("Move");
         look = InputSystem.actions.FindAction("Look");
@@ -106,12 +110,22 @@ public class CharacterMove : MonoBehaviour
                 OnAttack();
             }
         }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnDodge();
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            OnUseConsumable();
+        }
     }
 
 
     private void FixedUpdate()
     {
         if (state.currentState == CharacterState.StateType.Attack ||
+            state.currentState == CharacterState.StateType.UsingConsumable ||
             state.currentState == CharacterState.StateType.Damaged)
         {
             rb.linearVelocity = Vector3.zero;
@@ -146,6 +160,17 @@ public class CharacterMove : MonoBehaviour
 
         state.HardAttacking();
         anim.SetTrigger(HardAttack);
+    }
+
+    private void OnUseConsumable()
+    {
+        if (state.currentState != StateType.Idle &&
+            state.currentState != StateType.Move)
+            return;
+
+        state.UsingConsumable();
+        anim.SetTrigger(Heal);
+        HealParticle.Play();
     }
 
     private void OnDodge(InputAction.CallbackContext context)

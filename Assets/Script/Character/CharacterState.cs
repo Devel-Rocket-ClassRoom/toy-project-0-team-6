@@ -8,6 +8,7 @@ public class CharacterState : MonoBehaviour, IDamageable
         Idle,
         Move,
         Attack,
+        UsingConsumable,
         Dodge,
         Damaged,
         Die
@@ -19,6 +20,12 @@ public class CharacterState : MonoBehaviour, IDamageable
         Dodge,                  //회피
     }
 
+    public enum ConsumableItem
+    {
+        Heal,
+
+    }
+
     private CharacterMove characterMove;
     public CharacterAttackZone AttackZone;
     private GameObject boss;
@@ -26,7 +33,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     private int currentHealth;
 
     private int consumablesCount;   //현재 소모품 갯수
-    private int currentConsumable;  //현재 소모품 타입(임시 int)
+    private ConsumableItem currentConsumable;  //현재 소모품 타입(임시 int)
 
     public int StartPower = 5;
     public int StartHealthStat = 5;
@@ -64,7 +71,14 @@ public class CharacterState : MonoBehaviour, IDamageable
         get { return currentHealth; }
         set
         {
+            float prev = currentHealth;
+
             currentHealth = Mathf.Clamp(value, 0, maxHealth);
+
+            if (prev != currentHealth)
+            {
+                Damaged?.Invoke(currentHealth);
+            }
         }
     }
 
@@ -95,7 +109,7 @@ public class CharacterState : MonoBehaviour, IDamageable
         set { consumablesCount = value; }
     }
 
-    public int CurrentConsumable        //소모품 타입이 아직 없어 int로 대체
+    public ConsumableItem CurrentConsumable
     {
         get { return currentConsumable; }
         set { currentConsumable = value; }
@@ -185,17 +199,32 @@ public class CharacterState : MonoBehaviour, IDamageable
 
         currentState = StateType.Dodge;
 
-        CurrentStamina -= stmUseSpeed[(int)StaminaUseType.Dodge];
+        currentStamina -= stmUseSpeed[(int)StaminaUseType.Dodge];
         characterMove.commandQueue.Clear();
         DisableAttack();
+    }
+
+    public void UsingConsumable()
+    {
+        if (currentState == StateType.Attack ||
+            currentState == StateType.Damaged ||
+            currentState == StateType.Die)
+            return;
+
+        currentState = StateType.UsingConsumable;
+
+        CurrentHealth += 20;
+    }
+
+    public void StopHealParticle()
+    {
+        characterMove.HealParticle.Stop();
     }
 
     public bool IsInvincible()
     {
         return currentState == StateType.Dodge ||
                currentState == StateType.Die;
-
-
     }
 
 
@@ -228,8 +257,6 @@ public class CharacterState : MonoBehaviour, IDamageable
 
 
         CurrentHealth -= damageData.amount;
-
-        Damaged?.Invoke(damageData.amount);
     }
 
     public void EnableAttack()
