@@ -1,8 +1,7 @@
-﻿using Unity.Cinemachine;
-using Unity.Mathematics;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static CharacterState;
-using static UnityEditor.FilePathAttribute;
 
 public class CharacterMove : MonoBehaviour
 {
@@ -22,6 +21,11 @@ public class CharacterMove : MonoBehaviour
     public static readonly int Attack = Animator.StringToHash("Attack");
     public static readonly int Dodge = Animator.StringToHash("Dodge");
     public static readonly int HardAttack = Animator.StringToHash("HardAttack");
+
+    public List<string> commandQueue = new();
+    private bool canCommand = false;
+    [SerializeField]
+    private int maxCommand = 2;
 
     public float Horizontal { get; private set; }
     public float Vertical { get; private set; }
@@ -68,7 +72,18 @@ public class CharacterMove : MonoBehaviour
             }
             else
             {
-                OnAttack();
+                if (canCommand && state.attackCount > 0)
+                {
+                    commandQueue.Add("A");
+                    if(commandQueue.Count > maxCommand)
+                    {
+                        commandQueue.RemoveAt(0);
+                    }
+                }
+                else
+                {
+                    OnAttack();
+                }
             }
         }
 
@@ -89,7 +104,6 @@ public class CharacterMove : MonoBehaviour
         {
             OnDodge();
         }
-
     }
 
     private void FixedUpdate()
@@ -110,21 +124,17 @@ public class CharacterMove : MonoBehaviour
             Vector3 direction = transform.right * Horizontal + transform.forward * Vertical;
             direction = Vector3.ClampMagnitude(direction, 1f);
             rb.linearVelocity = direction * moveSpeed;
-
         }
-
-        
     }
 
     private void OnAttack()
     {
-        if (state.currentState != StateType.Idle &&
-            state.currentState != StateType.Move)
-            return;
+        state.currentState = CharacterState.StateType.Attack;
 
         state.Attacking();
         anim.SetTrigger(Attack);
     }
+
     private void OnHardAttack()
     {
         if (state.currentState != StateType.Idle &&
@@ -134,8 +144,6 @@ public class CharacterMove : MonoBehaviour
         state.HardAttacking();
         anim.SetTrigger(HardAttack);
     }
-
-
 
     private void OnDodge()
     {
@@ -156,6 +164,33 @@ public class CharacterMove : MonoBehaviour
 
     public void EndAttack()
     {
+        state.attackCount = 0;
+        anim.ResetTrigger(Attack);
         state.currentState = CharacterState.StateType.Idle;
+    }
+
+    public void OpenQueue()
+    {
+        canCommand = true;
+    }
+
+    public void CloseQueue()
+    {
+        canCommand = false;
+        TryNextAttack();
+    }
+
+    private void TryNextAttack()
+    {
+        if(commandQueue.Count == 0)
+        {
+            return;
+        }
+
+        if(commandQueue.Last() == "A")
+        {
+            anim.SetTrigger(Attack);
+            state.Attacking();
+        }
     }
 }

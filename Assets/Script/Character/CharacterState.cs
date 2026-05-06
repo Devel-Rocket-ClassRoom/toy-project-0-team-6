@@ -57,6 +57,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     private readonly int VeryHard = Animator.StringToHash("VeryHard");
     private readonly int Die = Animator.StringToHash("Die");
     private readonly string BossTag = "Boss";
+    public int attackCount = 0;
 
     public int CurrentHealth
     {
@@ -185,6 +186,8 @@ public class CharacterState : MonoBehaviour, IDamageable
         currentState = StateType.Dodge;
 
         CurrentStamina -= stmUseSpeed[(int)StaminaUseType.Dodge];
+        characterMove.commandQueue.Clear();
+        DisableAttack();
     }
 
     public bool IsInvincible()
@@ -231,11 +234,17 @@ public class CharacterState : MonoBehaviour, IDamageable
 
     public void EnableAttack()
     {
+        characterMove.commandQueue.Clear();
         AttackZone.Attackable = true;
+        attackCount++;
     }
 
     public void DisableAttack()
     {
         AttackZone.Attackable = false;
+        if(characterMove.commandQueue.Count == 0)
+        {
+            characterMove.EndAttack();
+        }
     }
 }
