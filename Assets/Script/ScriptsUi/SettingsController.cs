@@ -142,6 +142,11 @@ public class SettingsController : MonoBehaviour
         if (isInitialized) return;
         keySettings.SetActive(true);
     }
+    public void CloseKeySettings()
+    {
+        if (isInitialized) return;
+        keySettings.SetActive(false);
+    }
     public void ApplySettingData()
     {
         if (SaveManager.Instance == null) return;
