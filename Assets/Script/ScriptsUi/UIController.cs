@@ -342,7 +342,8 @@ public class UIController : MonoBehaviour
     private IEnumerator ShowClearLogStats()
     {
         float delay = 0.3f;
-        
+        float duration = 0.2f;
+
         clearDamageDealtText.gameObject.SetActive(false);
         clearDamageTakenText.gameObject.SetActive(false);
         clearAttackCountText.gameObject.SetActive(false);
@@ -350,19 +351,22 @@ public class UIController : MonoBehaviour
         clearTimeText.gameObject.SetActive(false);
 
         yield return new WaitForSecondsRealtime(delay);
-        clearDamageDealtText.gameObject.SetActive(true);
+        yield return CountUpText(clearDamageDealtText, damageDeal, duration, "{0:N0}");
         yield return new WaitForSecondsRealtime(delay);
-        clearDamageTakenText.gameObject.SetActive(true);
+        yield return CountUpText(clearDamageTakenText, damageTaken, duration, "{0:N0}");
         yield return new WaitForSecondsRealtime(delay);
-        clearAttackCountText.gameObject.SetActive(true);
+        yield return CountUpText(clearAttackCountText, attackCount, duration, "{0}");
         yield return new WaitForSecondsRealtime(delay);
-        clearHitCountText.gameObject.SetActive(true);
+        yield return CountUpText(clearHitCountText, hitCount, duration, "{0}");
         yield return new WaitForSecondsRealtime(delay);
-        clearTimeText.gameObject.SetActive(true);
+        yield return CountUpTimeText(clearTimeText, runTimer, duration);
     }
     private IEnumerator ShowGameOverLogStats()
     {
         float delay = 0.3f;
+        float duration = 0.2f;
+        float ratio = boss.CurrentHp / (float)boss.data.BossHp * 100f;
+
         overDamageDealtText.gameObject.SetActive(false);
         overDamageTakenText.gameObject.SetActive(false);
         overAttackCountText.gameObject.SetActive(false);
@@ -370,15 +374,48 @@ public class UIController : MonoBehaviour
         overBossHpText.gameObject.SetActive(false);
 
         yield return new WaitForSecondsRealtime(delay);
-        overDamageDealtText.gameObject.SetActive(true);
+        yield return CountUpText(overDamageDealtText, damageDeal, duration, "{0:N0}");
         yield return new WaitForSecondsRealtime(delay);
-        overDamageTakenText.gameObject.SetActive(true);
+        yield return CountUpText(overDamageTakenText, damageTaken, duration, "{0:N0}");
         yield return new WaitForSecondsRealtime(delay);
-        overAttackCountText.gameObject.SetActive(true);
+        yield return CountUpText(overAttackCountText, attackCount, duration, "{0}"  );
         yield return new WaitForSecondsRealtime(delay);
-        overHitCountText.gameObject.SetActive(true);
+        yield return CountUpText(overHitCountText, hitCount, duration, "{0}"  );
         yield return new WaitForSecondsRealtime(delay);
-        overBossHpText.gameObject.SetActive(true);
+        yield return CountUpText(overBossHpText, Mathf.RoundToInt(ratio), duration, "{0}%");
         //중복 요소 줄이기 고려.
+    }
+
+    //오버 패널에서 숫자들이 0부터 차례대로 올라오도록 하는 코루틴 메서드 작성
+    private IEnumerator CountUpText(TextMeshProUGUI text, int target, float duration, string format = "{0}")
+    {
+        text.gameObject.SetActive(true);
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;//timescale이 0이므로 unscaled 사용
+            float time = Mathf.Clamp01(elapsed / duration);
+            int value = Mathf.RoundToInt(Mathf.Lerp(0, target, time));
+            text.text = string.Format(format, value);
+            yield return null;
+        }
+
+        text.text = string.Format(format, target);
+    }
+    //시간 표시용 
+    private IEnumerator CountUpTimeText(TextMeshProUGUI text, float target, float duration)
+    {
+        text.gameObject.SetActive(true);
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;//timescale이 0이므로 unscaled 사용
+            float time = Mathf.Clamp01(elapsed / duration);
+            float value = Mathf.Lerp(0, target, time);
+            text.text = FormatTime(value);
+            yield return null;
+        }
+        text.text = FormatTime(target);
     }
 }
