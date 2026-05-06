@@ -201,7 +201,6 @@ public class CharacterState : MonoBehaviour, IDamageable
 
         currentStamina -= stmUseSpeed[(int)StaminaUseType.Dodge];
         characterMove.commandQueue.Clear();
-        DisableAttack();
     }
 
     public void UsingConsumable()
@@ -261,6 +260,8 @@ public class CharacterState : MonoBehaviour, IDamageable
 
     public void EnableAttack()
     {
+        Debug.Log("어택시작");
+
         characterMove.commandQueue.Clear();
         AttackZone.Attackable = true;
         attackCount++;
@@ -268,7 +269,8 @@ public class CharacterState : MonoBehaviour, IDamageable
 
     public void DisableAttack()
     {
-        AttackZone.Attackable = false;
+        Debug.Log("어택끝");
+
         if(characterMove.commandQueue.Count == 0)
         {
             characterMove.EndAttack();

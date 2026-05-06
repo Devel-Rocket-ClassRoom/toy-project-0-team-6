@@ -56,6 +56,7 @@ public class Boss : MonoBehaviour, IDamageable
 
     public event Action<int> OnDamage;
     public event Action OnClear;
+    public ParticleSystem particle;
 
     private Statement CurrentStatement
     {
@@ -116,7 +117,7 @@ public class Boss : MonoBehaviour, IDamageable
 
     private void Update()
     {
-        if (target == null || isDeath || isAttack)
+        if (target == null || isDeath)
         {
             return;
         }
@@ -222,6 +223,11 @@ public class Boss : MonoBehaviour, IDamageable
 
     public void OnDeath()
     {
+        if (isDeath)
+        {
+            return;
+        }
+
         isDeath = true;
         agent.isStopped = true;
         animator.SetTrigger(Death);
@@ -278,10 +284,10 @@ public class Boss : MonoBehaviour, IDamageable
     {
         if(!attackZone.gameObject.activeSelf)
         {
-            attackZone.gameObject.SetActive(true);
             DamageVO attackInfo = new() { amount = damage, damageType = DamageVO.DamageType.normal };
             attackZone.SetDamage(attackInfo);
             attackZone.attackable = true;
+            attackZone.gameObject.SetActive(true);
             return;
         }
         attackZone.gameObject.SetActive(false);
@@ -302,9 +308,6 @@ public class Boss : MonoBehaviour, IDamageable
             return;
         }
 
-        CurrentHp -= damageData.amount;
-        OnDamage?.Invoke(damageData.amount);
-
         switch (damageData.damageType)
         {   
             case DamageVO.DamageType.normal:
@@ -323,16 +326,25 @@ public class Boss : MonoBehaviour, IDamageable
                 break;
         }
 
-        if(CurrentHp < 0)
+        CurrentHp -= damageData.amount;
+        OnDamage?.Invoke(damageData.amount);
+
+        if (CurrentHp <= 0)
         {
             CurrentHp = 0;
-            currentstatement = Statement.Death;
+            CurrentStatement = Statement.Death;
         }
     }
 
     public void Phase2MotionEnd()
     {
-        agent.isStopped = currentstatement == Statement.Move ? false : true;
+        if (CurrentStatement == Statement.Attack)
+        {
+            AttackAnimationEnd();
+        }
+
+        agent.isStopped = CurrentStatement == Statement.Move ? false : true;
+        
     }
 
     public void ToggleInvincible()

@@ -12,6 +12,8 @@ public class CharacterMove : MonoBehaviour
 
     public ParticleSystem HealParticle;
     public GameObject startMenu;
+    public GameObject optionMenu;
+    public GameObject pauseMenu;
 
     public float moveSpeed = 5;
     public float dodgeSpeed = 8f;
@@ -71,7 +73,7 @@ public class CharacterMove : MonoBehaviour
 
     private void Update()
     {
-        if (startMenu.activeSelf)
+        if (startMenu.activeSelf || optionMenu.activeSelf || pauseMenu.activeSelf)
         {
             return;
         }
