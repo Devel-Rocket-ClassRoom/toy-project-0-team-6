@@ -19,6 +19,7 @@ public class SettingsController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private CharacterMove characterMove;
+    [SerializeField] private GameObject keySettings;
 
     [Header("Play Time Display")]
     [SerializeField] private TextMeshProUGUI playTimeTextSettings;
@@ -31,12 +32,13 @@ public class SettingsController : MonoBehaviour
     private void Start()
     {
         mouseSensivitySlider.value = characterMove.rotateSpeed*10;
-        
-       
+        keySettings.SetActive(false);
+
+
         ApplySettingData();
     }
     private void Update()
-    {
+    { 
         if(!isPlaying) return;
         if (SaveManager.Instance == null) return;
         totalPlayTime += Time.deltaTime;
@@ -72,7 +74,8 @@ public class SettingsController : MonoBehaviour
     public void SetMouseSensivity(float value)
     {
         if(isInitialized) return;
-        characterMove.rotateSpeed = value*0.1f;
+        mouseSensivitySlider.value = value;
+        characterMove.rotateSpeed = value * 0.1f;
         SaveManager.Instance.CurrentData.mouseSensitivity = value;
     }
     public void SetFrameRate30()
@@ -134,6 +137,16 @@ public class SettingsController : MonoBehaviour
             AudioManager.Instance.SetSEVolume(SaveManager.Instance.CurrentData.seVolume);
         }
     }
+    public void SetKeySettings()
+    {
+        if (isInitialized) return;
+        keySettings.SetActive(true);
+    }
+    public void CloseKeySettings()
+    {
+        if (isInitialized) return;
+        keySettings.SetActive(false);
+    }
     public void ApplySettingData()
     {
         if (SaveManager.Instance == null) return;
@@ -161,8 +174,8 @@ public class SettingsController : MonoBehaviour
 
 
 
-        characterMove.rotateSpeed = data.mouseSensitivity;
-        mouseSensivitySlider.value = characterMove.rotateSpeed;
+        characterMove.rotateSpeed = data.mouseSensitivity * 0.1f;
+        mouseSensivitySlider.value = data.mouseSensitivity;
 
         totalPlayTime = data.totalPlayTime;
         UpdateTimeText();

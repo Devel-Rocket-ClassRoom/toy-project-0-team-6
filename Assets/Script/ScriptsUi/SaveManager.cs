@@ -1,10 +1,12 @@
 using UnityEngine;
 using System.IO;
 using Newtonsoft.Json;
+using UnityEngine.InputSystem;
 
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager Instance { get; private set; }
+  
     public SaveData CurrentData { get; private set; }
     
 
@@ -41,6 +43,7 @@ public class SaveManager : MonoBehaviour
     public void Save()
     {
         if (CurrentData == null) return;
+        CurrentData.keyBindings = InputSystem.actions.SaveBindingOverridesAsJson();
         string json = JsonConvert.SerializeObject(CurrentData, Formatting.Indented);
         File.WriteAllText(Path, json);
     }
@@ -53,9 +56,14 @@ public class SaveManager : MonoBehaviour
         }
         string json = File.ReadAllText(Path);
         CurrentData = JsonConvert.DeserializeObject<SaveData>(json);
+        if(!string.IsNullOrEmpty(CurrentData.keyBindings))
+        {
+            InputSystem.actions.LoadBindingOverridesFromJson(CurrentData.keyBindings);
+        }
     }
     public void ResetData()
     {
+        InputSystem.actions.RemoveAllBindingOverrides();
         CurrentData = new SaveData();
         Save();
     }   
