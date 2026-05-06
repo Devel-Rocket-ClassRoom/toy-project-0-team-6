@@ -13160,7 +13160,7 @@ PrefabInstance:
     - target: {fileID: 6004667321814363594, guid: e73ce2efa271fd947ba1a44e6420184e, type: 3}
       propertyPath: characterState
       value: 
-      objectReference: {fileID: 5826423858752425657, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 6123497077234865388, guid: e73ce2efa271fd947ba1a44e6420184e, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
