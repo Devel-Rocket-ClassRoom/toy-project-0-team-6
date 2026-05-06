@@ -19,6 +19,7 @@ public class SettingsController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private CharacterMove characterMove;
+    [SerializeField] private GameObject keySettings;
 
     [Header("Play Time Display")]
     [SerializeField] private TextMeshProUGUI playTimeTextSettings;
@@ -31,12 +32,13 @@ public class SettingsController : MonoBehaviour
     private void Start()
     {
         mouseSensivitySlider.value = characterMove.rotateSpeed*10;
-        
-       
+        keySettings.SetActive(false);
+
+
         ApplySettingData();
     }
     private void Update()
-    {
+    { 
         if(!isPlaying) return;
         if (SaveManager.Instance == null) return;
         totalPlayTime += Time.deltaTime;
@@ -134,6 +136,11 @@ public class SettingsController : MonoBehaviour
             AudioManager.Instance.SetSEVolume(SaveManager.Instance.CurrentData.seVolume);
         }
     }
+    public void SetKeySettings()
+    {
+        if (isInitialized) return;
+        keySettings.SetActive(true);
+    }
     public void ApplySettingData()
     {
         if (SaveManager.Instance == null) return;
@@ -161,7 +168,7 @@ public class SettingsController : MonoBehaviour
 
 
 
-        characterMove.rotateSpeed = data.mouseSensitivity;
+        characterMove.rotateSpeed = data.mouseSensitivity ;
         mouseSensivitySlider.value = characterMove.rotateSpeed;
 
         totalPlayTime = data.totalPlayTime;
