@@ -186,6 +186,8 @@ public class CharacterState : MonoBehaviour, IDamageable
         currentState = StateType.Dodge;
 
         CurrentStamina -= stmUseSpeed[(int)StaminaUseType.Dodge];
+        characterMove.commandQueue.Clear();
+        DisableAttack();
     }
 
     public bool IsInvincible()

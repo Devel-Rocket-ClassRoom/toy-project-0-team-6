@@ -1,6 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static CharacterState;
-using static UnityEditor.FilePathAttribute;
 
 public class CharacterMove : MonoBehaviour
 {
@@ -103,7 +104,6 @@ public class CharacterMove : MonoBehaviour
         {
             OnDodge();
         }
-
     }
 
     private void FixedUpdate()
@@ -124,7 +124,6 @@ public class CharacterMove : MonoBehaviour
             Vector3 direction = transform.right * Horizontal + transform.forward * Vertical;
             direction = Vector3.ClampMagnitude(direction, 1f);
             rb.linearVelocity = direction * moveSpeed;
-
         }
     }
 
@@ -165,7 +164,6 @@ public class CharacterMove : MonoBehaviour
 
     public void EndAttack()
     {
-
         state.attackCount = 0;
         anim.ResetTrigger(Attack);
         state.currentState = CharacterState.StateType.Idle;
