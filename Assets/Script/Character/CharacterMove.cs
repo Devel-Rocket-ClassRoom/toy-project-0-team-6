@@ -62,6 +62,13 @@ public class CharacterMove : MonoBehaviour
         useItem.performed += OnUseConsumable;
     }
 
+    private void OnDisable()
+    {
+        attack.performed -= OnAttackKey;
+        dodge.performed -= OnDodge;
+        useItem.performed -= OnUseConsumable;
+    }
+
     private void Update()
     {
         if (startMenu.activeSelf)

@@ -108,6 +108,11 @@ public class UIController : MonoBehaviour
         cancel.performed += OnPause;
     }
 
+    private void OnDisable()
+    {
+        cancel.performed -= OnPause;
+    }
+
     private void OnDestroy()//
     {
         if (characterState != null)
