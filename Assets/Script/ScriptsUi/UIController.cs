@@ -1,10 +1,10 @@
 using System.Collections;
 using TMPro;
-using Unity.Jobs;
+ 
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+
 
 public class UIController : MonoBehaviour
 {
