@@ -41,7 +41,7 @@ public class Boss : MonoBehaviour, IDamageable
     public float attackInterval = 4f;
     private float forwardAttackCoolTime = 0f;   //전진공격
     public float forwardAttackInterval = 10f;
-    private float windMillCoolTime = 0f;   //전진공격
+    private float windMillCoolTime = 0f;   //회전공격
     public float windMillInterval = 10f;
     private bool phase2;
     private int maxHp;
