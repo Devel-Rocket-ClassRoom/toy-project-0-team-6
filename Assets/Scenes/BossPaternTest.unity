@@ -3115,6 +3115,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BossPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 147486, guid: ec06d59a25025df4faf8326294504ede, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 462548, guid: ec06d59a25025df4faf8326294504ede, type: 3}
       propertyPath: m_LocalScale.x
       value: 2
@@ -5196,6 +5200,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
+    - target: {fileID: 2161907641686016540, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: c9e6cebacfa8dc740949eadc44f7ddc0, type: 2}
     - target: {fileID: 2202998997008912976, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.000000027939674
