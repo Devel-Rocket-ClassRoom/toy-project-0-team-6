@@ -46,7 +46,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     public float maxStamina;          //최대 스테미나
     private float currentStamina;     //현재 스테미나
     public float[] stmUseSpeed = new float[] { 20, 0.5f, 4 };   //스테미나 소모 속도[공격(1회)/달리기(초당)/회피(1회)] /임시 값
-    private float restoreStmTime = 3f;  //스테미나 회복 대기시간
+    public float restoreStmTime = 5f;  //스테미나 회복 대기시간
     private float restoreStmTimer = 0f; //대기 타이머
     public float DodgeCooltime = 2f;    //닷지 쿨타임
     private float lastDodgeTime = -999f;

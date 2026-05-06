@@ -13,11 +13,12 @@ public class CharacterMove : MonoBehaviour
     public ParticleSystem HealParticle;
     public GameObject startMenu;
 
-    public float normalSpeed = 5;
-
-    public float dodgeSpeed = 8f;
+    public float normalSpeed = 5;   //평상시 속력
+    public float dodgeSpeed = 8f;   //드레인 상태시 속력
     public float rotateSpeed = 0.3f;
     public float drainedSpeedMultiplier = 0.3f; // 느려지는 정도
+    private float speed;    //적용할 속도
+
     private Vector3 dodgeDirection; //닷지 시 방향 저장
 
     public static readonly int Attack = Animator.StringToHash("Attack");
@@ -68,6 +69,12 @@ public class CharacterMove : MonoBehaviour
         if (startMenu.activeSelf)
         {
             return;
+        }
+
+        speed = normalSpeed;
+        if (state.IsDrained)
+        {
+            speed *= drainedSpeedMultiplier;
         }
 
         moveValue = move.ReadValue<Vector2>();
@@ -122,11 +129,6 @@ public class CharacterMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float speed = normalSpeed;
-        if (state.IsDrained)
-        {
-            speed *= 0.5f;
-        }
 
         if (state.currentState == CharacterState.StateType.Attack ||
             state.currentState == CharacterState.StateType.UsingConsumable ||
