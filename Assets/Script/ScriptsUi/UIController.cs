@@ -180,7 +180,7 @@ public class UIController : MonoBehaviour
     {
         AudioManager.Instance.PlaySE(clickSound);
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);   
     }
 
     public void OnMainMenu()

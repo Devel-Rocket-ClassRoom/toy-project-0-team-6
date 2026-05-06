@@ -24,7 +24,7 @@ public class AudioManager : MonoBehaviour
     }
     private void Start()
     {
-      
+        
         if (SaveManager.Instance == null) return;
         SaveData data = SaveManager.Instance.CurrentData;
         SetBGMVolume(data.bgmVolume);
@@ -56,5 +56,6 @@ public class AudioManager : MonoBehaviour
         if (bgmSource.clip == clip && bgmSource.isPlaying) return;
         bgmSource.clip = clip;
         bgmSource.Play();
+        bgmSource.loop = true;
     }
 }
