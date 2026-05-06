@@ -4032,9 +4032,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterMove
   HealParticle: {fileID: 2652910271708337845}
   startMenu: {fileID: 0}
-  moveSpeed: 5
+  normalSpeed: 5
   dodgeSpeed: 8
-  rotateSpeed: 3
+  rotateSpeed: 0.3
+  drainedSpeedMultiplier: 0.3
   commandQueue: []
   maxCommand: 2
 --- !u!114 &5826423858752425657
@@ -4056,9 +4057,12 @@ MonoBehaviour:
   StartDexterity: 5
   maxStamina: 100
   stmUseSpeed:
-  - 2
-  - 0.5
-  - 4
+  - 10
+  - 5
+  - 20
+  restoreStmTime: 5
+  DodgeCooltime: 2
+  HealCoolTime: 8
   currentState: 0
   attackCount: 0
 --- !u!54 &3996833783787003756
