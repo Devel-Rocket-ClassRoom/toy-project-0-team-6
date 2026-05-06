@@ -115,6 +115,8 @@ public class UIController : MonoBehaviour
   
     private void CheckDeath()
     {
+        //캐릭터쪽은 보스와 달리 dead체크가 미완성으로 보여 UI쪽에서 체크하도록 함. 보스는 클리어 이벤트로 체크
+        //추후 캐릭터쪽이 보스와 동일하게 이벤트로 바뀌면 해당 기능은 제거.
         if (gameOver) return;
         if (characterState == null) return;
         if (!gamePanel.activeSelf) return;
@@ -122,6 +124,8 @@ public class UIController : MonoBehaviour
 
         gameOver = true;
         OnGameOver();
+        
+        
     }
 
    
@@ -132,7 +136,6 @@ public class UIController : MonoBehaviour
         damageTaken += dmg;
         hitCount++;
     }
-
     private void OnBossDamaged(int dmg)
     {
         if (gameOver) return;
@@ -140,10 +143,6 @@ public class UIController : MonoBehaviour
         attackCount++;
       
     }
-
-  
- 
-
     private void ResetStats()
     {
         damageDealt = 0;
