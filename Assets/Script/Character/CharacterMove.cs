@@ -18,6 +18,7 @@ public class CharacterMove : MonoBehaviour
     public static readonly string vertical = "Vertical";
     public static readonly int Attack = Animator.StringToHash("Attack");
     public static readonly int Dodge = Animator.StringToHash("Dodge");
+    public static readonly int HardAttack = Animator.StringToHash("HardAttack");
 
     public float Horizontal { get; private set; }
     public float Vertical { get; private set; }
@@ -58,7 +59,14 @@ public class CharacterMove : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            OnAttack();
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                OnHardAttack();
+            }
+            else
+            {
+                OnAttack();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -110,11 +118,20 @@ public class CharacterMove : MonoBehaviour
             state.currentState != StateType.Move)
             return;
 
-        state.currentState = CharacterState.StateType.Attack;
-
         anim.SetTrigger(Attack);
         state.Attacking();
     }
+    private void OnHardAttack()
+    {
+        if (state.currentState != StateType.Idle &&
+            state.currentState != StateType.Move)
+            return;
+
+        anim.SetTrigger(HardAttack);
+        state.Attacking();
+    }
+
+
 
     private void OnDodge()
     {
