@@ -39,6 +39,8 @@ public class CharacterMove : MonoBehaviour
     InputAction attack;
     InputAction dodge;
     InputAction hardAttack;
+    InputAction useItem;
+    InputAction changeItem;
 
     void Start()
     {
@@ -47,14 +49,17 @@ public class CharacterMove : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         HealParticle.Stop();
 
-        move = InputSystem.actions.FindAction("Move");
-        look = InputSystem.actions.FindAction("Look");
+        move = InputSystem.actions.FindAction("Move",true);
+        look = InputSystem.actions.FindAction("Look",true);
         attack = InputSystem.actions.FindAction("Attack",true);
         dodge = InputSystem.actions.FindAction("Dodge",true);
         hardAttack= InputSystem.actions.FindAction("StrongAttack", true);
+        useItem = InputSystem.actions.FindAction("UseItem",true);
+        changeItem = InputSystem.actions.FindAction("ChangeItem",true);
 
         attack.performed += OnAttackKey;
         dodge.performed += OnDodge;
+        useItem.performed += OnUseConsumable;
     }
 
     private void Update()
@@ -110,15 +115,6 @@ public class CharacterMove : MonoBehaviour
                 OnAttack();
             }
         }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            OnDodge();
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            OnUseConsumable();
-        }
     }
 
 
@@ -162,7 +158,7 @@ public class CharacterMove : MonoBehaviour
         anim.SetTrigger(HardAttack);
     }
 
-    private void OnUseConsumable()
+    private void OnUseConsumable(InputAction.CallbackContext context)
     {
         if (state.currentState != StateType.Idle &&
             state.currentState != StateType.Move)
