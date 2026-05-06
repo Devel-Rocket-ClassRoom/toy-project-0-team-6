@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Runtime.Serialization;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CharacterState : MonoBehaviour, IDamageable
 { 
@@ -77,10 +79,29 @@ public class CharacterState : MonoBehaviour, IDamageable
 
             if (prev != currentHealth)
             {
+
+                if (vibration != null)
+                {
+                    StopCoroutine(vibration);
+                    Gamepad.current.SetMotorSpeeds(0f, 0f);
+                }
+
+                vibration = StartCoroutine(HitVibration());
+
                 Damaged?.Invoke(currentHealth);
             }
         }
     }
+
+    Coroutine vibration=null;
+    public IEnumerator HitVibration()
+    {
+        Gamepad.current.SetMotorSpeeds(0.75f, 0.75f);
+        yield return new WaitForSeconds(0.2f);
+        Gamepad.current.SetMotorSpeeds(0f, 0f);
+        vibration = null;
+    }
+
 
     public float CurrentStamina
     {
