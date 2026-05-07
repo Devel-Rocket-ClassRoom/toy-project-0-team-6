@@ -434,4 +434,5 @@ public class UIController : MonoBehaviour
         }
         text.text = FormatTime(target);
     }
+    //메서드 역할이 유사한게 있으므로 통합 고려.
 }
