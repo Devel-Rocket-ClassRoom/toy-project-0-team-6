@@ -4537,22 +4537,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5140181443405527016, guid: ec06d59a25025df4faf8326294504ede, type: 3}
-      propertyPath: m_Size.x
-      value: 1.5543993
-      objectReference: {fileID: 0}
-    - target: {fileID: 5140181443405527016, guid: ec06d59a25025df4faf8326294504ede, type: 3}
-      propertyPath: m_Center.x
-      value: -0.10242826
-      objectReference: {fileID: 0}
-    - target: {fileID: 5140181443405527016, guid: ec06d59a25025df4faf8326294504ede, type: 3}
-      propertyPath: m_Center.y
-      value: 0.010359187
-      objectReference: {fileID: 0}
-    - target: {fileID: 6006163044216416315, guid: ec06d59a25025df4faf8326294504ede, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6113,10 +6097,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character
       objectReference: {fileID: 0}
-    - target: {fileID: 3935999515426265829, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4990719812868454805, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
@@ -6157,22 +6137,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5826423858752425657, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
-      propertyPath: maxHealth
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 5826423858752425657, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
-      propertyPath: StartPower
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5826423858752425657, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
-      propertyPath: maxStamina
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 5826423858752425657, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
-      propertyPath: restoreStmTime
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 6985358914666879070, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
       propertyPath: DodgeView
       value: 
@@ -6193,10 +6157,6 @@ PrefabInstance:
       propertyPath: LockOnPoint
       value: 
       objectReference: {fileID: 1524359984}
-    - target: {fileID: 6985358914666879070, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
-      propertyPath: rotateSpeed
-      value: 0.3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
