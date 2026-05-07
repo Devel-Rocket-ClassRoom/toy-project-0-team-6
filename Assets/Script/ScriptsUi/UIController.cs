@@ -55,6 +55,8 @@ public class UIController : MonoBehaviour
     private bool gameOver = false;
 
     InputAction cancel;
+    InputAction pause;
+
 
     private void Awake()
     {
@@ -113,11 +115,15 @@ public class UIController : MonoBehaviour
 
         cancel = InputSystem.actions.FindAction("Cancel");
         cancel.performed += OnPause;
+
+        pause = InputSystem.actions.FindAction("Pause");
+        pause.performed += OnPause;
     }
 
     private void OnDisable()
     {
         cancel.performed -= OnPause;
+        pause.performed -= OnPause;
     }
 
     private void OnDestroy()//
