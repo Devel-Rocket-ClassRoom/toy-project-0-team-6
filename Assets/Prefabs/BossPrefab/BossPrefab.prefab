@@ -671,7 +671,7 @@ MonoBehaviour:
   idleInterval: 4
   attackDistance: 3
   attackInterval: 4
-  forwardAttackInterval: 10
+  forwardAttackInterval: 4
   windMillInterval: 10
 --- !u!54 &9199964701013812390
 Rigidbody:

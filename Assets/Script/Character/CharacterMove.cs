@@ -193,7 +193,11 @@ public class CharacterMove : MonoBehaviour
 
     private void OnAttack()
     {
-        if(state.CurrentStamina <= 0)
+        if (state.currentState != StateType.Idle &&
+            state.currentState != StateType.Move)
+            return;
+
+        if (state.CurrentStamina <= 0)
         {
             EndAttack();
             return;
@@ -248,7 +252,7 @@ public class CharacterMove : MonoBehaviour
 
         dodgeDirection.Normalize();
 
-        if (!state.canDodge)
+        if (!state.canDodge || state.CurrentStamina <= 0f)
             return;
 
         state.Dodging();
