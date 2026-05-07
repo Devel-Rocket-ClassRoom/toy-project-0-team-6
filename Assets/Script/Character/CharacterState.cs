@@ -1,10 +1,9 @@
 using System.Collections;
-using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CharacterState : MonoBehaviour, IDamageable
-{ 
+{
     public enum StateType
     {
         Idle,
@@ -76,7 +75,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     private readonly int Die = Animator.StringToHash("Die");
     private readonly string BossTag = "Boss";
     public int attackCount = 0;
-    private Coroutine vibration=null;
+    private Coroutine vibration = null;
     private bool canDamage = true;
 
     public int CurrentHealth
@@ -109,15 +108,15 @@ public class CharacterState : MonoBehaviour, IDamageable
 
     public float HealCooldownRemaining =>
     Mathf.Max(0, (lastHealTime + HealCoolTime) - Time.time);
-    
-    
+
+
     public IEnumerator HitVibration()
     {
         if (Gamepad.current == null)
         {
             yield break;
         }
-            Gamepad.current.SetMotorSpeeds(0.75f, 0.75f);
+        Gamepad.current.SetMotorSpeeds(0.75f, 0.75f);
         yield return new WaitForSeconds(0.2f);
         Gamepad.current.SetMotorSpeeds(0f, 0f);
         vibration = null;
@@ -246,7 +245,7 @@ public class CharacterState : MonoBehaviour, IDamageable
 
         AttackZone.SetDamage(damage);
 
-        CurrentStamina -= (int)(stmUseSpeed[(int)StaminaUseType.NormalAttack]* 1.5);
+        CurrentStamina -= (int)(stmUseSpeed[(int)StaminaUseType.NormalAttack] * 1.5);
     }
 
     public void Dodging()
@@ -256,7 +255,7 @@ public class CharacterState : MonoBehaviour, IDamageable
             currentState == StateType.Die)
             return;
 
-        if (!CanDodge()) 
+        if (!CanDodge())
             return;
 
         currentState = StateType.Dodge;
@@ -353,7 +352,7 @@ public class CharacterState : MonoBehaviour, IDamageable
 
     public void DisableAttack()
     {
-        if(characterMove.commandQueue.Count == 0)
+        if (characterMove.commandQueue.Count == 0)
         {
             characterMove.EndAttack();
             AttackZone.Attackable = false;
