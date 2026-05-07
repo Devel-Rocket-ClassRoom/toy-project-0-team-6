@@ -64,10 +64,7 @@ public class CharacterMove : MonoBehaviour
         attack.performed += OnAttackKey;
         dodge.performed += OnDodge;
         useItem.performed += OnUseConsumable;
-        if(Gamepad.current != null)
-        {
-            Gamepad.current.SetMotorSpeeds(0f, 0f);
-        }
+        Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
 
     private void OnDisable()
@@ -75,11 +72,7 @@ public class CharacterMove : MonoBehaviour
         attack.performed -= OnAttackKey;
         dodge.performed -= OnDodge;
         useItem.performed -= OnUseConsumable;
-        if (Gamepad.current != null)
-        {
-            Gamepad.current.SetMotorSpeeds(0f, 0f);
-        }
-            
+        Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
 
     private void Update()
@@ -170,6 +163,12 @@ public class CharacterMove : MonoBehaviour
 
     private void OnAttack()
     {
+        if(state.CurrentStamina <= 0)
+        {
+            EndAttack();
+            return;
+        }
+
         state.currentState = CharacterState.StateType.Attack;
 
         state.Attacking();
@@ -181,6 +180,12 @@ public class CharacterMove : MonoBehaviour
         if (state.currentState != StateType.Idle &&
             state.currentState != StateType.Move)
             return;
+
+        if (state.CurrentStamina <= 0)
+        {
+            EndAttack();
+            return;
+        }
 
         state.HardAttacking();
         anim.SetTrigger(HardAttack);
@@ -240,8 +245,9 @@ public class CharacterMove : MonoBehaviour
 
     private void TryNextAttack()
     {
-        if(commandQueue.Count == 0)
+        if(commandQueue.Count == 0 || state.CurrentStamina <= 0)
         {
+            EndAttack();
             return;
         }
 

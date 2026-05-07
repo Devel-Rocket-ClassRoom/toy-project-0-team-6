@@ -347,6 +347,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     {
         characterMove.commandQueue.Clear();
         AttackZone.Attackable = true;
+        canDamage = true;
         attackCount++;
     }
 
@@ -356,7 +357,6 @@ public class CharacterState : MonoBehaviour, IDamageable
         {
             characterMove.EndAttack();
             AttackZone.Attackable = false;
-            canDamage = true;
         }
     }
 }
