@@ -20,6 +20,7 @@ public class UIController : MonoBehaviour
     [Header("References")]
     [SerializeField] private CharacterState characterState;
     [SerializeField] private Boss boss;
+    
 
     [Header("Audio")]
     [SerializeField] private AudioClip mainMenuSound;

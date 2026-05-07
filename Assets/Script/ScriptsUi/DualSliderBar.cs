@@ -9,12 +9,12 @@ public class DualSliderBar : MonoBehaviour
     [SerializeField] private float delaySeconds = 0.5f;
     [SerializeField] private float lerpSpeed = 3f;
 
-    private float trueRatio;
+    private float tgtRatio;
     private float delayTimer;
 
     private void Awake()
     {
-        trueRatio = 1f;
+        tgtRatio = 1f;
         mainSlider.value = 1f;
         delaySlider.value = 1f;
     }
@@ -22,8 +22,8 @@ public class DualSliderBar : MonoBehaviour
     public void SetValue(float current, float max)
     {
         float newRatio = current / max;
-        bool isDecreasing = newRatio < trueRatio;//
-        trueRatio = newRatio;
+        bool isDecreasing = newRatio < tgtRatio;//
+        tgtRatio = newRatio;
 
         if (isDecreasing)
         {
@@ -49,17 +49,17 @@ public class DualSliderBar : MonoBehaviour
         {
             delaySlider.value = Mathf.MoveTowards(
                 delaySlider.value,
-                trueRatio,
+                tgtRatio,
                 lerpSpeed * Time.deltaTime
             );
         }
 
-        // 회복: main이 trueRatio를 천천히 따라감
-        if (mainSlider.value < trueRatio)
+        // 회복: main이 tgtRatio를 천천히 따라감
+        if (mainSlider.value < tgtRatio)
         {
             mainSlider.value = Mathf.MoveTowards(
                 mainSlider.value,
-                trueRatio,
+                tgtRatio,
                 lerpSpeed * Time.deltaTime
             );
         }
