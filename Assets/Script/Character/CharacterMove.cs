@@ -72,7 +72,10 @@ public class CharacterMove : MonoBehaviour
         dodge.performed -= OnDodge;
         useItem.performed -= OnUseConsumable;
         if (Gamepad.current != null)
+        {
             Gamepad.current.SetMotorSpeeds(0f, 0f);
+        }
+            
     }
 
     private void Update()
