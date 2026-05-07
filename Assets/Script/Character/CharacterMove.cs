@@ -155,14 +155,7 @@ public class CharacterMove : MonoBehaviour
     private void BossLockOn(InputAction.CallbackContext context)
     {
         lockOn = !lockOn;
-        if(LockOnPoint.activeSelf)
-        {
-            LockOnPoint.SetActive(false);
-        }
-        else
-        {
-            LockOnPoint.SetActive(true);
-        }
+        LockOnPoint.SetActive(lockOn);
     }
 
     private void FixedUpdate()
