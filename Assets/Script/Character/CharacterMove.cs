@@ -194,7 +194,8 @@ public class CharacterMove : MonoBehaviour
     private void OnAttack()
     {
         if (state.currentState != StateType.Idle &&
-            state.currentState != StateType.Move)
+            state.currentState != StateType.Move &&
+            state.currentState != StateType.Attack)
             return;
 
         if (state.CurrentStamina <= 0)
@@ -287,6 +288,7 @@ public class CharacterMove : MonoBehaviour
 
         if(commandQueue.Last() == "A")
         {
+            Debug.Log(1);
             anim.SetTrigger(Attack);
             state.Attacking();
         }
