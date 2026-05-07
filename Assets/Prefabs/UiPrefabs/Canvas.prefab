@@ -3739,6 +3739,8 @@ MonoBehaviour:
   characterState: {fileID: 5826423858752425657, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
   boss: {fileID: 1890410289026383522, guid: ec06d59a25025df4faf8326294504ede, type: 3}
   mainMenuSound: {fileID: 8300000, guid: 0d2873262f167ec4abf222bc8ce44027, type: 3}
+  gameOverSound: {fileID: 8300000, guid: 136ac75b1c0b7604abae5d0c5d4ca1a5, type: 3}
+  clearSound: {fileID: 8300000, guid: 33c216f0f288fec45a7e3322e92aee59, type: 3}
   inGameSound: {fileID: 8300000, guid: 1cb75002adc444044967a3143e20d211, type: 3}
   clickSound: {fileID: 8300000, guid: 17896552f8998214c9919a9aa86ee483, type: 3}
   settingsController: {fileID: 4835254446412471402}
@@ -3752,6 +3754,7 @@ MonoBehaviour:
   overAttackCountText: {fileID: 7048854877709998242}
   overHitCountText: {fileID: 3152787758342810528}
   overBossHpText: {fileID: 6842182581724330828}
+  logDisplayDelay: 3
 --- !u!114 &4835254446412471402
 MonoBehaviour:
   m_ObjectHideFlags: 0

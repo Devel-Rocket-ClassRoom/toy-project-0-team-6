@@ -1,6 +1,6 @@
 using System.Collections;
 using TMPro;
- 
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -23,6 +23,8 @@ public class UIController : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private AudioClip mainMenuSound;
+    [SerializeField] private AudioClip gameOverSound;
+    [SerializeField] private AudioClip clearSound;
     [SerializeField] private AudioClip inGameSound;
     [SerializeField] private AudioClip clickSound;
 
@@ -43,7 +45,8 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI overHitCountText;
     [SerializeField] private TextMeshProUGUI overBossHpText;
 
-   
+    [SerializeField] private float logDisplayDelay = 3f;
+
     private int damageDeal;
     private int damageTaken;
     private int attackCount;
@@ -142,34 +145,25 @@ public class UIController : MonoBehaviour
             boss.OnDamage -= OnBossDamaged;
         }
     }
-
- 
-
     private void Update()
     {
         if (timerRunning) runTimer += Time.deltaTime;
         CheckDeath();
     }
-
-  
+    private bool logDisplayed;
     private void CheckDeath()
     {
-        //캐릭터쪽은 보스와 달리 dead체크가 미완성으로 보여 UI쪽에서 체크하도록 함. 보스는 클리어 이벤트로 체크
-        //추후 캐릭터쪽이 보스와 동일하게 이벤트로 바뀌면 해당 기능은 제거.
+      
         if (gameOver) return;
+        if(logDisplayed) return;
         if (characterState == null) return;
         if (!gamePanel.activeSelf) return;
         if (!characterState.IsDead) return;
         
-
         gameOver = true;
-        OnGameOver();
+        logDisplayed = true;
+        StartCoroutine(ShowGameOverPanel());
     }
-
-   
-
-
-    
 
     public void OnStartGame()
     {
@@ -184,7 +178,7 @@ public class UIController : MonoBehaviour
         if (clearPanel != null) clearPanel.SetActive(false);
         gamePanel.SetActive(true);
         settingsController.StartCount();
-
+         
         Time.timeScale = 1f;
         CursorInvisible();
     }
@@ -198,6 +192,7 @@ public class UIController : MonoBehaviour
         startMenuPanel.SetActive(false);
         settingsPanel.SetActive(true);
         CursorVisible();
+         
     }
 
     public void OnCloseSettings()
@@ -277,16 +272,38 @@ public class UIController : MonoBehaviour
         if (Gamepad.current != null)
             Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
+    private IEnumerator ShowGameOverPanel()
+    {
+        timerRunning = false;
+
+        yield return new WaitForSecondsRealtime(logDisplayDelay);
+     
+        logDisplayed = false;
+        AudioManager.Instance.PlayBGM(gameOverSound);
+        OnGameOver();
+    }
+
 
     public void OnClear()
     {
-        
-        if (gameOver) return;
+        if(gameOver) return;
+        if(logDisplayed) return;
         gameOver = true;
+        logDisplayed = true;
+        StartCoroutine(ShowClearPanel());
+    }
+    private IEnumerator ShowClearPanel()
+    {
         timerRunning = false;
+        yield return new WaitForSecondsRealtime(logDisplayDelay);
+
+      
+        logDisplayed = false;
+
+        AudioManager.Instance.PlayBGM(clearSound);
         gamePanel.SetActive(false);
         pausePanel.SetActive(false);
-        if (clearPanel != null) clearPanel.SetActive(true);
+        clearPanel.SetActive(true);
         Time.timeScale = 0f;
         settingsController.StopCount();
         SaveManager.Instance.CurrentData.stageClearCount++;
@@ -294,6 +311,7 @@ public class UIController : MonoBehaviour
         SaveManager.Instance.Save();
         CursorVisible();
         StartCoroutine(ShowClearLogStats());
+
     }
     public void CursorVisible()
     {
