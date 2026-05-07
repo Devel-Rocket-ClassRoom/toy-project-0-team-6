@@ -12,6 +12,8 @@ public class CharacterMove : MonoBehaviour
 
     public ParticleSystem HealParticle;
     public GameObject startMenu;
+    public GameObject optionMenu;
+    public GameObject pauseMenu;
 
     public float normalSpeed = 5;   //평상시 속력
     public float dodgeSpeed = 8f;   //드레인 상태시 속력
@@ -62,10 +64,7 @@ public class CharacterMove : MonoBehaviour
         attack.performed += OnAttackKey;
         dodge.performed += OnDodge;
         useItem.performed += OnUseConsumable;
-        if(Gamepad.current != null)
-        {
-            Gamepad.current.SetMotorSpeeds(0f, 0f);
-        }
+        Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
 
     private void OnDisable()
@@ -73,16 +72,12 @@ public class CharacterMove : MonoBehaviour
         attack.performed -= OnAttackKey;
         dodge.performed -= OnDodge;
         useItem.performed -= OnUseConsumable;
-        if (Gamepad.current != null)
-        {
-            Gamepad.current.SetMotorSpeeds(0f, 0f);
-        }
-            
+        Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
 
     private void Update()
     {
-        if (startMenu.activeSelf)
+        if (startMenu.activeSelf || optionMenu.activeSelf || pauseMenu.activeSelf)
         {
             return;
         }
@@ -168,6 +163,12 @@ public class CharacterMove : MonoBehaviour
 
     private void OnAttack()
     {
+        if(state.CurrentStamina <= 0)
+        {
+            EndAttack();
+            return;
+        }
+
         state.currentState = CharacterState.StateType.Attack;
 
         state.Attacking();
@@ -179,6 +180,12 @@ public class CharacterMove : MonoBehaviour
         if (state.currentState != StateType.Idle &&
             state.currentState != StateType.Move)
             return;
+
+        if (state.CurrentStamina <= 0)
+        {
+            EndAttack();
+            return;
+        }
 
         state.HardAttacking();
         anim.SetTrigger(HardAttack);
@@ -238,8 +245,9 @@ public class CharacterMove : MonoBehaviour
 
     private void TryNextAttack()
     {
-        if(commandQueue.Count == 0)
+        if(commandQueue.Count == 0 || state.CurrentStamina <= 0)
         {
+            EndAttack();
             return;
         }
 

@@ -56,6 +56,7 @@ public class Boss : MonoBehaviour, IDamageable
 
     public event Action<int> OnDamage;
     public event Action OnClear;
+    public ParticleSystem particle;
 
     private Statement CurrentStatement
     {
@@ -116,7 +117,7 @@ public class Boss : MonoBehaviour, IDamageable
 
     private void Update()
     {
-        if (target == null || isDeath || isAttack)
+        if (target == null || isDeath)
         {
             return;
         }
@@ -176,7 +177,7 @@ public class Boss : MonoBehaviour, IDamageable
                 break;
             case Statement.Move:
                 OnMove();
-                if (toTargetDistance > attackDistance && toTargetDistance < 7f && forwardAttackCoolTime > forwardAttackInterval)
+                if (toTargetDistance > attackDistance && toTargetDistance < 4f && forwardAttackCoolTime > forwardAttackInterval)
                 {
                     canForward = true;
                     CurrentStatement = Statement.Attack;
@@ -222,6 +223,11 @@ public class Boss : MonoBehaviour, IDamageable
 
     public void OnDeath()
     {
+        if (isDeath)
+        {
+            return;
+        }
+
         isDeath = true;
         agent.isStopped = true;
         animator.SetTrigger(Death);
@@ -278,10 +284,34 @@ public class Boss : MonoBehaviour, IDamageable
     {
         if(!attackZone.gameObject.activeSelf)
         {
-            attackZone.gameObject.SetActive(true);
-            DamageVO attackInfo = new() { amount = damage, damageType = DamageVO.DamageType.normal };
+            DamageVO attackInfo = new();
+
+            if (normalAttackCount > 0)
+            {
+                attackInfo.amount = damage;
+                attackInfo.damageType = DamageVO.DamageType.normal;
+            }
+            else if (canForward)
+            {
+                attackInfo.amount = damage * 2;
+                attackInfo.damageType = DamageVO.DamageType.hard;
+            }
+            else if (canWindMill)
+            {
+                attackInfo.amount = damage;
+                attackInfo.damageType = DamageVO.DamageType.normal;
+            }
+            else if(normalAttackCount == 0)
+            {
+                attackInfo.amount = damage * 4;
+                attackInfo.damageType = DamageVO.DamageType.veryHard;
+            }
+
+            Debug.Log(attackInfo.amount);
+
             attackZone.SetDamage(attackInfo);
             attackZone.attackable = true;
+            attackZone.gameObject.SetActive(true);
             return;
         }
         attackZone.gameObject.SetActive(false);
@@ -302,9 +332,6 @@ public class Boss : MonoBehaviour, IDamageable
             return;
         }
 
-        CurrentHp -= damageData.amount;
-        OnDamage?.Invoke(damageData.amount);
-
         switch (damageData.damageType)
         {   
             case DamageVO.DamageType.normal:
@@ -323,16 +350,25 @@ public class Boss : MonoBehaviour, IDamageable
                 break;
         }
 
-        if(CurrentHp < 0)
+        CurrentHp -= damageData.amount;
+        OnDamage?.Invoke(damageData.amount);
+
+        if (CurrentHp <= 0)
         {
             CurrentHp = 0;
-            currentstatement = Statement.Death;
+            CurrentStatement = Statement.Death;
         }
     }
 
     public void Phase2MotionEnd()
     {
-        agent.isStopped = currentstatement == Statement.Move ? false : true;
+        if (CurrentStatement == Statement.Attack)
+        {
+            AttackAnimationEnd();
+        }
+
+        agent.isStopped = CurrentStatement == Statement.Move ? false : true;
+        
     }
 
     public void ToggleInvincible()

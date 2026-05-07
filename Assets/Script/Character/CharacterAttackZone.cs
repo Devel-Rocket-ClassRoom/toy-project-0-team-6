@@ -23,11 +23,11 @@ public class CharacterAttackZone : MonoBehaviour
         if (other.CompareTag("Boss"))
         {
             boss = other.gameObject.GetComponent<IDamageable>();
-        }
-        if (boss != null && Attackable)
-        {
-            Attackable = false;
-            boss.GetDamage(damage);
+            if (boss != null && Attackable)
+            {
+                Attackable = false;
+                boss.GetDamage(damage);
+            }
         }
     }
 

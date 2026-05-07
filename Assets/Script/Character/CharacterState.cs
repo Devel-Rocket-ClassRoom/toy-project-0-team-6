@@ -77,6 +77,8 @@ public class CharacterState : MonoBehaviour, IDamageable
     private readonly string BossTag = "Boss";
     public int attackCount = 0;
     private Coroutine vibration=null;
+    private bool canDamage = true;
+
     public int CurrentHealth
     {
         get { return currentHealth; }
@@ -215,9 +217,10 @@ public class CharacterState : MonoBehaviour, IDamageable
     {
         if (currentState == StateType.Dodge ||
             currentState == StateType.Damaged ||
-            currentState == StateType.Die)
+            currentState == StateType.Die || !canDamage)
             return;
 
+        canDamage = false;
         currentState = StateType.Attack;
         DamageVO damage = new DamageVO();
         damage.amount = Power;
@@ -344,15 +347,16 @@ public class CharacterState : MonoBehaviour, IDamageable
     {
         characterMove.commandQueue.Clear();
         AttackZone.Attackable = true;
+        canDamage = true;
         attackCount++;
     }
 
     public void DisableAttack()
     {
-        AttackZone.Attackable = false;
         if(characterMove.commandQueue.Count == 0)
         {
             characterMove.EndAttack();
+            AttackZone.Attackable = false;
         }
     }
 }

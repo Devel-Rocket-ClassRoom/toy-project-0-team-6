@@ -23,12 +23,23 @@ public class NormalAttackZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             player = other.gameObject.GetComponent<IDamageable>();
+            if (player != null && attackable)
+            {
+                attackable = false;
+                player.GetDamage(damage);
+            }
         }
+    }
 
-        if (player != null && attackable)
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
         {
-            attackable = false;
-            player.GetDamage(damage);
+            player = other.gameObject.GetComponent<IDamageable>();
+            if (player != null)
+            {
+                attackable = true;
+            }
         }
     }
 
