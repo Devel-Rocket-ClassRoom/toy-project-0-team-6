@@ -220,7 +220,7 @@ public class UIController : MonoBehaviour
 
     public void OnPause(InputAction.CallbackContext context)
     {
-        if (!gamePanel.activeSelf)
+        if (!gamePanel.activeSelf && !pausePanel.activeSelf)
             return;
 
         if (pausePanel.activeSelf)
