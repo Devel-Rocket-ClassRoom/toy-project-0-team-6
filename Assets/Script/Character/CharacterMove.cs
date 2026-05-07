@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using static CharacterState;
 
@@ -10,12 +11,14 @@ public class CharacterMove : MonoBehaviour
     private CharacterState state;
     private Animator anim;
     private Rigidbody rb;
+    private GameObject boss;
 
     public ParticleSystem HealParticle;
     public GameObject startMenu;
     public GameObject optionMenu;
     public GameObject pauseMenu;
     public GameObject DodgeView;
+    public GameObject LockOnPoint;
 
     public float normalSpeed = 5;   //평상시 속력
     public float dodgeSpeed = 8f;   //드레인 상태시 속력
@@ -34,6 +37,7 @@ public class CharacterMove : MonoBehaviour
     private bool canCommand = false;
     [SerializeField]
     private int maxCommand = 2;
+    private bool lockOn = false;
 
     Vector2 moveValue = Vector2.zero;
     
@@ -47,6 +51,7 @@ public class CharacterMove : MonoBehaviour
     InputAction hardAttack;
     InputAction useItem;
     InputAction changeItem;
+    InputAction LockOn;
 
     void Start()
     {
@@ -54,6 +59,7 @@ public class CharacterMove : MonoBehaviour
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         HealParticle.Stop();
+        boss = GameObject.FindWithTag("Boss");
 
         move = InputSystem.actions.FindAction("Move",true);
         look = InputSystem.actions.FindAction("Look",true);
@@ -62,10 +68,13 @@ public class CharacterMove : MonoBehaviour
         hardAttack= InputSystem.actions.FindAction("StrongAttack", true);
         useItem = InputSystem.actions.FindAction("UseItem",true);
         changeItem = InputSystem.actions.FindAction("ChangeItem",true);
+        LockOn = InputSystem.actions.FindAction("LockOn", true);
 
         attack.performed += OnAttackKey;
         dodge.performed += OnDodge;
         useItem.performed += OnUseConsumable;
+        LockOn.performed += BossLockOn;
+
 
         if(Gamepad.current!=null)
             Gamepad.current.SetMotorSpeeds(0f, 0f);
@@ -76,6 +85,7 @@ public class CharacterMove : MonoBehaviour
         attack.performed -= OnAttackKey;
         dodge.performed -= OnDodge;
         useItem.performed -= OnUseConsumable;
+        LockOn.performed -= BossLockOn;
         if (Gamepad.current != null)
             Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
@@ -142,9 +152,20 @@ public class CharacterMove : MonoBehaviour
         }
     }
 
+    private void BossLockOn(InputAction.CallbackContext context)
+    {
+        lockOn = !lockOn;
+        LockOnPoint.SetActive(lockOn);
+    }
 
     private void FixedUpdate()
     {
+        if (lockOn)
+        {
+            transform.LookAt(boss.transform);
+            DodgeView.transform.LookAt(boss.transform);
+        }
+
         if (state.currentState == CharacterState.StateType.Attack ||
             state.currentState == CharacterState.StateType.UsingConsumable ||
             state.currentState == CharacterState.StateType.Damaged)

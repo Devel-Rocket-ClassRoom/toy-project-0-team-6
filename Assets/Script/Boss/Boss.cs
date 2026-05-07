@@ -56,7 +56,6 @@ public class Boss : MonoBehaviour, IDamageable
 
     public event Action<int> OnDamage;
     public event Action OnClear;
-    public ParticleSystem particle;
 
     private Statement CurrentStatement
     {
