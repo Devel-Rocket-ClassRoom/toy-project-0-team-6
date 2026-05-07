@@ -77,6 +77,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     public int attackCount = 0;
     private Coroutine vibration = null;
     private bool canDamage = true;
+    public bool canDodge { get; private set; } = true;
 
     public int CurrentHealth
     {
@@ -255,10 +256,11 @@ public class CharacterState : MonoBehaviour, IDamageable
             currentState == StateType.Die)
             return;
 
-        if (!CanDodge())
+        if (!canDodge)
             return;
 
         currentState = StateType.Dodge;
+        canDodge = false;
 
         CurrentStamina -= stmUseSpeed[(int)StaminaUseType.Dodge];
 
@@ -267,11 +269,11 @@ public class CharacterState : MonoBehaviour, IDamageable
         characterMove.commandQueue.Clear();
     }
 
-    public bool CanDodge()
+    public void CanDodge()
     {
-        return Time.time >= lastDodgeTime + DodgeCooltime &&
-               currentStamina >= stmUseSpeed[(int)StaminaUseType.Dodge];
+        canDodge = true;
     }
+
     public float GetDodgeCooldownRatio()        //UI용
     {
         return DodgeCooldownRemaining / DodgeCooltime;
