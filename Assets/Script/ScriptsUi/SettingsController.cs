@@ -88,6 +88,7 @@ public class SettingsController : MonoBehaviour
         if (isInitialized) return;
         if (virtualCamera == null) return;
         virtualCamera.Lens.FieldOfView = value;
+        fovSlider.value = value;
         SaveManager.Instance.CurrentData.fov = value;
     }
     public void SetFrameRate30()

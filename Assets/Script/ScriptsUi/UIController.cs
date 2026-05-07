@@ -52,6 +52,8 @@ public class UIController : MonoBehaviour
     private bool timerRunning;
     private static bool restartGame;
 
+    private GameObject prevPanel;
+
     private bool gameOver = false;
 
     InputAction cancel;
@@ -190,6 +192,9 @@ public class UIController : MonoBehaviour
     public void OnOpenSettings()
     {
         AudioManager.Instance.PlaySE(clickSound);
+
+        prevPanel = pausePanel.activeSelf ? pausePanel : startMenuPanel;
+        pausePanel.SetActive(false);
         startMenuPanel.SetActive(false);
         settingsPanel.SetActive(true);
         CursorVisible();
@@ -200,7 +205,18 @@ public class UIController : MonoBehaviour
         AudioManager.Instance.PlaySE(clickSound);
         SaveManager.Instance.Save();
         settingsPanel.SetActive(false);
-        startMenuPanel.SetActive(true);
+        if (prevPanel != null)
+        {
+            prevPanel.SetActive(true);
+        }
+        CursorVisible();
+    }
+    public void OnOpenKeyConfig()
+    {
+        AudioManager.Instance.PlaySE(clickSound);
+        keyconfigPanel.SetActive(true);
+        startMenuPanel.SetActive(false);
+        settingsPanel.SetActive(false);
         CursorVisible();
     }
 
