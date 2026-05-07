@@ -16,7 +16,6 @@ public class CharacterMove : MonoBehaviour
     public GameObject optionMenu;
     public GameObject pauseMenu;
     public GameObject DodgeView;
-    public CinemachineCamera DodgeCam;
 
     public float normalSpeed = 5;   //평상시 속력
     public float dodgeSpeed = 8f;   //드레인 상태시 속력
@@ -67,8 +66,6 @@ public class CharacterMove : MonoBehaviour
         attack.performed += OnAttackKey;
         dodge.performed += OnDodge;
         useItem.performed += OnUseConsumable;
-        
-        DodgeCam.gameObject.SetActive(false);
 
         if(Gamepad.current!=null)
             Gamepad.current.SetMotorSpeeds(0f, 0f);
@@ -232,7 +229,7 @@ public class CharacterMove : MonoBehaviour
 
         if (!state.CanDodge())
             return;
-        //DodgeCam.gameObject.SetActive(true);
+
         state.Dodging();
         anim.SetTrigger(Dodge);
     }
@@ -272,7 +269,6 @@ public class CharacterMove : MonoBehaviour
 
     public void DodgeEnd()
     {
-        //DodgeCam.gameObject.SetActive(false);
         transform.rotation = DodgeView.transform.rotation;
     }
 }
