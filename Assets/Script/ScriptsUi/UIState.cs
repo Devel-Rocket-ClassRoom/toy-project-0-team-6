@@ -45,10 +45,14 @@ public class UIState : MonoBehaviour
     private void Update()
     {
         if (dodgeTimer > 0f)
+        {
             dodgeTimer -= Time.unscaledDeltaTime;
+        }
 
         if (healTimer > 0f)
+        {
             healTimer -= Time.unscaledDeltaTime;
+        }
 
         bool isActionDisabled = IsActionDisabled();
 

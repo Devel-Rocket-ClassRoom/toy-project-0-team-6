@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.Cinemachine;
 
 public class SettingsController : MonoBehaviour
 {
@@ -17,9 +18,13 @@ public class SettingsController : MonoBehaviour
     [SerializeField] private Slider bgmVolumeSlider;
     [SerializeField] private Slider seVolumeSlider;
 
+    [Header("FOV Settings")]
+    [SerializeField] private Slider fovSlider;
+
     [Header("References")]
     [SerializeField] private CharacterMove characterMove;
     [SerializeField] private GameObject keySettings;
+    [SerializeField] private CinemachineCamera virtualCamera;
 
     [Header("Play Time Display")]
     [SerializeField] private TextMeshProUGUI playTimeTextSettings;
@@ -77,6 +82,13 @@ public class SettingsController : MonoBehaviour
         mouseSensivitySlider.value = value;
         characterMove.rotateSpeed = value * 0.1f;
         SaveManager.Instance.CurrentData.mouseSensitivity = value;
+    }
+    public void SetFov(float value)
+    {
+        if (isInitialized) return;
+        if (virtualCamera == null) return;
+        virtualCamera.Lens.FieldOfView = value;
+        SaveManager.Instance.CurrentData.fov = value;
     }
     public void SetFrameRate30()
     {
@@ -139,12 +151,11 @@ public class SettingsController : MonoBehaviour
     }
     public void SetKeySettings()
     {
-        if (isInitialized) return;
+        
         keySettings.SetActive(true);
     }
     public void CloseKeySettings()
     {
-        if (isInitialized) return;
         keySettings.SetActive(false);
     }
     public void ApplySettingData()
@@ -173,10 +184,15 @@ public class SettingsController : MonoBehaviour
         seVolumeSlider.value = data.seVolume;
 
 
-
+        //마우스 감도 조절
         characterMove.rotateSpeed = data.mouseSensitivity * 0.1f;
         mouseSensivitySlider.value = data.mouseSensitivity;
 
+        //카메라 시야각 조절
+        virtualCamera.Lens.FieldOfView = data.fov;
+        fovSlider.value = data.fov;
+
+        //플레이 타임 
         totalPlayTime = data.totalPlayTime;
         UpdateTimeText();
 

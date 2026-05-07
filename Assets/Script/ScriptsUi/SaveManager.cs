@@ -75,31 +75,5 @@ public class SaveManager : MonoBehaviour
     {
         Save();
     }
-
-#if UNITY_EDITOR
-    private void OnDisable()
-    {
-        Save();
-    }
-
-    [ContextMenu("Save Test")]
-    private void SaveTest()
-    {
-        Save();
-        Debug.Log($"저장 완료: {Path}");
-        Debug.Log(JsonConvert.SerializeObject(CurrentData, Formatting.Indented));
-    }
-
-    [ContextMenu("Load Test")]
-    private void LoadTest()
-    {
-        Load();
-        Debug.Log($"로드 완료");
-        Debug.Log(JsonConvert.SerializeObject(CurrentData, Formatting.Indented));
-    }
-#endif
-
-
-
 }
 

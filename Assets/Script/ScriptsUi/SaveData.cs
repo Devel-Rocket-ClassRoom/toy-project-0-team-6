@@ -17,8 +17,4 @@ public class SaveData
     public float mouseSensitivity = 3f;
     //new input system기준 키설정 저장
     public string keyBindings = "";
-   
-
-
-
 }

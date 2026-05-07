@@ -67,6 +67,7 @@ public class UIController : MonoBehaviour
         gameOverPanel.SetActive(false);
         clearPanel.SetActive(false);
         pausePanel.SetActive(false);
+        keyconfigPanel.SetActive(false);
         Time.timeScale = 0f;
 
 
