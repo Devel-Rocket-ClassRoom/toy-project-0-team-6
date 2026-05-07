@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static CharacterState;
@@ -14,6 +15,8 @@ public class CharacterMove : MonoBehaviour
     public GameObject startMenu;
     public GameObject optionMenu;
     public GameObject pauseMenu;
+    public GameObject DodgeView;
+    public CinemachineCamera DodgeCam;
 
     public float normalSpeed = 5;   //평상시 속력
     public float dodgeSpeed = 8f;   //드레인 상태시 속력
@@ -65,6 +68,8 @@ public class CharacterMove : MonoBehaviour
         dodge.performed += OnDodge;
         useItem.performed += OnUseConsumable;
         
+        DodgeCam.gameObject.SetActive(false);
+
         if(Gamepad.current!=null)
             Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
@@ -143,24 +148,28 @@ public class CharacterMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         if (state.currentState == CharacterState.StateType.Attack ||
             state.currentState == CharacterState.StateType.UsingConsumable ||
             state.currentState == CharacterState.StateType.Damaged)
         {
             rb.linearVelocity = Vector3.zero;
+            DodgeView.transform.position = transform.position;
+            DodgeView.transform.rotation = transform.rotation;
             return;
         }
         else if(state.currentState == CharacterState.StateType.Dodge)
         {
             rb.linearVelocity = dodgeDirection * dodgeSpeed;
-            //transform.rotation = Quaternion.LookRotation(dodgeDirection);
+            transform.rotation = Quaternion.LookRotation(dodgeDirection);
+            DodgeView.transform.position = transform.position;
         }
         else
         {
             Vector3 direction = transform.right * moveValue.x + transform.forward * moveValue.y;
             direction = Vector3.ClampMagnitude(direction, 1f);
             rb.linearVelocity = direction * speed;
+            DodgeView.transform.position = transform.position;
+            DodgeView.transform.rotation = transform.rotation;
         }
     }
 
@@ -223,7 +232,7 @@ public class CharacterMove : MonoBehaviour
 
         if (!state.CanDodge())
             return;
-
+        //DodgeCam.gameObject.SetActive(true);
         state.Dodging();
         anim.SetTrigger(Dodge);
     }
@@ -259,5 +268,11 @@ public class CharacterMove : MonoBehaviour
             anim.SetTrigger(Attack);
             state.Attacking();
         }
+    }
+
+    public void DodgeEnd()
+    {
+        //DodgeCam.gameObject.SetActive(false);
+        transform.rotation = DodgeView.transform.rotation;
     }
 }
