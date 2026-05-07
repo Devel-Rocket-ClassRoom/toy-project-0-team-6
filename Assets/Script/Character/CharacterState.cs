@@ -236,6 +236,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     public void Dead()
     {
         currentState = StateType.Die;
+        GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         anim.SetTrigger(Die);
         OnGameOver?.Invoke();
