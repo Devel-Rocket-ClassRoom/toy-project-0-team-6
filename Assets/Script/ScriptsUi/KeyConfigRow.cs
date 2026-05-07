@@ -106,6 +106,27 @@ public class KeyConfigRow : MonoBehaviour
 
     public void ResetKey()
     {
+        InputAction action = asset.FindAction(key);
+        int bindIndex = -1;
+        var bindingsList = action.bindings.ToList();
+        if (!string.IsNullOrEmpty(subKey))
+        {
+            bindIndex = bindingsList.FindIndex(x => x.isPartOfComposite && x.name == subKey.ToLower());
+        }
+        else
+        {
+            bindIndex = bindingsList.FindIndex(x => !x.isPartOfComposite && x.groups != null && x.groups.Contains(type));
+        }
 
+        if (bindIndex != -1)
+        {
+            action.RemoveBindingOverride(bindIndex);
+        }
+        else
+        {
+            action.RemoveAllBindingOverrides();
+        }
+
+        Refresh();
     }
 }
