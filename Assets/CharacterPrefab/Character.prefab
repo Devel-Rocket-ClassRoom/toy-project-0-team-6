@@ -4035,6 +4035,7 @@ MonoBehaviour:
   optionMenu: {fileID: 0}
   pauseMenu: {fileID: 0}
   DodgeView: {fileID: 0}
+  LockOnPoint: {fileID: 0}
   normalSpeed: 5
   dodgeSpeed: 8
   rotateSpeed: 0.3
@@ -4054,20 +4055,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterState
   AttackZone: {fileID: 8929906990137063851}
-  maxHealth: 100
-  StartPower: 40
+  maxHealth: 50
+  StartPower: 10
   StartHealthStat: 5
   StartDexterity: 5
-  maxStamina: 10000
+  maxStamina: 100
   stmUseSpeed:
   - 10
   - 5
   - 20
-  restoreStmTime: 5
+  restoreStmTime: 3
   DodgeCooltime: 2
   HealCoolTime: 8
   currentState: 0
   attackCount: 0
+  stmRecoverTime: 1
 --- !u!54 &3996833783787003756
 Rigidbody:
   m_ObjectHideFlags: 0

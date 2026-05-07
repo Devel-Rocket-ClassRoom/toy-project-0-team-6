@@ -160,6 +160,11 @@ public class CharacterMove : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (state.currentState == StateType.Die)
+        {
+            return;
+        }
+
         if (lockOn)
         {
             transform.LookAt(boss.transform);
