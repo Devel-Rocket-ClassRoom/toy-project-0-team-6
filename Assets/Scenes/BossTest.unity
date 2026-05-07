@@ -1482,6 +1482,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 408234242344933644, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 408234242344933644, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 416394249180599975, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -1497,6 +1505,14 @@ PrefabInstance:
     - target: {fileID: 416394249180599975, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 190
+      objectReference: {fileID: 0}
+    - target: {fileID: 583344600730679624, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 583344600730679624, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 631567391316571817, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1646,6 +1662,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -350
       objectReference: {fileID: 0}
+    - target: {fileID: 3465761620710538726, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3465761620710538726, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3672235671958850266, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0.5
@@ -1718,6 +1742,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 190
       objectReference: {fileID: 0}
+    - target: {fileID: 5552215426349761376, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552215426349761376, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6176992312651199188, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0.30808082
@@ -1757,6 +1789,14 @@ PrefabInstance:
     - target: {fileID: 6297498996322625813, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7606969346393348996, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7606969346393348996, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8197966549870481302, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
       propertyPath: boss
@@ -4138,6 +4178,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BossPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 147486, guid: ec06d59a25025df4faf8326294504ede, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 462548, guid: ec06d59a25025df4faf8326294504ede, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.05
@@ -5624,6 +5668,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6985358914666879070, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
+      propertyPath: DodgeView
+      value: 
+      objectReference: {fileID: 1552422791}
+    - target: {fileID: 6985358914666879070, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
       propertyPath: pauseMenu
       value: 
       objectReference: {fileID: 1809886749}
@@ -5635,20 +5683,11 @@ PrefabInstance:
       propertyPath: optionMenu
       value: 
       objectReference: {fileID: 1841066624}
-    - target: {fileID: 6985358914666879070, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
-      propertyPath: rotateSpeed
-      value: 0.3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
---- !u!4 &1193728828 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4990719812868454805, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
-  m_PrefabInstance: {fileID: 1193728827}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1193728831 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5826423858752425657, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
@@ -7018,6 +7057,37 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300006, guid: 7e2840d0d3a921a40b7183c2adaf24c5, type: 3}
+--- !u!1 &1552422791
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1552422792}
+  m_Layer: 0
+  m_Name: DodgeView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1552422792
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552422791}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.10814, z: -14.58445}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1555172889
 GameObject:
   m_ObjectHideFlags: 0
@@ -8818,7 +8888,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 1193728828}
+    TrackingTarget: {fileID: 1552422792}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -10396,6 +10466,7 @@ SceneRoots:
   - {fileID: 495240769}
   - {fileID: 530844254}
   - {fileID: 1193728827}
+  - {fileID: 1552422792}
   - {fileID: 833407569}
   - {fileID: 1236425170}
   - {fileID: 902275185}
