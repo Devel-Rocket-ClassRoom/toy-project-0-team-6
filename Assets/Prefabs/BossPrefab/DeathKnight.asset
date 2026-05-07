@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: DeathKnight
   m_EditorClassIdentifier: Assembly-CSharp::BossData
   BossHp: 100
-  BossName: "\uB370\uC2A4\uB098\uC774\uD2B8"
+  BossName: DeathKnight
   Attack: 10

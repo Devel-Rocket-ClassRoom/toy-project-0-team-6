@@ -8000,7 +8000,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5826423858752425657, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
       propertyPath: maxHealth
-      value: 2555
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5826423858752425657, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
+      propertyPath: maxStamina
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6985358914666879070, guid: fb43d370720faee40b417ec9c4df204b, type: 3}
       propertyPath: DodgeView

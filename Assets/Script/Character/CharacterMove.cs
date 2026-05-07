@@ -92,7 +92,7 @@ public class CharacterMove : MonoBehaviour
 
     private void Update()
     {
-        if (startMenu.activeSelf || optionMenu.activeSelf || pauseMenu.activeSelf)
+        if(state.currentState == StateType.Die)
         {
             return;
         }

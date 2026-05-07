@@ -53,6 +53,7 @@ public class Boss : MonoBehaviour, IDamageable
     private bool canForward;    //전진공격 가능 여부
     private bool canWindMill;
     private float wait;
+    public bool isGameOver { get; private set; } = false;
 
     public event Action<int> OnDamage;
     public event Action OnClear;
@@ -101,7 +102,12 @@ public class Boss : MonoBehaviour, IDamageable
         }
 
         target = GameObject.FindGameObjectWithTag(PlayerTag);
-        
+
+        if(target != null)
+        {
+            target.GetComponent<CharacterState>().OnGameOver += OnGameOver;
+        }
+
         CurrentStatement = Statement.Idle;
         phase2 = false;
         maxHp = data.BossHp;
@@ -116,7 +122,7 @@ public class Boss : MonoBehaviour, IDamageable
 
     private void Update()
     {
-        if (target == null || isDeath)
+        if (target == null || isDeath || isGameOver)
         {
             return;
         }
@@ -409,5 +415,24 @@ public class Boss : MonoBehaviour, IDamageable
         animator.speed = 1f;
         wait = 0f;
         coroutine = null;
+    }
+
+    public void OnGameOver()
+    {
+        CurrentStatement = Statement.Idle;
+        if (target != null)
+        {
+            target.GetComponent<CharacterState>().OnGameOver -= OnGameOver;
+        }
+        target = null;
+        isGameOver = true;
+    }
+
+    private void OnDisable()
+    {
+        if(target != null)
+        {
+            target.GetComponent<CharacterState>().OnGameOver -= OnGameOver;
+        }
     }
 }

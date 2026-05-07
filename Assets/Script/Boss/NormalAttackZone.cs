@@ -20,6 +20,11 @@ public class NormalAttackZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (Boss.isGameOver)
+        {
+            return;
+        }
+
         if (other.CompareTag("Player"))
         {
             player = other.gameObject.GetComponent<IDamageable>();

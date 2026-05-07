@@ -92,6 +92,12 @@ public class CharacterState : MonoBehaviour, IDamageable
             float prev = currentHealth;
             currentHealth = Mathf.Clamp(value, 0, maxHealth);
 
+            if(currentHealth <= 0f && currentState != StateType.Die)
+            {
+                currentState = StateType.Die;
+                Dead();
+            }
+
             if (prev != currentHealth)
             {
 
@@ -182,6 +188,11 @@ public class CharacterState : MonoBehaviour, IDamageable
 
     private void Update()
     {
+        if(currentState == StateType.Die)
+        {
+            return;
+        }
+
         if (restoreStmTimer > 0)
         {
             restoreStmTimer -= Time.deltaTime;
@@ -225,7 +236,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     public void Dead()
     {
         currentState = StateType.Die;
-
+        GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         anim.SetTrigger(Die);
         OnGameOver?.Invoke();
     }
@@ -335,6 +346,13 @@ public class CharacterState : MonoBehaviour, IDamageable
         if (IsInvincible())
             return;
 
+        CurrentHealth -= damageData.amount;
+
+        if(CurrentHealth <= 0)
+        {
+            return;
+        }
+
         switch (damageData.damageType)
         {
             case DamageVO.DamageType.noDamage:
@@ -357,13 +375,6 @@ public class CharacterState : MonoBehaviour, IDamageable
                 break;
         }
 
-
-        CurrentHealth -= damageData.amount;
-
-        if(CurrentHealth <= 0)
-        {
-            Dead();
-        }
     }
 
     public void EnableAttack()
