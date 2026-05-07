@@ -227,7 +227,7 @@ public class CharacterMove : MonoBehaviour
 
         dodgeDirection.Normalize();
 
-        if (!state.CanDodge())
+        if (!state.canDodge)
             return;
 
         state.Dodging();
@@ -270,5 +270,6 @@ public class CharacterMove : MonoBehaviour
     public void DodgeEnd()
     {
         transform.rotation = DodgeView.transform.rotation;
+        state.CanDodge();
     }
 }
