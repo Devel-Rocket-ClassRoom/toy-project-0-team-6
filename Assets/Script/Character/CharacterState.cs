@@ -77,6 +77,8 @@ public class CharacterState : MonoBehaviour, IDamageable
     public int attackCount = 0;
     private Coroutine vibration = null;
     private bool canDamage = true;
+    [SerializeField]
+    private float stmRecoverTime = 1f;
     public bool canDodge { get; private set; } = true;
 
     public int CurrentHealth
@@ -186,7 +188,18 @@ public class CharacterState : MonoBehaviour, IDamageable
         }
         if (CanRestoreStm && currentStamina < maxStamina)
         {
-            CurrentStamina += stmUseSpeed[1] * Time.deltaTime;
+            var duration = 0f;
+
+            if (CurrentStamina <= 0f)
+            {
+                duration = 0.1f;
+            }
+            else
+            {
+                duration = stmRecoverTime * (CurrentStamina / maxStamina);
+            }
+
+            CurrentStamina += Mathf.Lerp(0, maxStamina, Time.deltaTime * duration);
         }
 
         float DodgeRemain = DodgeCooldownRemaining;

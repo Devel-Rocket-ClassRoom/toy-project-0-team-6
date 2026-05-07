@@ -306,8 +306,6 @@ public class Boss : MonoBehaviour, IDamageable
                 attackInfo.damageType = DamageVO.DamageType.veryHard;
             }
 
-            Debug.Log(attackInfo.amount);
-
             attackZone.SetDamage(attackInfo);
             attackZone.attackable = true;
             attackZone.gameObject.SetActive(true);
