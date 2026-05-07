@@ -66,8 +66,13 @@ public class UIController : MonoBehaviour
         clearPanel.SetActive(false);
         pausePanel.SetActive(false);
         Time.timeScale = 0f;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+
+
+        foreach(var actionMap in InputSystem.actions.actionMaps)
+        {
+            actionMap.Disable();
+        }
+        CursorVisible();
     }
 
     private void Start()
@@ -271,11 +276,16 @@ public class UIController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        InputSystem.actions.FindActionMap("UI").Enable();
+        InputSystem.actions.FindActionMap("Player").Disable();
+
     }
     public void CursorInvisible()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        InputSystem.actions.FindActionMap("UI").Disable();
+        InputSystem.actions.FindActionMap("Player").Enable();
     }
     public void OnQuit()
     {
