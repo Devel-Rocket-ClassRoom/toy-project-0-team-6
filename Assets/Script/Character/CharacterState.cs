@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -72,7 +73,7 @@ public class CharacterState : MonoBehaviour, IDamageable
     private readonly int Normal = Animator.StringToHash("Normal");
     private readonly int Hard = Animator.StringToHash("Hard");
     private readonly int VeryHard = Animator.StringToHash("VeryHard");
-    private readonly int Die = Animator.StringToHash("Die");
+    private readonly int Die = Animator.StringToHash("Dead");
     private readonly string BossTag = "Boss";
     public int attackCount = 0;
     private Coroutine vibration = null;
@@ -80,6 +81,8 @@ public class CharacterState : MonoBehaviour, IDamageable
     [SerializeField]
     private float stmRecoverTime = 1f;
     public bool canDodge { get; private set; } = true;
+
+    public event Action OnGameOver;
 
     public int CurrentHealth
     {
@@ -224,6 +227,7 @@ public class CharacterState : MonoBehaviour, IDamageable
         currentState = StateType.Die;
 
         anim.SetTrigger(Die);
+        OnGameOver?.Invoke();
     }
 
     public void Attacking()
@@ -355,6 +359,11 @@ public class CharacterState : MonoBehaviour, IDamageable
 
 
         CurrentHealth -= damageData.amount;
+
+        if(CurrentHealth <= 0)
+        {
+            Dead();
+        }
     }
 
     public void EnableAttack()
