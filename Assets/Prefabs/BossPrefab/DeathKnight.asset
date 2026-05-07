@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b1486f78050b55499e913da2f54d4cc, type: 3}
   m_Name: DeathKnight
   m_EditorClassIdentifier: Assembly-CSharp::BossData
-  BossHp: 100
+  BossHp: 300
   BossName: DeathKnight
   Attack: 10
