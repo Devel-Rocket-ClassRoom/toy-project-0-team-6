@@ -177,7 +177,7 @@ public class Boss : MonoBehaviour, IDamageable
                 break;
             case Statement.Move:
                 OnMove();
-                if (toTargetDistance > attackDistance && toTargetDistance < 7f && forwardAttackCoolTime > forwardAttackInterval)
+                if (toTargetDistance > attackDistance && toTargetDistance < 4f && forwardAttackCoolTime > forwardAttackInterval)
                 {
                     canForward = true;
                     CurrentStatement = Statement.Attack;
@@ -284,7 +284,31 @@ public class Boss : MonoBehaviour, IDamageable
     {
         if(!attackZone.gameObject.activeSelf)
         {
-            DamageVO attackInfo = new() { amount = damage, damageType = DamageVO.DamageType.normal };
+            DamageVO attackInfo = new();
+
+            if (normalAttackCount > 0)
+            {
+                attackInfo.amount = damage;
+                attackInfo.damageType = DamageVO.DamageType.normal;
+            }
+            else if (canForward)
+            {
+                attackInfo.amount = damage * 2;
+                attackInfo.damageType = DamageVO.DamageType.hard;
+            }
+            else if (canWindMill)
+            {
+                attackInfo.amount = damage;
+                attackInfo.damageType = DamageVO.DamageType.normal;
+            }
+            else if(normalAttackCount == 0)
+            {
+                attackInfo.amount = damage * 4;
+                attackInfo.damageType = DamageVO.DamageType.veryHard;
+            }
+
+            Debug.Log(attackInfo.amount);
+
             attackZone.SetDamage(attackInfo);
             attackZone.attackable = true;
             attackZone.gameObject.SetActive(true);

@@ -25,7 +25,6 @@ public class NormalAttackZone : MonoBehaviour
             player = other.gameObject.GetComponent<IDamageable>();
             if (player != null && attackable)
             {
-                Debug.Log(1);
                 attackable = false;
                 player.GetDamage(damage);
             }
