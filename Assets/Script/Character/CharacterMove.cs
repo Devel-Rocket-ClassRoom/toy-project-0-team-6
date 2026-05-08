@@ -105,7 +105,8 @@ public class CharacterMove : MonoBehaviour
 
         moveValue = move.ReadValue<Vector2>();
 
-        transform.Rotate(0f, look.ReadValue<Vector2>().x * rotateSpeed * Time.timeScale, 0f, Space.World);
+        if(!lockOn)
+            transform.Rotate(0f, look.ReadValue<Vector2>().x * rotateSpeed * Time.timeScale, 0f, Space.World);
 
         if (state.currentState != StateType.Attack &&
             state.currentState != StateType.Dodge &&
