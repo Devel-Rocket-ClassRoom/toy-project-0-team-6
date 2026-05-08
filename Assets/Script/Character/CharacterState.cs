@@ -240,6 +240,7 @@ public class CharacterState : MonoBehaviour, IDamageable
         GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         canDodge = false;
         anim.SetTrigger(Die);
+        characterMove.HealParticle.Stop();
         OnGameOver?.Invoke();
     }
 
@@ -363,16 +364,19 @@ public class CharacterState : MonoBehaviour, IDamageable
             case DamageVO.DamageType.normal:
                 anim.SetTrigger(Normal);
                 canDodge = false;
+                characterMove.HealParticle.Stop();
                 currentState = StateType.Damaged;
                 break;
             case DamageVO.DamageType.hard:
                 anim.SetTrigger(Hard);
                 currentState = StateType.Damaged;
+                characterMove.HealParticle.Stop();
                 canDodge = false;
                 break;
             case DamageVO.DamageType.veryHard:
                 anim.SetTrigger(VeryHard);
                 currentState = StateType.Damaged;
+                characterMove.HealParticle.Stop();
                 canDodge = false;
                 break;
             case DamageVO.DamageType.instantKill:

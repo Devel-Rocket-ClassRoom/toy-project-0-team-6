@@ -233,9 +233,8 @@ public class CharacterMove : MonoBehaviour
 
     private void OnUseConsumable(InputAction.CallbackContext context)
     {
-        if (state.currentState == StateType.Idle ||
-            state.currentState == StateType.Move ||
-            state.currentState == StateType.UsingConsumable)
+        if (state.currentState != StateType.Idle &&
+            state.currentState != StateType.Move)
             return;
 
         if (!state.CanUseHeal())
@@ -251,7 +250,7 @@ public class CharacterMove : MonoBehaviour
         if (state.currentState != StateType.Idle &&
             state.currentState != StateType.Move)
             return;
-
+        Debug.Log(state.currentState);
         Debug.Log(1);
 
         dodgeDirection = transform.right * moveValue.x + transform.forward * moveValue.y;
@@ -272,6 +271,10 @@ public class CharacterMove : MonoBehaviour
     {
         state.attackCount = 0;
         anim.ResetTrigger(Attack);
+        if(state.currentState == CharacterState.StateType.Die)
+        {
+            return;
+        }
         state.currentState = CharacterState.StateType.Idle;
     }
 
