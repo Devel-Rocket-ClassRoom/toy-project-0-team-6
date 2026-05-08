@@ -233,6 +233,10 @@ public class UIController : MonoBehaviour
 
     public void OnPause(InputAction.CallbackContext context)
     {
+        if(characterState.currentState == CharacterState.StateType.Die)
+        {
+            return;
+        }
         if (!gamePanel.activeSelf && !pausePanel.activeSelf)
             return;
 
