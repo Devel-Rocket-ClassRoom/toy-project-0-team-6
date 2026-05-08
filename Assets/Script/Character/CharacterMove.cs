@@ -233,8 +233,9 @@ public class CharacterMove : MonoBehaviour
 
     private void OnUseConsumable(InputAction.CallbackContext context)
     {
-        if (state.currentState != StateType.Idle &&
-            state.currentState != StateType.Move)
+        if (state.currentState == StateType.Idle ||
+            state.currentState == StateType.Move ||
+            state.currentState == StateType.UsingConsumable)
             return;
 
         if (!state.CanUseHeal())
