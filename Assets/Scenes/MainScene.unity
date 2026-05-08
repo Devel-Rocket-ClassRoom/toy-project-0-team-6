@@ -1687,6 +1687,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 792853854484675611, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+      propertyPath: healOverlayTime
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 792853854484675611, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
+      propertyPath: dodgeOverlayTime
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1712396165831100603, guid: e746491dc20e3234396597aaaa5b55d1, type: 3}
       propertyPath: m_Name
       value: Canvas
