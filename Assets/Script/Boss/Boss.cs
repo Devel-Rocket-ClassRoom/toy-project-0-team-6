@@ -54,6 +54,7 @@ public class Boss : MonoBehaviour, IDamageable
     private bool canWindMill;
     private float wait;
     public bool isGameOver { get; private set; } = false;
+    private float beforeSpeed;
 
     public event Action<int> OnDamage;
     public event Action OnClear;
@@ -131,11 +132,14 @@ public class Boss : MonoBehaviour, IDamageable
 
         if (!phase2 && CurrentHp <= maxHp / 2)
         {
+            Debug.Log(1);
+
             phase2 = true;
             damage = Mathf.CeilToInt(data.Attack * 1.3f);
             attackInterval = Mathf.Floor(attackInterval * 0.9f);
             idleInterval = Mathf.Floor(idleInterval * 0.9f);
             agent.speed = Mathf.Ceil(agent.speed * 1.1f);
+            beforeSpeed = agent.speed;
             agent.isStopped = true;
             animator.SetTrigger(Phase2);
             return;
@@ -390,6 +394,7 @@ public class Boss : MonoBehaviour, IDamageable
     {
         windMillCoolTime = 0f;
         canWindMill = false;
+        agent.speed = beforeSpeed;
         AttackAnimationEnd();
     }
 
