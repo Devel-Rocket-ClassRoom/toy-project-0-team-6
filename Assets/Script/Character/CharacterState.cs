@@ -238,6 +238,7 @@ public class CharacterState : MonoBehaviour, IDamageable
         currentState = StateType.Die;
         GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        canDodge = false;
         anim.SetTrigger(Die);
         OnGameOver?.Invoke();
     }
@@ -361,15 +362,18 @@ public class CharacterState : MonoBehaviour, IDamageable
                 break;
             case DamageVO.DamageType.normal:
                 anim.SetTrigger(Normal);
+                canDodge = false;
                 currentState = StateType.Damaged;
                 break;
             case DamageVO.DamageType.hard:
                 anim.SetTrigger(Hard);
                 currentState = StateType.Damaged;
+                canDodge = false;
                 break;
             case DamageVO.DamageType.veryHard:
                 anim.SetTrigger(VeryHard);
                 currentState = StateType.Damaged;
+                canDodge = false;
                 break;
             case DamageVO.DamageType.instantKill:
                 Dead();

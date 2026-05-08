@@ -248,9 +248,10 @@ public class CharacterMove : MonoBehaviour
     private void OnDodge(InputAction.CallbackContext context)
     {
         if (state.currentState != StateType.Idle &&
-            state.currentState != StateType.Move &&
-            state.currentState == StateType.Die)
+            state.currentState != StateType.Move)
             return;
+
+        Debug.Log(1);
 
         dodgeDirection = transform.right * moveValue.x + transform.forward * moveValue.y;
 
