@@ -255,3 +255,10 @@ $RECYCLE.BIN/
 # macOS
 .DS_Store
 Assets/Imported
+
+
+
+#CLAUDE CODE
+
+.claude/settings.local.json
+.claude/CLAUDE.local.md
