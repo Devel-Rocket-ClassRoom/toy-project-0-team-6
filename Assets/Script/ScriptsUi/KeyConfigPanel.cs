@@ -10,7 +10,7 @@ public class KeyConfigPanel : MonoBehaviour
     public enum InputDevice
     {
         KeyboardMouse,
-        Pad
+        Pad,
     }
 
     public KeyConfigRow keyRowPrefab;
@@ -22,25 +22,11 @@ public class KeyConfigPanel : MonoBehaviour
 
     public InputActionAsset inputActions;
 
-    string[] keyBoardOptions = {
-        "Up",
-        "Down",
-        "Left",
-        "Right",
-        "Attack",
-        "StrongAttack",
-        "Roll",
-    };
-
+    string[] keyBoardOptions = { "Up", "Down", "Left", "Right", "Attack", "StrongAttack", "Roll" };
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-    }
+    void Start() { }
 
     // Update is called once per frame
-    void Update()
-    {
-
-    }
+    void Update() { }
 }

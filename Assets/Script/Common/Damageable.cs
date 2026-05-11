@@ -14,7 +14,7 @@ public struct DamageVO
         normal,
         hard,
         veryHard,
-        instantKill
+        instantKill,
     }
 
     public int amount;

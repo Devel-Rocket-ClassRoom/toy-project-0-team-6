@@ -20,11 +20,11 @@ public class CharacterMove : MonoBehaviour
     public GameObject DodgeView;
     public GameObject LockOnPoint;
 
-    public float normalSpeed = 5;   //평상시 속력
-    public float dodgeSpeed = 8f;   //드레인 상태시 속력
+    public float normalSpeed = 5; //평상시 속력
+    public float dodgeSpeed = 8f; //드레인 상태시 속력
     public float rotateSpeed = 0.3f;
     public float drainedSpeedMultiplier = 0.3f; // 느려지는 정도
-    private float speed;    //적용할 속도
+    private float speed; //적용할 속도
 
     private Vector3 dodgeDirection; //닷지 시 방향 저장
 
@@ -35,13 +35,12 @@ public class CharacterMove : MonoBehaviour
 
     public List<string> commandQueue = new();
     private bool canCommand = false;
+
     [SerializeField]
     private int maxCommand = 2;
     private bool lockOn = false;
 
     Vector2 moveValue = Vector2.zero;
-    
-
 
     //InputActions
     InputAction move;
@@ -61,13 +60,13 @@ public class CharacterMove : MonoBehaviour
         HealParticle.Stop();
         boss = GameObject.FindWithTag("Boss");
 
-        move = InputSystem.actions.FindAction("Move",true);
-        look = InputSystem.actions.FindAction("Look",true);
-        attack = InputSystem.actions.FindAction("Attack",true);
-        dodge = InputSystem.actions.FindAction("Dodge",true);
-        hardAttack= InputSystem.actions.FindAction("StrongAttack", true);
-        useItem = InputSystem.actions.FindAction("UseItem",true);
-        changeItem = InputSystem.actions.FindAction("ChangeItem",true);
+        move = InputSystem.actions.FindAction("Move", true);
+        look = InputSystem.actions.FindAction("Look", true);
+        attack = InputSystem.actions.FindAction("Attack", true);
+        dodge = InputSystem.actions.FindAction("Dodge", true);
+        hardAttack = InputSystem.actions.FindAction("StrongAttack", true);
+        useItem = InputSystem.actions.FindAction("UseItem", true);
+        changeItem = InputSystem.actions.FindAction("ChangeItem", true);
         LockOn = InputSystem.actions.FindAction("LockOn", true);
 
         attack.performed += OnAttackKey;
@@ -75,8 +74,7 @@ public class CharacterMove : MonoBehaviour
         useItem.performed += OnUseConsumable;
         LockOn.performed += BossLockOn;
 
-
-        if(Gamepad.current!=null)
+        if (Gamepad.current != null)
             Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
 
@@ -92,7 +90,7 @@ public class CharacterMove : MonoBehaviour
 
     private void Update()
     {
-        if(state.currentState == StateType.Die)
+        if (state.currentState == StateType.Die)
         {
             return;
         }
@@ -105,15 +103,22 @@ public class CharacterMove : MonoBehaviour
 
         moveValue = move.ReadValue<Vector2>();
 
-        if(!lockOn)
-            transform.Rotate(0f, look.ReadValue<Vector2>().x * rotateSpeed * Time.timeScale, 0f, Space.World);
+        if (!lockOn)
+            transform.Rotate(
+                0f,
+                look.ReadValue<Vector2>().x * rotateSpeed * Time.timeScale,
+                0f,
+                Space.World
+            );
 
-        if (state.currentState != StateType.Attack &&
-            state.currentState != StateType.Dodge &&
-            state.currentState != StateType.UsingConsumable &&
-            state.currentState != StateType.Damaged)
+        if (
+            state.currentState != StateType.Attack
+            && state.currentState != StateType.Dodge
+            && state.currentState != StateType.UsingConsumable
+            && state.currentState != StateType.Damaged
+        )
         {
-            bool isMoving = moveValue.magnitude>0.001f;
+            bool isMoving = moveValue.magnitude > 0.001f;
 
             state.currentState = isMoving ? StateType.Move : StateType.Idle;
         }
@@ -172,16 +177,18 @@ public class CharacterMove : MonoBehaviour
             DodgeView.transform.LookAt(boss.transform);
         }
 
-        if (state.currentState == CharacterState.StateType.Attack ||
-            state.currentState == CharacterState.StateType.UsingConsumable ||
-            state.currentState == CharacterState.StateType.Damaged)
+        if (
+            state.currentState == CharacterState.StateType.Attack
+            || state.currentState == CharacterState.StateType.UsingConsumable
+            || state.currentState == CharacterState.StateType.Damaged
+        )
         {
             rb.linearVelocity = Vector3.zero;
             DodgeView.transform.position = transform.position;
             DodgeView.transform.rotation = transform.rotation;
             return;
         }
-        else if(state.currentState == CharacterState.StateType.Dodge)
+        else if (state.currentState == CharacterState.StateType.Dodge)
         {
             rb.linearVelocity = dodgeDirection * dodgeSpeed;
             transform.rotation = Quaternion.LookRotation(dodgeDirection);
@@ -199,9 +206,11 @@ public class CharacterMove : MonoBehaviour
 
     private void OnAttack()
     {
-        if (state.currentState != StateType.Idle &&
-            state.currentState != StateType.Move &&
-            state.currentState != StateType.Attack)
+        if (
+            state.currentState != StateType.Idle
+            && state.currentState != StateType.Move
+            && state.currentState != StateType.Attack
+        )
             return;
 
         if (state.CurrentStamina <= 0)
@@ -218,8 +227,7 @@ public class CharacterMove : MonoBehaviour
 
     private void OnHardAttack()
     {
-        if (state.currentState != StateType.Idle &&
-            state.currentState != StateType.Move)
+        if (state.currentState != StateType.Idle && state.currentState != StateType.Move)
             return;
 
         if (state.CurrentStamina <= 0)
@@ -234,8 +242,7 @@ public class CharacterMove : MonoBehaviour
 
     private void OnUseConsumable(InputAction.CallbackContext context)
     {
-        if (state.currentState != StateType.Idle &&
-            state.currentState != StateType.Move)
+        if (state.currentState != StateType.Idle && state.currentState != StateType.Move)
             return;
 
         if (!state.CanUseHeal())
@@ -248,8 +255,7 @@ public class CharacterMove : MonoBehaviour
 
     private void OnDodge(InputAction.CallbackContext context)
     {
-        if (state.currentState != StateType.Idle &&
-            state.currentState != StateType.Move)
+        if (state.currentState != StateType.Idle && state.currentState != StateType.Move)
             return;
         Debug.Log(state.currentState);
         Debug.Log(1);
@@ -272,7 +278,7 @@ public class CharacterMove : MonoBehaviour
     {
         state.attackCount = 0;
         anim.ResetTrigger(Attack);
-        if(state.currentState == CharacterState.StateType.Die)
+        if (state.currentState == CharacterState.StateType.Die)
         {
             return;
         }
@@ -292,13 +298,13 @@ public class CharacterMove : MonoBehaviour
 
     private void TryNextAttack()
     {
-        if(commandQueue.Count == 0 || state.CurrentStamina <= 0)
+        if (commandQueue.Count == 0 || state.CurrentStamina <= 0)
         {
             EndAttack();
             return;
         }
 
-        if(commandQueue.Last() == "A")
+        if (commandQueue.Last() == "A")
         {
             Debug.Log(1);
             anim.SetTrigger(Attack);

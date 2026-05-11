@@ -36,12 +36,13 @@ public class Boss : MonoBehaviour, IDamageable
     private float idleTime = 0f;
     public float idleInterval = 4f;
     public float attackDistance = 0f;
-    private float toTargetDistance => Vector3.Distance(transform.position, target.transform.position);
+    private float toTargetDistance =>
+        Vector3.Distance(transform.position, target.transform.position);
     private float attackCoolTime = 0f;
     public float attackInterval = 4f;
-    private float forwardAttackCoolTime = 0f;   //ÀüÁø°ø°Ý
+    private float forwardAttackCoolTime = 0f; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public float forwardAttackInterval = 10f;
-    private float windMillCoolTime = 0f;   //È¸Àü°ø°Ý
+    private float windMillCoolTime = 0f; //È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public float windMillInterval = 10f;
     private bool phase2;
     private int maxHp;
@@ -49,8 +50,8 @@ public class Boss : MonoBehaviour, IDamageable
     private int damage;
     private bool isDeath;
     private bool invincible;
-    private bool isAttack;      
-    private bool canForward;    //ÀüÁø°ø°Ý °¡´É ¿©ºÎ
+    private bool isAttack;
+    private bool canForward; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private bool canWindMill;
     private float wait;
     public bool isGameOver { get; private set; } = false;
@@ -96,7 +97,7 @@ public class Boss : MonoBehaviour, IDamageable
 
     private void Start()
     {
-        if(coroutine != null)
+        if (coroutine != null)
         {
             StopCoroutine(coroutine);
             coroutine = null;
@@ -104,7 +105,7 @@ public class Boss : MonoBehaviour, IDamageable
 
         target = GameObject.FindGameObjectWithTag(PlayerTag);
 
-        if(target != null)
+        if (target != null)
         {
             target.GetComponent<CharacterState>().OnGameOver += OnGameOver;
         }
@@ -156,7 +157,11 @@ public class Boss : MonoBehaviour, IDamageable
         {
             case Statement.Idle:
                 idleTime += Time.deltaTime;
-                if (toTargetDistance > attackDistance && toTargetDistance < 7f && forwardAttackCoolTime > forwardAttackInterval)
+                if (
+                    toTargetDistance > attackDistance
+                    && toTargetDistance < 7f
+                    && forwardAttackCoolTime > forwardAttackInterval
+                )
                 {
                     canForward = true;
                     CurrentStatement = Statement.Attack;
@@ -176,7 +181,7 @@ public class Boss : MonoBehaviour, IDamageable
                 }
                 break;
             case Statement.Attack:
-                if(!isAttack && attackCoolTime > attackInterval)
+                if (!isAttack && attackCoolTime > attackInterval)
                 {
                     OnAttack();
                 }
@@ -186,7 +191,11 @@ public class Boss : MonoBehaviour, IDamageable
                 break;
             case Statement.Move:
                 OnMove();
-                if (toTargetDistance > attackDistance && toTargetDistance < 4f && forwardAttackCoolTime > forwardAttackInterval)
+                if (
+                    toTargetDistance > attackDistance
+                    && toTargetDistance < 4f
+                    && forwardAttackCoolTime > forwardAttackInterval
+                )
                 {
                     canForward = true;
                     CurrentStatement = Statement.Attack;
@@ -206,7 +215,7 @@ public class Boss : MonoBehaviour, IDamageable
 
     private void FixedUpdate()
     {
-        if(target == null || isDeath)
+        if (target == null || isDeath)
         {
             return;
         }
@@ -224,7 +233,7 @@ public class Boss : MonoBehaviour, IDamageable
         animator.SetTrigger(BigHit);
     }
 
-    //µð¹ö±×¿ë
+    //ï¿½ï¿½ï¿½ï¿½×¿ï¿½
     public void OnPhase2()
     {
         CurrentHp -= CurrentHp / 2;
@@ -267,7 +276,7 @@ public class Boss : MonoBehaviour, IDamageable
             return;
         }
 
-        if(normalAttackCount >= 2)
+        if (normalAttackCount >= 2)
         {
             animator.SetTrigger(BigAttack);
             normalAttackCount = 0;
@@ -291,7 +300,7 @@ public class Boss : MonoBehaviour, IDamageable
 
     public void ToggleAttackZone()
     {
-        if(!attackZone.gameObject.activeSelf)
+        if (!attackZone.gameObject.activeSelf)
         {
             DamageVO attackInfo = new();
 
@@ -310,7 +319,7 @@ public class Boss : MonoBehaviour, IDamageable
                 attackInfo.amount = damage;
                 attackInfo.damageType = DamageVO.DamageType.normal;
             }
-            else if(normalAttackCount == 0)
+            else if (normalAttackCount == 0)
             {
                 attackInfo.amount = damage * 4;
                 attackInfo.damageType = DamageVO.DamageType.veryHard;
@@ -340,7 +349,7 @@ public class Boss : MonoBehaviour, IDamageable
         }
 
         switch (damageData.damageType)
-        {   
+        {
             case DamageVO.DamageType.normal:
                 OnMiddleHit();
                 break;
@@ -375,7 +384,6 @@ public class Boss : MonoBehaviour, IDamageable
         }
 
         agent.isStopped = CurrentStatement == Statement.Move ? false : true;
-        
     }
 
     public void ToggleInvincible()
@@ -412,7 +420,7 @@ public class Boss : MonoBehaviour, IDamageable
     public IEnumerator CoWaiting()
     {
         animator.speed = 0.1f;
-        while(wait < 1f)
+        while (wait < 1f)
         {
             wait += Time.deltaTime;
             yield return null;
@@ -435,7 +443,7 @@ public class Boss : MonoBehaviour, IDamageable
 
     private void OnDisable()
     {
-        if(target != null)
+        if (target != null)
         {
             target.GetComponent<CharacterState>().OnGameOver -= OnGameOver;
         }

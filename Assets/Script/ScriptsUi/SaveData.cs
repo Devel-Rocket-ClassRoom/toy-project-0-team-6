@@ -1,6 +1,6 @@
-using UnityEngine;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 //세이브 데이터 클래스
@@ -15,6 +15,7 @@ public class SaveData
     public float fov = 80f;
     public int stageClearCount = 0;
     public float mouseSensitivity = 3f;
+
     //new input system기준 키설정 저장
     public string keyBindings = "";
 }

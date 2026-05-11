@@ -3,9 +3,14 @@ using UnityEngine;
 
 public class BossHUDController : MonoBehaviour
 {
-    [SerializeField] private DualSliderBar hpBar;
-    [SerializeField] private TMP_Text bossNameText;
-    [SerializeField] private Boss boss;
+    [SerializeField]
+    private DualSliderBar hpBar;
+
+    [SerializeField]
+    private TMP_Text bossNameText;
+
+    [SerializeField]
+    private Boss boss;
 
     private int startHp;
 

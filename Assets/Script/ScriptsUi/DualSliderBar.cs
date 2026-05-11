@@ -3,11 +3,17 @@ using UnityEngine.UI;
 
 public class DualSliderBar : MonoBehaviour
 {
-    [SerializeField] private Slider mainSlider;
-    [SerializeField] private Slider delaySlider;
+    [SerializeField]
+    private Slider mainSlider;
 
-    [SerializeField] private float delaySeconds = 0.5f;
-    [SerializeField] private float lerpSpeed = 3f;
+    [SerializeField]
+    private Slider delaySlider;
+
+    [SerializeField]
+    private float delaySeconds = 0.5f;
+
+    [SerializeField]
+    private float lerpSpeed = 3f;
 
     private float tgtRatio;
     private float delayTimer;
@@ -22,12 +28,11 @@ public class DualSliderBar : MonoBehaviour
     public void SetValue(float current, float max)
     {
         float newRatio = current / max;
-        bool isDecreasing = newRatio < tgtRatio;//
+        bool isDecreasing = newRatio < tgtRatio; //
         tgtRatio = newRatio;
 
         if (isDecreasing)
         {
-             
             mainSlider.value = newRatio;
             delayTimer = delaySeconds; // delay 슬라이더 대기 타이머 리셋
         }

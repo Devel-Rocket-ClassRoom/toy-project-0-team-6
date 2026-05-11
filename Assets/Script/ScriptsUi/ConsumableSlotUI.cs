@@ -4,8 +4,11 @@ using UnityEngine.UI;
 
 public class ConsumableSlotUI : MonoBehaviour
 {
-    [SerializeField] private Image itemIcon;
-    [SerializeField] private TMP_Text countText;
+    [SerializeField]
+    private Image itemIcon;
+
+    [SerializeField]
+    private TMP_Text countText;
 
     public void SetItem(ItemData data, int count)
     {

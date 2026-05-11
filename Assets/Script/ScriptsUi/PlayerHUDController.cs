@@ -3,15 +3,19 @@ using UnityEngine.UI;
 
 public class PlayerHUDController : MonoBehaviour
 {
-    [SerializeField] private DualSliderBar hpBar;
-    [SerializeField] private StaminaBar staminaBar;
-    [SerializeField] private CharacterState characterState;
+    [SerializeField]
+    private DualSliderBar hpBar;
+
+    [SerializeField]
+    private StaminaBar staminaBar;
+
+    [SerializeField]
+    private CharacterState characterState;
 
     private bool initialized = false;
 
     private void Start()
     {
-         
         if (characterState == null || !characterState.gameObject.activeInHierarchy)
             characterState = FindAnyObjectByType<CharacterState>();
 
@@ -21,16 +25,16 @@ public class PlayerHUDController : MonoBehaviour
             return;
         }
 
-      
         characterState.Damaged += OnDamaged;
         characterState.OnStaminaChanged += OnStaminaChanged;
     }
 
     private void Update()
     {
-        
-        if (initialized || characterState == null) return;
-        if (characterState.CurrentHealth <= 0) return;
+        if (initialized || characterState == null)
+            return;
+        if (characterState.CurrentHealth <= 0)
+            return;
 
         initialized = true;
         hpBar.SetValue(characterState.CurrentHealth, characterState.maxHealth);
@@ -39,20 +43,23 @@ public class PlayerHUDController : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (characterState == null) return;
+        if (characterState == null)
+            return;
         characterState.Damaged -= OnDamaged;
         characterState.OnStaminaChanged -= OnStaminaChanged;
     }
 
     private void OnDamaged(int dmg)
     {
-        if (characterState == null) return;
+        if (characterState == null)
+            return;
         hpBar.SetValue(characterState.CurrentHealth, characterState.maxHealth);
     }
 
     private void OnStaminaChanged(float current)
     {
-        if (characterState == null) return;
+        if (characterState == null)
+            return;
         staminaBar.SetValue(current, characterState.maxStamina);
     }
 

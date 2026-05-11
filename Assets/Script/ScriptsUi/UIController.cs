@@ -5,48 +5,91 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-
 public class UIController : MonoBehaviour
 {
     [Header("Panels")]
-    [SerializeField] private GameObject startMenuPanel;
-    [SerializeField] private GameObject settingsPanel;
-    [SerializeField] private GameObject gamePanel;
-    [SerializeField] private GameObject gameOverPanel;
-    [SerializeField] private GameObject clearPanel;
-    [SerializeField] private GameObject pausePanel;
-    [SerializeField] private GameObject keyconfigPanel;
+    [SerializeField]
+    private GameObject startMenuPanel;
+
+    [SerializeField]
+    private GameObject settingsPanel;
+
+    [SerializeField]
+    private GameObject gamePanel;
+
+    [SerializeField]
+    private GameObject gameOverPanel;
+
+    [SerializeField]
+    private GameObject clearPanel;
+
+    [SerializeField]
+    private GameObject pausePanel;
+
+    [SerializeField]
+    private GameObject keyconfigPanel;
 
     [Header("References")]
-    [SerializeField] private CharacterState characterState;
-    [SerializeField] private Boss boss;
-    
+    [SerializeField]
+    private CharacterState characterState;
+
+    [SerializeField]
+    private Boss boss;
 
     [Header("Audio")]
-    [SerializeField] private AudioClip mainMenuSound;
-    [SerializeField] private AudioClip gameOverSound;
-    [SerializeField] private AudioClip clearSound;
-    [SerializeField] private AudioClip inGameSound;
-    [SerializeField] private AudioClip clickSound;
+    [SerializeField]
+    private AudioClip mainMenuSound;
+
+    [SerializeField]
+    private AudioClip gameOverSound;
+
+    [SerializeField]
+    private AudioClip clearSound;
+
+    [SerializeField]
+    private AudioClip inGameSound;
+
+    [SerializeField]
+    private AudioClip clickSound;
 
     [Header("Controllers")]
-    [SerializeField] private SettingsController settingsController;
+    [SerializeField]
+    private SettingsController settingsController;
 
     [Header("Clear Panel Text")]
-    [SerializeField] private TextMeshProUGUI clearDamageDealtText;
-    [SerializeField] private TextMeshProUGUI clearDamageTakenText;
-    [SerializeField] private TextMeshProUGUI clearAttackCountText;
-    [SerializeField] private TextMeshProUGUI clearHitCountText;
-    [SerializeField] private TextMeshProUGUI clearTimeText;
+    [SerializeField]
+    private TextMeshProUGUI clearDamageDealtText;
+
+    [SerializeField]
+    private TextMeshProUGUI clearDamageTakenText;
+
+    [SerializeField]
+    private TextMeshProUGUI clearAttackCountText;
+
+    [SerializeField]
+    private TextMeshProUGUI clearHitCountText;
+
+    [SerializeField]
+    private TextMeshProUGUI clearTimeText;
 
     [Header("GameOver Panel Text")]
-    [SerializeField] private TextMeshProUGUI overDamageDealtText;
-    [SerializeField] private TextMeshProUGUI overDamageTakenText;
-    [SerializeField] private TextMeshProUGUI overAttackCountText;
-    [SerializeField] private TextMeshProUGUI overHitCountText;
-    [SerializeField] private TextMeshProUGUI overBossHpText;
+    [SerializeField]
+    private TextMeshProUGUI overDamageDealtText;
 
-    [SerializeField] private float logDisplayDelay = 3f;
+    [SerializeField]
+    private TextMeshProUGUI overDamageTakenText;
+
+    [SerializeField]
+    private TextMeshProUGUI overAttackCountText;
+
+    [SerializeField]
+    private TextMeshProUGUI overHitCountText;
+
+    [SerializeField]
+    private TextMeshProUGUI overBossHpText;
+
+    [SerializeField]
+    private float logDisplayDelay = 3f;
 
     private int damageDeal;
     private int damageTaken;
@@ -63,10 +106,8 @@ public class UIController : MonoBehaviour
     InputAction cancel;
     InputAction pause;
 
-
     private void Awake()
     {
-        
         startMenuPanel.SetActive(true);
         settingsPanel.SetActive(false);
         gamePanel.SetActive(false);
@@ -76,8 +117,7 @@ public class UIController : MonoBehaviour
         keyconfigPanel.SetActive(false);
         Time.timeScale = 0f;
 
-
-        foreach(var actionMap in InputSystem.actions.actionMaps)
+        foreach (var actionMap in InputSystem.actions.actionMaps)
         {
             actionMap.Disable();
         }
@@ -106,14 +146,13 @@ public class UIController : MonoBehaviour
         {
             boss = FindAnyObjectByType<Boss>();
         }
-            
 
         if (boss != null)
         {
             boss.OnClear += OnClear;
             boss.OnDamage += OnBossDamaged;
         }
-        if(restartGame)
+        if (restartGame)
         {
             restartGame = false;
             settingsController.ApplySettingData();
@@ -133,7 +172,7 @@ public class UIController : MonoBehaviour
         pause.performed -= OnPause;
     }
 
-    private void OnDestroy()//
+    private void OnDestroy() //
     {
         if (characterState != null)
         {
@@ -146,21 +185,29 @@ public class UIController : MonoBehaviour
             boss.OnDamage -= OnBossDamaged;
         }
     }
+
     private void Update()
     {
-        if (timerRunning) runTimer += Time.deltaTime;
+        if (timerRunning)
+            runTimer += Time.deltaTime;
         CheckDeath();
     }
+
     private bool logDisplayed;
+
     private void CheckDeath()
     {
-      
-        if (gameOver) return;
-        if(logDisplayed) return;
-        if (characterState == null) return;
-        if (!gamePanel.activeSelf) return;
-        if (!characterState.IsDead) return;
-        
+        if (gameOver)
+            return;
+        if (logDisplayed)
+            return;
+        if (characterState == null)
+            return;
+        if (!gamePanel.activeSelf)
+            return;
+        if (!characterState.IsDead)
+            return;
+
         gameOver = true;
         logDisplayed = true;
         StartCoroutine(ShowGameOverPanel());
@@ -176,10 +223,11 @@ public class UIController : MonoBehaviour
 
         startMenuPanel.SetActive(false);
         gameOverPanel.SetActive(false);
-        if (clearPanel != null) clearPanel.SetActive(false);
+        if (clearPanel != null)
+            clearPanel.SetActive(false);
         gamePanel.SetActive(true);
         settingsController.StartCount();
-         
+
         Time.timeScale = 1f;
         CursorInvisible();
     }
@@ -193,7 +241,6 @@ public class UIController : MonoBehaviour
         startMenuPanel.SetActive(false);
         settingsPanel.SetActive(true);
         CursorVisible();
-         
     }
 
     public void OnCloseSettings()
@@ -207,6 +254,7 @@ public class UIController : MonoBehaviour
         }
         CursorVisible();
     }
+
     public void OnOpenKeyConfig()
     {
         AudioManager.Instance.PlaySE(clickSound);
@@ -221,7 +269,7 @@ public class UIController : MonoBehaviour
         AudioManager.Instance.PlaySE(clickSound);
         restartGame = true;
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);   
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void OnMainMenu()
@@ -233,7 +281,7 @@ public class UIController : MonoBehaviour
 
     public void OnPause(InputAction.CallbackContext context)
     {
-        if(characterState.currentState == CharacterState.StateType.Die)
+        if (characterState.currentState == CharacterState.StateType.Die)
         {
             return;
         }
@@ -251,7 +299,6 @@ public class UIController : MonoBehaviour
             Time.timeScale = 0f;
             CursorVisible();
         }
-        
     }
 
     public void OnResume()
@@ -277,32 +324,34 @@ public class UIController : MonoBehaviour
         if (Gamepad.current != null)
             Gamepad.current.SetMotorSpeeds(0f, 0f);
     }
+
     private IEnumerator ShowGameOverPanel()
     {
         timerRunning = false;
 
         yield return new WaitForSecondsRealtime(logDisplayDelay);
-     
+
         logDisplayed = false;
         AudioManager.Instance.PlayBGM(gameOverSound);
         OnGameOver();
     }
 
-
     public void OnClear()
     {
-        if(gameOver) return;
-        if(logDisplayed) return;
+        if (gameOver)
+            return;
+        if (logDisplayed)
+            return;
         gameOver = true;
         logDisplayed = true;
         StartCoroutine(ShowClearPanel());
     }
+
     private IEnumerator ShowClearPanel()
     {
         timerRunning = false;
         yield return new WaitForSecondsRealtime(logDisplayDelay);
 
-      
         logDisplayed = false;
 
         AudioManager.Instance.PlayBGM(clearSound);
@@ -316,16 +365,16 @@ public class UIController : MonoBehaviour
         SaveManager.Instance.Save();
         CursorVisible();
         StartCoroutine(ShowClearLogStats());
-
     }
+
     public void CursorVisible()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         InputSystem.actions.FindActionMap("UI").Enable();
         InputSystem.actions.FindActionMap("Player").Disable();
-
     }
+
     public void CursorInvisible()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -333,6 +382,7 @@ public class UIController : MonoBehaviour
         InputSystem.actions.FindActionMap("UI").Disable();
         InputSystem.actions.FindActionMap("Player").Enable();
     }
+
     public void OnQuit()
     {
 #if UNITY_EDITOR
@@ -344,17 +394,20 @@ public class UIController : MonoBehaviour
 
     private void OnPlayerDamaged(int dmg)
     {
-        if (gameOver) return;
+        if (gameOver)
+            return;
         damageTaken += dmg;
         hitCount++;
     }
+
     private void OnBossDamaged(int dmg)
     {
-        if (gameOver) return;
+        if (gameOver)
+            return;
         damageDeal += dmg;
         attackCount++;
-      
     }
+
     private void ResetStats()
     {
         damageDeal = 0;
@@ -385,12 +438,11 @@ public class UIController : MonoBehaviour
     {
         overDamageDealtText.text = $"{damageDeal:N0}";
         overDamageTakenText.text = $"{damageTaken:N0}";
-         overAttackCountText.text = $"{attackCount}";
+        overAttackCountText.text = $"{attackCount}";
         overHitCountText.text = $"{hitCount}";
-        
+
         float ratio = boss.CurrentHp / (float)boss.data.BossHp * 100f;
         overBossHpText.text = $"{ratio:F0}%";
-         
     }
 
     //게임오버/클리어 패널의 로그 텍스트 순차적으로 띄우기
@@ -417,6 +469,7 @@ public class UIController : MonoBehaviour
         yield return new WaitForSecondsRealtime(delay);
         yield return CountUpTimeText(clearTimeText, runTimer, duration);
     }
+
     private IEnumerator ShowGameOverLogStats()
     {
         float delay = 0.3f;
@@ -434,23 +487,28 @@ public class UIController : MonoBehaviour
         yield return new WaitForSecondsRealtime(delay);
         yield return CountUpText(overDamageTakenText, damageTaken, duration, "{0:N0}");
         yield return new WaitForSecondsRealtime(delay);
-        yield return CountUpText(overAttackCountText, attackCount, duration, "{0}"  );
+        yield return CountUpText(overAttackCountText, attackCount, duration, "{0}");
         yield return new WaitForSecondsRealtime(delay);
-        yield return CountUpText(overHitCountText, hitCount, duration, "{0}"  );
+        yield return CountUpText(overHitCountText, hitCount, duration, "{0}");
         yield return new WaitForSecondsRealtime(delay);
         yield return CountUpText(overBossHpText, Mathf.RoundToInt(ratio), duration, "{0}%");
         //중복 요소 줄이기 고려.
     }
 
     //오버 패널에서 숫자들이 0부터 차례대로 올라오도록 하는 코루틴 메서드 작성
-    private IEnumerator CountUpText(TextMeshProUGUI text, int target, float duration, string format = "{0}")
+    private IEnumerator CountUpText(
+        TextMeshProUGUI text,
+        int target,
+        float duration,
+        string format = "{0}"
+    )
     {
         text.gameObject.SetActive(true);
 
         float elapsed = 0f;
         while (elapsed < duration)
         {
-            elapsed += Time.unscaledDeltaTime;//timescale이 0이므로 unscaled 사용
+            elapsed += Time.unscaledDeltaTime; //timescale이 0이므로 unscaled 사용
             float time = Mathf.Clamp01(elapsed / duration);
             int value = Mathf.RoundToInt(Mathf.Lerp(0, target, time));
             text.text = string.Format(format, value);
@@ -459,14 +517,15 @@ public class UIController : MonoBehaviour
 
         text.text = string.Format(format, target);
     }
-    //시간 표시용 
+
+    //시간 표시용
     private IEnumerator CountUpTimeText(TextMeshProUGUI text, float target, float duration)
     {
         text.gameObject.SetActive(true);
         float elapsed = 0f;
         while (elapsed < duration)
         {
-            elapsed += Time.unscaledDeltaTime;//timescale이 0이므로 unscaled 사용
+            elapsed += Time.unscaledDeltaTime; //timescale이 0이므로 unscaled 사용
             float time = Mathf.Clamp01(elapsed / duration);
             float value = Mathf.Lerp(0, target, time);
             text.text = FormatTime(value);

@@ -30,36 +30,46 @@ public class KeyConfigRow : MonoBehaviour
         if (subKey.Length > 0)
         {
             Debug.Log(subKey);
-            bind = asset.FindAction(key).bindings.First((k) => k.name.Equals(subKey.ToLower()) && k.groups.Contains(type));
+            bind = asset
+                .FindAction(key)
+                .bindings.First((k) => k.name.Equals(subKey.ToLower()) && k.groups.Contains(type));
         }
         else
         {
             bind = asset.FindAction(key).bindings.First((k) => k.groups.Contains(type));
         }
 
-        keyButtonText.text = InputControlPath.ToHumanReadableString(bind.effectivePath, InputControlPath.HumanReadableStringOptions.OmitDevice);
+        keyButtonText.text = InputControlPath.ToHumanReadableString(
+            bind.effectivePath,
+            InputControlPath.HumanReadableStringOptions.OmitDevice
+        );
     }
 
     public void AssignKey()
     {
         InputAction action = asset.FindAction(key);
-       
+
         int bindIndex = -1;
         var bindingsList = action.bindings.ToList();
         if (!string.IsNullOrEmpty(subKey))
         {
-            bindIndex = bindingsList.FindIndex(x => x.isPartOfComposite && x.name == subKey.ToLower());
+            bindIndex = bindingsList.FindIndex(x =>
+                x.isPartOfComposite && x.name == subKey.ToLower()
+            );
         }
         else
         {
-            bindIndex = bindingsList.FindIndex(x => !x.isPartOfComposite && x.groups != null && x.groups.Contains(type));
+            bindIndex = bindingsList.FindIndex(x =>
+                !x.isPartOfComposite && x.groups != null && x.groups.Contains(type)
+            );
         }
 
         Debug.Log(bindIndex);
         action.Disable();
         if (bindIndex == -1)
         {
-            var rebindOperation = action.PerformInteractiveRebinding()
+            var rebindOperation = action
+                .PerformInteractiveRebinding()
                 .WithControlsExcluding("<Pointer>/position")
                 .WithControlsExcluding("<Pointer>/delta")
                 .WithCancelingThrough("<Keyboard>/escape")
@@ -81,7 +91,8 @@ public class KeyConfigRow : MonoBehaviour
         }
         else
         {
-            var rebindOperation = action.PerformInteractiveRebinding(bindIndex)
+            var rebindOperation = action
+                .PerformInteractiveRebinding(bindIndex)
                 .WithControlsExcluding("<Pointer>/position")
                 .WithControlsExcluding("<Pointer>/delta")
                 .WithCancelingThrough("<Keyboard>/escape")
@@ -111,11 +122,15 @@ public class KeyConfigRow : MonoBehaviour
         var bindingsList = action.bindings.ToList();
         if (!string.IsNullOrEmpty(subKey))
         {
-            bindIndex = bindingsList.FindIndex(x => x.isPartOfComposite && x.name == subKey.ToLower());
+            bindIndex = bindingsList.FindIndex(x =>
+                x.isPartOfComposite && x.name == subKey.ToLower()
+            );
         }
         else
         {
-            bindIndex = bindingsList.FindIndex(x => !x.isPartOfComposite && x.groups != null && x.groups.Contains(type));
+            bindIndex = bindingsList.FindIndex(x =>
+                !x.isPartOfComposite && x.groups != null && x.groups.Contains(type)
+            );
         }
 
         if (bindIndex != -1)

@@ -3,26 +3,32 @@ using UnityEngine;
 
 public class HPTest : MonoBehaviour
 {
-   
-    [SerializeField] private PlayerHUDController playerHUD;
-    [SerializeField] private BossHUDController bossHUD;
+    [SerializeField]
+    private PlayerHUDController playerHUD;
 
-    
-    [SerializeField] private CharacterState characterState;
-    [SerializeField] private Boss boss;
+    [SerializeField]
+    private BossHUDController bossHUD;
 
-   
-    [SerializeField] private int playerDamageAmount = 20;
-    [SerializeField] private int bossDamageAmount = 100;
-    [SerializeField] private int healAmount = 30;
+    [SerializeField]
+    private CharacterState characterState;
+
+    [SerializeField]
+    private Boss boss;
+
+    [SerializeField]
+    private int playerDamageAmount = 20;
+
+    [SerializeField]
+    private int bossDamageAmount = 100;
+
+    [SerializeField]
+    private int healAmount = 30;
 
     private void Start()
     {
-         
         if (characterState == null)
             Debug.LogWarning("Character연결X");
 
-       
         if (boss == null || boss.data == null)
             Debug.LogWarning("Boss연결X");
     }
@@ -35,7 +41,7 @@ public class HPTest : MonoBehaviour
             DamageVO dmg = new DamageVO
             {
                 amount = playerDamageAmount,
-                damageType = DamageVO.DamageType.normal
+                damageType = DamageVO.DamageType.normal,
             };
             characterState.GetDamage(dmg);
         }
@@ -54,7 +60,7 @@ public class HPTest : MonoBehaviour
             DamageVO dmg = new DamageVO
             {
                 amount = bossDamageAmount,
-                damageType = DamageVO.DamageType.normal
+                damageType = DamageVO.DamageType.normal,
             };
             boss.GetDamage(dmg);
         }

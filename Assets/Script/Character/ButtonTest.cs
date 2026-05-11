@@ -13,7 +13,6 @@ public class ButtonTest : MonoBehaviour
         buttons[1].onClick.AddListener(() => TestDamage(DamageVO.DamageType.hard));
         buttons[2].onClick.AddListener(() => TestDamage(DamageVO.DamageType.veryHard));
         buttons[3].onClick.AddListener(() => TestDamage(DamageVO.DamageType.instantKill));
-
     }
 
     void TestDamage(DamageVO.DamageType type)
