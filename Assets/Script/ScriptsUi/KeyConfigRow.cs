@@ -29,7 +29,6 @@ public class KeyConfigRow : MonoBehaviour
         InputBinding bind;
         if (subKey.Length > 0)
         {
-            Debug.Log(subKey);
             bind = asset
                 .FindAction(key)
                 .bindings.First((k) => k.name.Equals(subKey.ToLower()) && k.groups.Contains(type));
@@ -64,7 +63,6 @@ public class KeyConfigRow : MonoBehaviour
             );
         }
 
-        Debug.Log(bindIndex);
         action.Disable();
         if (bindIndex == -1)
         {

@@ -257,9 +257,6 @@ public class CharacterMove : MonoBehaviour
     {
         if (state.currentState != StateType.Idle && state.currentState != StateType.Move)
             return;
-        Debug.Log(state.currentState);
-        Debug.Log(1);
-
         dodgeDirection = transform.right * moveValue.x + transform.forward * moveValue.y;
 
         if (dodgeDirection == Vector3.zero)
@@ -306,7 +303,6 @@ public class CharacterMove : MonoBehaviour
 
         if (commandQueue.Last() == "A")
         {
-            Debug.Log(1);
             anim.SetTrigger(Attack);
             state.Attacking();
         }
