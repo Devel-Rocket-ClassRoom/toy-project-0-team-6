@@ -199,18 +199,8 @@ public class CharacterState : MonoBehaviour, IDamageable
         }
         if (CanRestoreStm && currentStamina < maxStamina)
         {
-            var duration = 0f;
-
-            if (CurrentStamina <= 0f)
-            {
-                duration = 0.1f;
-            }
-            else
-            {
-                duration = stmRecoverTime * (CurrentStamina / maxStamina);
-            }
-
-            CurrentStamina += Mathf.Lerp(0, maxStamina, Time.deltaTime * duration);
+            float recoveryPerSecond = maxStamina / stmRecoverTime;
+            CurrentStamina += recoveryPerSecond * Time.deltaTime;
         }
 
         float DodgeRemain = DodgeCooldownRemaining;
