@@ -29,6 +29,7 @@ public class Boss : MonoBehaviour, IDamageable
     public BossData data;
     private NavMeshAgent agent;
     private GameObject target;
+    private CharacterState targetState;
     private Coroutine coroutine;
 
     private Statement currentstatement;
@@ -107,7 +108,11 @@ public class Boss : MonoBehaviour, IDamageable
 
         if (target != null)
         {
-            target.GetComponent<CharacterState>().OnGameOver += OnGameOver;
+            targetState = target.GetComponent<CharacterState>();
+            if (targetState != null)
+            {
+                targetState.OnGameOver += OnGameOver;
+            }
         }
 
         CurrentStatement = Statement.Idle;
@@ -433,9 +438,10 @@ public class Boss : MonoBehaviour, IDamageable
     public void OnGameOver()
     {
         CurrentStatement = Statement.Idle;
-        if (target != null)
+        if (targetState != null)
         {
-            target.GetComponent<CharacterState>().OnGameOver -= OnGameOver;
+            targetState.OnGameOver -= OnGameOver;
+            targetState = null;
         }
         target = null;
         isGameOver = true;
@@ -443,9 +449,10 @@ public class Boss : MonoBehaviour, IDamageable
 
     private void OnDisable()
     {
-        if (target != null)
+        if (targetState != null)
         {
-            target.GetComponent<CharacterState>().OnGameOver -= OnGameOver;
+            targetState.OnGameOver -= OnGameOver;
+            targetState = null;
         }
     }
 }
