@@ -38,7 +38,7 @@ public class Boss : MonoBehaviour, IDamageable
     public float idleInterval = 4f;
     public float attackDistance = 0f;
     private float toTargetDistance =>
-        Vector3.Distance(transform.position, target.transform.position);
+        target != null ? Vector3.Distance(transform.position, target.transform.position) : float.MaxValue;
     private float attackCoolTime = 0f;
     public float attackInterval = 4f;
     private float forwardAttackCoolTime = 0f; //��������
@@ -106,7 +106,11 @@ public class Boss : MonoBehaviour, IDamageable
 
         target = GameObject.FindGameObjectWithTag(PlayerTag);
 
-        if (target != null)
+        if (target == null)
+        {
+            Debug.LogError($"[Boss] '{PlayerTag}' 태그를 가진 오브젝트를 찾을 수 없습니다.");
+        }
+        else
         {
             targetState = target.GetComponent<CharacterState>();
             if (targetState != null)
