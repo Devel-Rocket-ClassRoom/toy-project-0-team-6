@@ -180,6 +180,8 @@ public class CharacterState : MonoBehaviour, IDamageable
 
         characterMove = GetComponent<CharacterMove>();
         boss = GameObject.FindGameObjectWithTag(BossTag);
+        if (boss == null)
+            Debug.LogError($"[CharacterState] '{BossTag}' 태그를 가진 오브젝트를 찾을 수 없습니다.");
         anim = GetComponent<Animator>();
     }
 

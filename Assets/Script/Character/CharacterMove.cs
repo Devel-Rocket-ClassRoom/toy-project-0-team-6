@@ -59,6 +59,8 @@ public class CharacterMove : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         HealParticle.Stop();
         boss = GameObject.FindWithTag("Boss");
+        if (boss == null)
+            Debug.LogError("[CharacterMove] 'Boss' 태그를 가진 오브젝트를 찾을 수 없습니다.");
 
         move = InputSystem.actions.FindAction("Move", true);
         look = InputSystem.actions.FindAction("Look", true);
@@ -160,6 +162,7 @@ public class CharacterMove : MonoBehaviour
 
     private void BossLockOn(InputAction.CallbackContext context)
     {
+        if (boss == null) return;
         lockOn = !lockOn;
         LockOnPoint.SetActive(lockOn);
     }
@@ -173,8 +176,16 @@ public class CharacterMove : MonoBehaviour
 
         if (lockOn)
         {
-            transform.LookAt(boss.transform);
-            DodgeView.transform.LookAt(boss.transform);
+            if (boss == null || !boss.activeInHierarchy)
+            {
+                lockOn = false;
+                LockOnPoint.SetActive(false);
+            }
+            else
+            {
+                transform.LookAt(boss.transform);
+                DodgeView.transform.LookAt(boss.transform);
+            }
         }
 
         if (
