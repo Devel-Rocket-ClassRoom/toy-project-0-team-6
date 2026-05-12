@@ -25,5 +25,18 @@
       "Bash(rm -rf *)"
     ],
     "defaultMode": "default"
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/csharpier-format.sh"
+          }
+        ]
+      }
+    ]
   }
 }
